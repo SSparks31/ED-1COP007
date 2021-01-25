@@ -30,7 +30,7 @@ int hasSlash(char *path);
 /* Retorna um inteiro de valor -1, 0 ou 1, representando invalido, falso e verdadeiro, respectivamente. */
 
 char *concatPathFile(char *path, char *fileName); 
-/* Concatena caminho e nome de arquivo validos, a fim de retornar um nome de arquivo completamente qualificado. */
+/* Concatena caminho e nome de arquivo, a fim de retornar um nome de arquivo completamente qualificado. */
 /* Caso caminho nao termine em '/', esta e automaticamente adicionada. */
 /* Caso apenas o caminho seja vazio ou invalido, arquivo e considerado como caminho relativo ao diretorio atual */
 /* Caso apenas o nome de arquivo seja vazio ou invalido, retorna apenas o caminho */
