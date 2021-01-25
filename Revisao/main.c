@@ -14,6 +14,23 @@ int main(int argc, char* argv[]) {
 
     char* fullPath = argv[1];
 
+    char *nullPath = getPath(NULL);
+    printf("Caminho de arquivo invalido: %s\n", nullPath);
+
+    char *nullName = getFileName(NULL);
+    printf("Nome de arquivo invalido: %s\n", nullName);
+    
+    char *nullSuffix = getSuffix(NULL);
+    printf("Extensao de arquivo invalido: %s\n", nullSuffix);
+
+    int nullSlash = hasSlash(NULL);
+    printf("Caminho %s termina em '/': %d\n", "invalido", nullSlash);
+
+    char* nullRemadePath = concatPathFile(NULL, NULL);
+    printf("Caminho concatenado com path e name invalidos: %s\n", nullRemadePath);
+
+    printf("\n-------\n\n");
+
     printf("Caminho completo: %s\n", fullPath);
     
     char *path = getPath(fullPath);
@@ -26,14 +43,24 @@ int main(int argc, char* argv[]) {
     printf("Extensao do arquivo: %s\n", suffix);
 
     int slash = hasSlash(path);
-    printf("Caminho %s termina em '/': %s\n", path, slash ? "Sim" : "Nao");
+    printf("Caminho %s termina em '/': %d\n", path, slash);
 
     char *remadePath = concatPathFile(path, name);
-    printf("Caminho concatenado a partir das funcoes: %s\n", remadePath);
+    printf("Caminho concatenado: %s\n", remadePath);
+
+    remadePath = concatPathFile(NULL, name);
+    printf("Caminho concatenado com path invalido: %s\n", remadePath);
+
+    remadePath = concatPathFile(path, NULL);
+    printf("Caminho concatenado com name invalido: %s\n", remadePath);
 
     free(path);
+    free(nullPath);
     free(name);
+    free(nullName);
     free(suffix);
+    free(nullSuffix);
     free(remadePath);
+    free(nullRemadePath);
     return 0;
 }
