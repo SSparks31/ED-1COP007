@@ -111,13 +111,15 @@ char *concatPathFile(char *path, char *fileName) {
 
     if (validString(path)) {
         strcpy(fullPath, path);
+        if (!hasSlash(path)) {
+            strcat(fullPath, "/");
+        }
     } else {
         strcpy(fullPath, "./");
     }
-    if (!hasSlash(path)) {
-        strcat(fullPath, "/");
+    if (validString(fileName)) {
+        strcat(fullPath, fileName);
     }
-    strcat(fullPath, fileName);
 
     return fullPath;    
 }

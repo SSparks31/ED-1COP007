@@ -33,7 +33,7 @@ char *concatPathFile(char *path, char *fileName);
 /* Concatena caminho e nome de arquivo, a fim de retornar um nome de arquivo completamente qualificado. */
 /* Caso caminho nao termine em '/', esta e automaticamente adicionada. */
 /* Caso apenas o caminho seja vazio ou invalido, arquivo e considerado como caminho relativo ao diretorio atual */
-/* Caso apenas o nome de arquivo seja vazio ou invalido, retorna apenas o caminho */
+/* Caso apenas o nome de arquivo seja vazio ou invalido, retorna apenas o caminho, com '/' no final */
 /* Caso ambos sejam vazios ou invalidos, retorna NULL */
 /* Retorna uma string dinamicamente alocada */
 
