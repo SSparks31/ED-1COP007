@@ -1,87 +1,123 @@
 #include "revisaoEx.h"
 
-char *getPath(char *fullPath) {
-    if (!fullPath) { /* String invalida */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* rfindCharacter(char *string, char query) { 
+    /* Encontra ultima aparicao do caracter query em uma dada string */
+    /* Caso string seja vazia ou invalida, retorna NULL */
+    /* Caso query nao exista na string, retorna NULL */
+    /* Retorna ponteiro para caracter na string */
+
+    if (!string || strlen(string) == 0) {
         return NULL;
     }
 
-    size_t pathSize;
-    for (pathSize = strlen(fullPath); pathSize >= 0; --pathSize) { /* Percorrer string do final ao comeco para encontrar caracter '/' */
-        if (fullPath[pathSize] == '/') { 
-            break; /* Caracter encontrado, encerrar loop */
+    for (char *i = string + strlen(string); i >= string; --i) { /* Aritmetica de ponteiro para visualizar cada posicao individualmente */
+        if (*i == query) {
+            return i;
         }
     }
 
-    char *path = calloc(1, sizeof(char) * (pathSize + 1)); /* Ultima barra foi encontrada na posicao pathSize, portanto ha pathSize + 1 caracteres */
-    if (!path) { /* Nao foi possivel alocar memoria para path */
+    return NULL; /* Saiu do loop, query nao foi encontrado */
+}
+
+int validString(char* string) {
+    /* Retorna 0 caso string seja vazia ou NULL; caso contrário, retorna 1 */
+    return string && strlen(string) != 0;
+}
+
+char *getPath(char *fullPath) {
+    if (!validString(fullPath)) { /* String invalida ou vazia*/
         return NULL;
     }
 
-    strncpy(path, fullPath, pathSize); /* Copiar pathSize caracteres da string original para o resultado */
-    path[pathSize] = '\0'; /* Barra sera substituida por \0 para terminar a string */
+    char *path = NULL;
+    char *slashPosition = rfindCharacter(fullPath, '/');
+    if (!slashPosition) { /* Nao ha barra no nome, nao inclui caminho */
+        path = malloc(sizeof(char)); 
+        strcpy(path, "");
+    } else {
+        size_t pathSize = strlen(fullPath) - strlen(slashPosition);
+        path = malloc(sizeof(char) * pathSize); /* Path recebera todos os caracteres de fullPath antes de slashPosition, mais \0 */
+        strncpy(path, fullPath, pathSize);
+        path[pathSize] = '\0';
+    }
+
     return path;
 }
 
 char *getFileName(char *fullPath) {
-    if (!fullPath) { /* String invalida */
+    if (!validString(fullPath)) { /* String invalida ou vazia */
         return NULL;
     }
 
-    size_t i, pathSize = strlen(fullPath);
-    for (i = 0; i < pathSize; ++i) { /* Percorrer string do final ao comeco para encontrar caracter '/' */
-        if (fullPath[pathSize - i] == '/') { 
-            break; /* Caracter encontrado, encerrar loop */
-        }
+    char *name = NULL;
+    char *slashPosition = rfindCharacter(fullPath, '/');
+    if (!slashPosition) {
+        name = malloc(sizeof(char) * strlen(fullPath));
+        strcpy(name, fullPath); // Nao copiar '/'
+    } else {
+        name = malloc(sizeof(char) * strlen(slashPosition));
+        strcpy(name, slashPosition + 1);
     }
 
-    char *fileName = calloc(1, sizeof(char) * i); /* Barra foi encontrada i caracteres antes do final da string, portanto ha i - 1 caracteres */
-    if (!fileName) { /* Nao foi possivel alocar memoria para fileName */
-        return NULL;
-    }
-
-    strcpy(fileName, fullPath + (pathSize - (i - 1))); /* Copiar ultimos i - 1 caracteres, incluindo /0, da string original para o resultado */
-    return fileName;
+    return name;
 }
 
 char *getSuffix(char *name) {
-    if (!name) { /* String invalida */
+    if (!validString(name)) { /* String invalida */
         return NULL;
     }
 
-    size_t i, pathSize = strlen(name);
-    for (i = 0; i < pathSize; ++i) { /* Percorrer string do final ao comeco para encontrar caracter '.' */
-        if (name[pathSize - i] == '.') { 
-            break; /* Caracter encontrado, encerrar loop */
-        }
+    char *suffix = NULL;
+    char *dotPosition = rfindCharacter(name, '.');
+    if (!dotPosition) {
+        suffix = malloc(1);
+        strcpy(suffix, "");
+    } else {
+        suffix = malloc(strlen(dotPosition));
+        strcpy(suffix, dotPosition + 1);
     }
-
-    char *suffix = calloc(1, sizeof(char) * i); /* Ponto foi encontrado i caracteres antes do final da string, portanto ha i - 1 caracteres */
-    if (!suffix) { /* Nao foi possivel alocar memoria para suffix */
-        return NULL;
-    }
-
-    strcpy(suffix, name + (pathSize - (i - 1))); /* Copiar ultimos i - 1 caracteres, incluindo /0, da string original para o resultado */
+     
     return suffix;
 }
 
 int hasSlash(char *path) {
+    if (!validString(path)) {
+        return -1;
+    }
     return path[strlen(path) - 1] == '/';
 }
 
 char *concatPathFile(char *path, char *fileName) {
-    if (!path || !fileName) { /* String invalida */
-        return NULL;
+    size_t pathSize = 1; /* Espaco para \0 alocado no inicio */
+    if (validString(path)) {
+        pathSize += strlen(path) + !hasSlash(path);
+    }
+    if (validString(fileName)) {
+        pathSize += strlen(fileName);
+        if (!validString(path)) { /* Name valido e path invalido, tratar como caminho relativo */
+            pathSize += strlen("./");
+        }
     }
 
-    char *fullPath = calloc(1, sizeof(char) * (strlen(path) + !hasSlash(path) + strlen(fileName) + 1)); /* Tamanho total do resultado = tamanho do path + 1 se path nao termina em / + tamanho do filename + 1 para o caracter de termino */
-    if (!fullPath) { /* Nao foi possivel alocar memoria para fullPath */
+    if (pathSize == 1) { /* Tanto path quanto filename sao invalidos */
         return NULL;
     }
+    
+    char *fullPath = malloc(sizeof(char) * pathSize);
 
-    strcpy(fullPath, path); /* Copiar path para resultado */
+    if (validString(path)) {
+        strcpy(fullPath, path);
+    } else {
+        strcpy(fullPath, "./");
+    }
     if (!hasSlash(path)) {
-        strcat(fullPath, "/"); /* Adicionar barra caso ja nao haja */
+        strcat(fullPath, "/");
     }
-    strcat(fullPath, fileName); /* Adicionar filename para resultado*/
-    return fullPath;
+    strcat(fullPath, fileName);
+
+    return fullPath;    
 }
