@@ -3,24 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-char* rfindCharacter(char *string, char query) { 
-    if (!string || strlen(string) == 0) {
-        return NULL;
-    }
-
-    for (char *i = string + strlen(string); i >= string; --i) { /* Aritmetica de ponteiro para visualizar cada posicao individualmente */
-        if (*i == query) {
-            return i;
-        }
-    }
-
-    return NULL; /* Saiu do loop, query nao foi encontrado */
-}
-
-int validString(char* string) {
-    return string && strlen(string) != 0;
-}
+#include "stringManip.h"
 
 char *getPath(char *fullPath) {
     if (!validString(fullPath)) { /* String invalida ou vazia*/
@@ -116,4 +99,17 @@ char *concatPathFile(char *path, char *fileName) {
     }
 
     return fullPath;    
+}
+
+char *concatFileSuffix(char *fileName, char *suffix) {
+    if (!validString(fileName) || !validString(suffix)) {
+        return NULL;
+    }
+    
+    char *result = malloc(sizeof(char) * (strlen(fileName) + 1 + strlen(suffix) + 1));
+    strcpy(result, fileName);
+    strcat(result, ".");
+    strcat(result, suffix);
+
+    return result;
 }

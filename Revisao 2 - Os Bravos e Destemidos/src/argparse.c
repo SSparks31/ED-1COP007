@@ -4,9 +4,10 @@
 
 #include "argparse.h"
 
+#include "stringManip.h"
 
 int argumentParse(char* result, int argc, char* argv[], char* target) {
-    if (!result || !argv || !target || strlen(target) == 0 || target[0] != '-') {
+    if (!result || !argv || !validString(target) || target[0] != '-') {
         return -1;
     }
     

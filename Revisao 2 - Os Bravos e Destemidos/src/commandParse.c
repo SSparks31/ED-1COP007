@@ -1,6 +1,9 @@
 #include "commandParse.h"
 
 #include <stdlib.h>
+#include <string.h>
+
+#include "stringManip.h"
 
 int charToInt(char num) {
     if (num < '0' || num > '9') {
@@ -63,6 +66,7 @@ int commandParse(FILE *input, dataStoreT *dataStore) {
     } else if (strcmp(command, "r") == 0) {
         int id = charToInt(argument[0]);
         argument += 2; /* Avancar argument para nao incluir id e espaco */
+        printf("Command: %s\nFile ID: %d\nArgument: %s\n", command, id, argument);
         commandParseReadFromFile(dataStore, id, argument);
     } else if (strcmp(command, "f") == 0) {
         int id = charToInt(argument[0]);
@@ -72,22 +76,26 @@ int commandParse(FILE *input, dataStoreT *dataStore) {
     }
 }
 
-int commandParseSetX(dataStoreT *dataStore, char *x);
-int commandParseSetY(dataStoreT *dataStore, char *y);
-int commandParseSetZ(dataStoreT *dataStore, char *z);
+int commandParseSetX(dataStoreT *dataStore, char *x) {
+    if (!dataStore || !validString(x)) {
+        return -1;
+    }
+}
+int commandParseSetY(dataStoreT *dataStore, char *y) {}
+int commandParseSetZ(dataStoreT *dataStore, char *z) {}
 
-int commandParseClearX(dataStoreT *dataStore);
-int commandParseClearY(dataStoreT *dataStore);
-int commandParseClearZ(dataStoreT *dataStore);
+int commandParseClearX(dataStoreT *dataStore) {}
+int commandParseClearY(dataStoreT *dataStore) {}
+int commandParseClearZ(dataStoreT *dataStore) {}
 
-int commandParseSetD(dataStoreT *dataStore, char *path);
-int commandParseSetA(dataStoreT *dataStore, char *path);
-int commandParseSetE(dataStoreT *dataStore, char *path);
+int commandParseSetD(dataStoreT *dataStore, char *path) {}
+int commandParseSetA(dataStoreT *dataStore, char *path) {}
+int commandParseSetE(dataStoreT *dataStore, char *path) {}
 
-int commandParseCreateFileC(dataStoreT *dataStore, int id);
-int commandParseCreateFileO(dataStoreT *dataStore, int id);
-int commandParseCreateFileL(dataStoreT *dataStore, int id);
+int commandParseCreateFileC(dataStoreT *dataStore, int id) {}
+int commandParseCreateFileO(dataStoreT *dataStore, int id) {}
+int commandParseCreateFileL(dataStoreT *dataStore, int id) {}
 
-int commandParseWriteToFile(dataStoreT *dataStore, int id, char *contents);
-int commandParseReadFromFile(dataStoreT *dataStore, int id, char *store);
-int commandParseCloseFile(dataStoreT *dataStore, int id);
+int commandParseWriteToFile(dataStoreT *dataStore, int id, char *contents) {}
+int commandParseReadFromFile(dataStoreT *dataStore, int id, char *store) {}
+int commandParseCloseFile(dataStoreT *dataStore, int id) {}

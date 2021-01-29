@@ -37,4 +37,6 @@ char *concatPathFile(char *path, char *fileName);
 /* Caso ambos sejam vazios ou invalidos, retorna NULL. */
 /* Retorna uma string dinamicamente alocada. */
 
+char *concatFileSuffix(char *fileName, char *suffix);
+
 #endif
