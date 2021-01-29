@@ -1,10 +1,11 @@
+#ifndef MODULO_DATASTORE_H
+#define MODULO_DATASTORE_H
+
 #include <stdio.h>
 
 typedef struct dataFile {
     FILE *file;
-    char *mode;
-
-    int id;
+    char mode[2];
 } dataFileT;
 
 typedef struct dataStore {
@@ -23,12 +24,36 @@ typedef struct dataStore {
     dataFileT *fileList[10]; /* Lista para armazenar arquivos */
 } dataStoreT;
 
-dataFileT *createDataFile(int id, char *path, char *mode);
+dataFileT *createDataFile(char *path, char *mode);
 void destroyDataFile(dataFileT **dataFile);
 
 dataStoreT *createDataStore(char *defaultDir, char *p1, char *p2, char *p3);
 void destroyDataStore(dataStoreT **dataStore);
 
-void addFile(dataStoreT *dataStore, int id);
+int addFile(dataStoreT *dataStore, int id, char *mode);
 dataFileT getFile(dataStoreT *dataStore, int id);
-void removeFile(dataStoreT *dataStoreT, int id);
+int removeFile(dataStoreT *dataStoreT, int id);
+
+int commandParse(FILE *input, dataStoreT *dataStore);
+
+int commandParseSetX(dataStoreT *dataStore, char *x);
+int commandParseSetY(dataStoreT *dataStore, char *y);
+int commandParseSetZ(dataStoreT *dataStore, char *z);
+
+int commandParseClearX(dataStoreT *dataStore);
+int commandParseClearY(dataStoreT *dataStore);
+int commandParseClearZ(dataStoreT *dataStore);
+
+int commandParseSetD(dataStoreT *dataStore, char *path);
+int commandParseSetA(dataStoreT *dataStore, char *path);
+int commandParseSetE(dataStoreT *dataStore, char *path);
+
+int commandParseCreateFileC(dataStoreT *dataStore, int id);
+int commandParseCreateFileO(dataStoreT *dataStore, int id);
+int commandParseCreateFileL(dataStoreT *dataStore, int id);
+
+int commandParseWriteToFile(dataStoreT *dataStore, int id, char *contents);
+int commandParseReadFromFile(dataStoreT *dataStore, int id, char *store);
+int commandParseCloseFile(dataStoreT *dataStore, int id);
+
+#endif
