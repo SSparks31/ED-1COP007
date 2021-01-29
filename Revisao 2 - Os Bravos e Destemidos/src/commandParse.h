@@ -1,3 +1,6 @@
+#ifndef MODULO_COMMANDPARSE_H
+#define MODULO_COMMANDPARSE_H
+
 #include "dataStore.h"
 
 int commandParse(FILE *input, dataStoreT *dataStore);
@@ -21,3 +24,5 @@ int commandParseCreateFileL(dataStoreT *dataStore, int id);
 int commandParseWriteToFile(dataStoreT *dataStore, int id, char *contents);
 int commandParseReadFromFile(dataStoreT *dataStore, int id, char *store);
 int commandParseCloseFile(dataStoreT *dataStore, int id);
+
+#endif
