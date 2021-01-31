@@ -1,0 +1,35 @@
+#include "stringHelp.h"
+
+#include <string.h>
+
+char *findCharacter(char *str, char query) {
+    if (!str) {
+        return NULL;
+    }
+    for (; *str; ++str) {
+        if (*str == query) {
+            return str;
+        }
+    }
+    return NULL;
+}
+
+char *rfindCharacter(char *str, char query) {
+    if (!str) {
+        return NULL;
+    }
+    char *aux = str + strlen(str);
+    for (; aux != str; --aux) {
+        if (*aux == query) {
+            return aux;
+        }
+    }
+    return NULL;
+}
+
+int isEmpty(char *str) {
+    if (!str) {
+        return -1;
+    }
+    return strlen(str) == 0;
+}
