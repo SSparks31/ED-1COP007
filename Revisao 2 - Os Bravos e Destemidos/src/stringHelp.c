@@ -1,5 +1,6 @@
 #include "stringHelp.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 char *findCharacter(char *str, char query) {
@@ -54,5 +55,18 @@ char *stripQuotes(char *res, char *str) {
         res[strlen(res) - 1] = '\0';
     }
 
+    return res;
+}
+
+#include <stdio.h>
+
+char *stripNewline(char *res, char *str) {
+    strcpy(res, str);
+
+    char *aux = res + strlen(res) - 1;
+    for (; *aux == '\n' || *aux == '\r'; --aux);
+
+    aux[1] = '\0';
+    
     return res;
 }

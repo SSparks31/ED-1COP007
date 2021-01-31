@@ -20,6 +20,14 @@ char *stripQuotes(char *res, char *str);
 /* Caso `str` seja invalida ou vazia, res recebe string vazia */
 /* Caso `str` nao contenha aspas, nao ocorre modificacao */
 /* Valor de retorno: ponteiro para primeiro caracter de `res` */
-/* Ex.: stripQuotes(res, "\"Batata") -> res recebe "Batata"; */
+/* Ex.: stripQuotes(res, "\"Argumento composto\"") -> res recebe "Argumento composto"; */
+
+char *stripNewline(char *res, char *str);
+/* Dadas uma string valida `res` e uma string valida `str`, remove caracter de nova linha posicionado no final de `str` e armazena resultado em `res` */
+/* Caso `str` seja invalida ou vazia, res recebe string vazia */
+/* Caso `str` nao contenha caracter de nova linha, nao ocorre modificacao */
+/* Valor de retorno: ponteiro para primeiro caracter de `res` */
+/* Ex.: stripQuotes(res, "Argumento com newline\r\n") -> res recebe "Argumento com newline"; */
+
 
 #endif
