@@ -6,23 +6,6 @@
 
 #include "stringHelp.h"
 
-struct dataStore {
-    char *varX;
-    char *varY;
-    char *varZ;
-
-    char **parameters;
-
-    char *currentDir;
-    char *fileName;
-    char *fileSuffix;
-};
-
-struct dataFile {
-    FILE *file;
-    char mode[2];
-};
-
 dataStoreT *createDataStore(char *defaultDir, char **params) {
     dataStoreT *dataStore = malloc(sizeof(dataStoreT));
     if (!dataStore) {
