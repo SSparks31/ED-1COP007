@@ -1,5 +1,6 @@
 #include "dataStore.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "stringHelp.h"

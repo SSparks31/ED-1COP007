@@ -1,7 +1,6 @@
 #ifndef LIB_DATASTORE_H
 #define LIB_DATASTORE_H
 
-#include <stdlib.h>
 #include <stdio.h>
 
 typedef struct dataStore {
