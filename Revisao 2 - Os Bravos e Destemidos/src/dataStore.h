@@ -14,6 +14,7 @@ typedef struct dataStore {
     char *varZ;
 
     char **parameters;
+    int numParameters;
 
     char *currentDir;
     char *fileName;
