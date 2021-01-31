@@ -1,7 +1,7 @@
 #include "path.h"
 
 #include <string.h>
-#include "stringSearch.h"
+#include "stringHelp.h"
 
 #include <stdio.h>
 
