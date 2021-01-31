@@ -21,7 +21,7 @@ dataStoreT *createDataStore(char *defaultDir, char **params) {
     dataStore->fileName = NULL;
     dataStore->fileSuffix = NULL;
 
-    if (isEmpty(defaultDir) == 0) {
+    if (!isEmpty(defaultDir)) {
         dataStore->currentDir = malloc(sizeof(char) * (strlen(defaultDir) + 1));
         strcpy(dataStore->currentDir, defaultDir);
     }
