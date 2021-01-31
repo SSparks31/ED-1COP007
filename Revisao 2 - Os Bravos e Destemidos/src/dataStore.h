@@ -13,7 +13,7 @@ void destroyDataStore(dataStoreT **dataStore);
 /* Destroi estrutura do programa */
 /* Substitui ponteiro original por NULL para fim de controle */
 
-dataFileT *createDataFile(int id, char *path, char *mode);
+dataFileT *createDataFile(char *path, char *mode);
 /* Cria estrutura responsavel por armazenar stream de arquivo e modo */
 /* Caso haja problema de alocacao de memoria, retorna NULL */
 /* Caso nao seja possivel abrir o arquivo denominado por `path`, retorna NULL*/

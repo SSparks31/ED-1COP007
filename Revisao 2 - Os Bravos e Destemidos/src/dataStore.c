@@ -63,7 +63,7 @@ void destroyDataStore(dataStoreT **dataStore) {
     *dataStore = NULL;
 }
 
-dataFileT *createDataFile(int id, char *path, char *mode) {
+dataFileT *createDataFile(char *path, char *mode) {
     FILE *file = fopen(path, mode);
     if (!file) {
         return NULL;
