@@ -70,3 +70,20 @@ char *stripNewline(char *res, char *str) {
     
     return res;
 }
+
+char *fgetLine(FILE *instream, char* retString, size_t stringLen) {
+    if (!instream || !retString || stringLen <= 0) {
+        return NULL;
+    }
+    char buf;
+    int stringPos;
+    for (stringPos = 0; stringPos < stringLen - 1; stringPos++) {
+        buf = getc(instream);
+        if (buf == '\n' || buf == '\r' || buf == EOF) {
+            break;
+        }
+        retString[stringPos] = buf;
+    }
+    retString[stringPos] = '\0';
+    return retString;
+}
