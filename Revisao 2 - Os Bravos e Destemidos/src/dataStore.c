@@ -5,7 +5,7 @@
 
 #include "stringHelp.h"
 
-dataStoreT *createDataStore(char *defaultDir, char **params) {
+dataStoreT *createDataStore(char *defaultDir, int numParams, char **params) {
     dataStoreT *dataStore = malloc(sizeof(dataStoreT));
     if (!dataStore) {
         return NULL;
@@ -15,6 +15,7 @@ dataStoreT *createDataStore(char *defaultDir, char **params) {
     dataStore->varY = NULL;
     dataStore->varZ = NULL;
 
+    dataStore->numParameters = numParams;
     dataStore->parameters = params;
     
     dataStore->currentDir = NULL;

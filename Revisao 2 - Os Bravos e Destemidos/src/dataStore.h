@@ -23,7 +23,7 @@ typedef struct dataStore {
     dataFileT fileList[10];
 } dataStoreT;
 
-dataStoreT *createDataStore(char *defaultDir, char **params);
+dataStoreT *createDataStore(char *defaultDir, int numParams, char **params);
 /* Cria estrutura responsavel por armazenar variaveis e parametros do programa */
 /* Caso `defaultDir` seja um caminho valido, inicializa diretorio atual do programa com seu valor */
 /* Caso haja problema de alocacao de memoria, retorna NULL */
