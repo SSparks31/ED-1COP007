@@ -3,6 +3,11 @@
 
 #include <stdio.h>
 
+typedef struct dataFile {
+    FILE *file;
+    char mode[2];
+} dataFileT;
+
 typedef struct dataStore {
     char *varX;
     char *varY;
@@ -13,12 +18,9 @@ typedef struct dataStore {
     char *currentDir;
     char *fileName;
     char *fileSuffix;
-} dataStoreT;
 
-typedef struct dataFile {
-    FILE *file;
-    char mode[2];
-} dataFileT;
+    dataFileT fileList[10];
+} dataStoreT;
 
 dataStoreT *createDataStore(char *defaultDir, char **params);
 /* Cria estrutura responsavel por armazenar variaveis e parametros do programa */
