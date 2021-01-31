@@ -1,8 +1,22 @@
 #ifndef LIB_DATASTORE_H
 #define LIB_DATASTORE_H
 
-typedef struct dataStore dataStoreT;
-typedef struct dataFile dataFileT;
+typedef struct dataStore {
+    char *varX;
+    char *varY;
+    char *varZ;
+
+    char **parameters;
+
+    char *currentDir;
+    char *fileName;
+    char *fileSuffix;
+} dataStoreT;
+
+typedef struct dataFile {
+    FILE *file;
+    char mode[2];
+} dataFileT;
 
 dataStoreT *createDataStore(char *defaultDir, char **params);
 /* Cria estrutura responsavel por armazenar variaveis e parametros do programa */
