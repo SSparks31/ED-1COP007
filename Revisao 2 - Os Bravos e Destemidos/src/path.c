@@ -3,8 +3,6 @@
 #include <string.h>
 #include "stringHelp.h"
 
-#include <stdio.h>
-
 char *getPath(char *res, char *fullPath) {
     if (!res) {
         return NULL;
