@@ -1,5 +1,5 @@
-*.zip
-Teste/*
+**/*.zip
+**/Teste/*
 **/obj
 **/*.exe
-*old
+**/*old
