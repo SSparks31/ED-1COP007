@@ -4,7 +4,7 @@
 
 #define DIR_MASK 0777
 
-int makedirs(char* fullPath) {
+int makedirs(char *fullPath) {
     char *aux = fullPath;
     for (; *aux; ++aux) {
         if (*aux == '/') {
