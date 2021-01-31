@@ -1,6 +1,8 @@
 #ifndef LIB_DATASTORE_H
 #define LIB_DATASTORE_H
 
+#include <stdlib.h>
+
 typedef struct dataStore {
     char *varX;
     char *varY;
