@@ -10,7 +10,7 @@ char *getPath(char *res, char *fullPath) {
         return NULL;
     }
 
-    if (!fullPath || strlen(fullPath) == 0) {
+    if (isEmpty(fullPath) != 0) {
         strcpy(res, "");
         return res;
     }
@@ -33,7 +33,7 @@ char *getFileName(char *res, char *fullPath) {
         return NULL;
     }
 
-    if (!fullPath || strlen(fullPath) == 0) {
+    if (isEmpty(fullPath) != 0) {
         strcpy(res, "");
         return res;
     }
@@ -54,7 +54,7 @@ char *getSuffix(char *res, char *fullPath) {
         return NULL;
     }
 
-    if (!fullPath || strlen(fullPath) == 0) {
+    if (isEmpty(fullPath) != 0) {
         strcpy(res, "");
         return res;
     }
@@ -87,12 +87,12 @@ char *concatFileSuffix(char *res, char *fileName, char *suffix) {
         return NULL;
     }
 
-    if (!fileName || strlen(fileName) == 0) {
+    if (isEmpty(fileName) != 0) {
         strcpy(res, "");
         return res;
     }
 
-    if (!suffix || strlen(suffix) == 0) {
+    if (isEmpty(suffix) != 0) {
         strcpy(res, fileName);
         return res;
     }
@@ -111,12 +111,12 @@ char *concatPathFile(char *res, char *path, char *fileName) {
         return NULL;
     }
 
-    if (!fileName || strlen(fileName) == 0) {
+    if (isEmpty(fileName) != 0) {
         strcpy(res, "");
         return res;
     }
 
-    if (!path || strlen(path) == 0) {
+    if (isEmpty(path) != 0) {
         char relativePath[3] = "./";
         path = relativePath;
     }
