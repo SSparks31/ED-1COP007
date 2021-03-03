@@ -25,6 +25,10 @@ void commandParse(FILE *input, dataStoreT *dataStore) {
 
         if (strcmp(command, "+x") == 0) {
             commandParseSetX(dataStore, argument);
+            for (char *x = dataStore->varX; *x; ++x) {
+                printf("[%d]->", *x);
+            }
+            printf("%s\n", dataStore->varX);
         } else if (strcmp(command, "+y") == 0) {
             commandParseSetY(dataStore, argument);
         } else if (strcmp(command, "+z") == 0) {
@@ -66,13 +70,28 @@ int commandParseSetX(dataStoreT *dataStore, char *x) {
     }
 
     if (strcmp(x, "@1") == 0) {
-        setVarX(dataStore, getParam1(dataStore));
+        if (dataStore->numParameters >= 1) {
+            setVarX(dataStore, getParam1(dataStore));
+        } else {
+            printf("Parametro @1 nao encontrado\n");
+            return -1;
+        }
     } else if (strcmp(x, "@2") == 0) {
-        setVarX(dataStore, getParam2(dataStore));
+        if (dataStore->numParameters >= 2) {
+            setVarX(dataStore, getParam2(dataStore));
+        } else {
+            printf("Parametro @2 nao encontrado\n");
+            return -1;
+        }
     } else if (strcmp(x, "@3") == 0) {
-        setVarX(dataStore, getParam3(dataStore));
+        if (dataStore->numParameters >= 3) {
+            setVarX(dataStore, getParam3(dataStore));
+        } else {
+            printf("Parametro @3 nao encontrado\n");
+            return -1;
+        }
     } else {
-        setVarX(dataStore, stripQuotes(x, x));
+        setVarX(dataStore, stringStrip());
     }
 
     return 0;
@@ -84,43 +103,62 @@ int commandParseSetY(dataStoreT *dataStore, char *y) {
     }
 
     if (strcmp(y, "@1") == 0) {
-        setVarY(dataStore, getParam1(dataStore));
+        if (dataStore->numParameters >= 1) {
+            setVarY(dataStore, getParam1(dataStore));
+        } else {
+            printf("Parametro @1 nao encontrado\n");
+            return -1;
+        }
     } else if (strcmp(y, "@2") == 0) {
-        setVarY(dataStore, getParam2(dataStore));
+        if (dataStore->numParameters >= 2) {
+            setVarY(dataStore, getParam2(dataStore));
+        } else {
+            printf("Parametro @2 nao encontrado\n");
+            return -1;
+        }
     } else if (strcmp(y, "@3") == 0) {
-        setVarY(dataStore, getParam3(dataStore));
+        if (dataStore->numParameters >= 3) {
+            setVarY(dataStore, getParam3(dataStore));
+        } else {
+            printf("Parametro @3 nao encontrado\n");
+            return -1;
+        }
     } else {
         setVarY(dataStore, stripQuotes(y, y));
     }
 
     return 0;
 }
+
 int commandParseSetZ(dataStoreT *dataStore, char *z) {
     if (!dataStore || isEmpty(z)) {
         return -1;
     }
 
-    if (z[0] != '*') {
-        setVarZ(dataStore, stripQuotes(z, z));
-        return 0;
-    int multiplier; 
-    if (z[1] == '*') {
-        multiplier = stringToNum(getParam1(dataStore));
+    if (strcmp(z, "@1") == 0) {
+        if (dataStore->numParameters >= 1) {
+            setVarZ(dataStore, getParam1(dataStore));
+        } else {
+            printf("Parametro @1 nao encontrado\n");
+            return -1;
+        }
+    } else if (strcmp(z, "@2") == 0) {
+        if (dataStore->numParameters >= 2) {
+            setVarZ(dataStore, getParam2(dataStore));
+        } else {
+            printf("Parametro @2 nao encontrado\n");
+            return -1;
+        }
+    } else if (strcmp(z, "@3") == 0) {
+        if (dataStore->numParameters >= 3) {
+            setVarZ(dataStore, getParam3(dataStore));
+        } else {
+            printf("Parametro @3 nao encontrado\n");
+            return -1;
+        }
     } else {
-        multiplier = stringToNum(z + 1);
+        setVarZ(dataStore, stripQuotes(z, z));
     }
-
-    char *buf = malloc(sizeof(char) * (strlen(getVarZ(dataStore)) * (multiplier+1) +1));
-    if (!buf) {
-        return -1;
-    }
-    strcpy(buf, getVarZ(dataStore));
-    for (int i = 0; i < multiplier; ++i) {
-        strcat(buf, getVarZ(dataStore));
-    }
-    
-    setVarZ(dataStore, buf);
-    free(buf);
 
     return 0;
 }
