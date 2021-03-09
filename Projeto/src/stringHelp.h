@@ -1,6 +1,8 @@
 #ifndef LIB_STRINGHELP_H
 #define LIB_STRINGHELP_H
 
+#include <stdio.h>
+
 char* findCharacter(char *str, char query);
 /* Dados uma string `str` e um caracter `query`, retorna ponteiro para primeira instancia de `query` em `str` */
 /* Caso `str` seja invalida ou vazia, retorna NULL */
