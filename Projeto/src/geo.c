@@ -68,7 +68,7 @@ listT geoParser(char* geoPath) {
     return rectList;
 }
 
-rectT createRect(char* borderColor, char fillColor, char* command) {
+rectT createRect(char* borderColor, char* fillColor, char* command) {
     rectT newRect = malloc(sizeof(struct rect));
     char* id = findCharacter(command, ' ') + 1;
     char* x  = findCharacter(id, ' ') + 1;
@@ -95,6 +95,8 @@ rectT createRect(char* borderColor, char fillColor, char* command) {
     strcpy(newRect->yPos  , y);
     strcpy(newRect->width , w);
     strcpy(newRect->height, h);
+
+    return newRect;
 }
 
 char* getIDRect(rectT rect) {
