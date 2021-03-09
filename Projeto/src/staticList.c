@@ -1,18 +1,18 @@
-#include "staticList.h"
+#include "list.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 struct sListPos {
-    sListItem elem;
+    listElemT elem;
     int next;
 };
 
 struct sList {
-    sListPosT list;
+    struct sListPos* list;
 
-    int maxLength;
     int curLength;
+    int maxLength;
 
     int firstElem;
     int nextPos;
@@ -20,12 +20,12 @@ struct sList {
     size_t accessCount;
 };
 
-sListT createSList(int maxElem) {
+listT createList(int maxElem) {
     if (maxElem <= 0) {
         return NULL;
     }
 
-    sListT sList = malloc(sizeof(struct sList));
+    struct sList* sList = malloc(sizeof(struct sList));
     if (!sList) {
         return NULL;
     }
@@ -49,96 +49,107 @@ sListT createSList(int maxElem) {
     sList->firstElem = -1;
     sList->nextPos = 0;
 
-    sList->accessCount = 0;
+    sList->accessCount = maxElem;
 
     return sList;
 }
 
-int isEmptySList(sListT sList) {
-    if (!sList) {
+int isEmptyList(listT list) {
+    if (!list) {
         return -1;
     }
 
+    struct sList* sList = list;
     return sList->curLength == 0;
 }
 
-int lengthSList(sListT sList) {
-    if (!sList) {
+int lengthList(listT list) {
+    if (!list) {
         return -1;
     }
 
+    struct sList* sList = list;
     return sList->curLength;
 }
 
-int isFullSList(sListT sList) {
-    if (!sList) {
+int isFullList(listT list) {
+    if (!list) {
         return -1;
     }
     
+    struct sList* sList = list;
     return sList->curLength == sList->maxLength;
 }
 
-sListPosT getFirstElementSList(sListT sList) {
-    if (!sList || isEmptySList(sList)) {
+listPosT getFirstElementList(listT list) {
+    if (!list || isEmptyList(list)) {
         return NULL;
     }
+
+    struct sList* sList = list;
+    
+    sList->accessCount++;
 
     return sList->list + sList->firstElem;
 }
 
-sListPosT getNextElementSList(sListT sList, sListPosT pos) {
-    if (!sList || isEmptySList(sList) || !pos) {
-        return NULL;
-    }
-    if (pos->next == -1) {
+listPosT getNextElementList(listT list, listPosT pos) {
+    if (!list || isEmptyList(list) || !pos) {
         return NULL;
     }
 
-    return sList->list + pos->next;
+    struct sList* sList = list;
+    struct sListPos* sPos = pos;
+    if (sPos->next == -1) {
+        return NULL;
+    }
+
+    sList->accessCount++;
+
+    return sList->list + sPos->next;
 }
 
-sListPosT getLastElementSList(sListT sList) {
-    if (!sList || isEmptySList(sList)) {
+listPosT getLastElementList(listT list) {
+    if (!list || isEmptyList(list)) {
         return NULL;
     }
 
-    sListPosT aux = getFirstElementSList(sList);
-    sList->accessCount++;
+    struct sList* sList = list;
+    struct sListPos* aux = getFirstElementList(list);
 
     while (aux->next != -1) {
-        aux = getNextElementSList(sList, aux);
-        sList->accessCount++;
+        aux = getNextElementList(list, aux);
     }
 
     return aux;
 }
 
-sListPosT getPrevElementSList(sListT sList, sListPosT pos) {
-    if (!sList || isEmptySList(sList) || !pos) {
+listPosT getPrevElementList(listT list, listPosT pos) {
+    if (!list || isEmptyList(list) || !pos) {
         return NULL;
     }
 
-    sListPosT aux = getFirstElementSList(sList);
-    sList->accessCount++;
+    struct sList* sList = list;
+    struct sListPos* sPos = pos;
+    struct sListPos* aux = getFirstElementList(list);
+    struct sListPos* prev = NULL;
 
-    if (pos == aux) {
-        return NULL;
+    while (aux != pos) {
+        prev = aux;
+        aux = getNextElementList(list, aux);
     }
 
-    while (aux && getNextElementSList(sList, aux) != pos) {
-        aux = getNextElementSList(sList, aux);
-        sList->accessCount++;
-    }
-
-    return aux;
+    return prev;
 }
 
-sListPosT appendSList(sListT sList, sListItem elem) {
-    if (!sList || isFullSList(sList) || !elem) {
+listPosT appendList(listT list, listElemT elem) {
+    if (!list || isFullList(list) || !elem) {
         return NULL;
     }
     
-    sListPosT lastPos = getLastElementSList(sList), nextPos = sList->list + sList->nextPos;
+    struct sList* sList = list;
+    struct sListPos* lastPos = getLastElementList(list);
+    struct sListPos* nextPos = sList->list + sList->nextPos;
 
     if (lastPos) {
         lastPos->next = sList->nextPos;
@@ -155,12 +166,16 @@ sListPosT appendSList(sListT sList, sListItem elem) {
     return nextPos;
 }
 
-sListPosT insertBeforeSList(sListT sList, sListPosT pos, sListItem elem) {
-    if (!sList || isFullSList(sList) || !pos || !elem) {
+listPosT insertBeforeList(listT list, listPosT pos, listElemT elem) {
+    if (!list || isFullList(list) || !pos || !elem) {
         return NULL;
     }
     
-    sListPosT prevPos = getPrevElementSList(sList, pos), newPos = sList->list + sList->nextPos;
+    struct sList* sList = list;
+    struct sListPos* sPos = pos;
+    struct sListPos* prevPos = getPrevElementList(list, pos);
+    struct sListPos* newPos = sList->list + sList->nextPos;
+
     if (!prevPos) {
         newPos->next = sList->firstElem;
         sList->firstElem = sList->nextPos;
@@ -175,71 +190,73 @@ sListPosT insertBeforeSList(sListT sList, sListPosT pos, sListItem elem) {
     return newPos;
 }
 
-sListPosT insertAfterSList(sListT sList, sListPosT pos, sListItem elem) {
-    if (!sList || isFullSList(sList) || !pos || !elem) {
+listPosT insertAfterList(listT list, listPosT pos, listElemT elem) {
+    if (!list || isFullList(list) || !pos || !elem) {
         return NULL;
     }
 
-    sListPosT nextPos = getNextElementSList(sList, pos);
+    struct sList* sList = list;
+    struct sListPos* sPos = pos;
+    struct sListPos* nextPos = getNextElementList(list, pos);
+
     if (!nextPos) {
-        return appendSList(sList, elem);
+        return appendList(list, elem);
     }
 
-    sListPosT newPos = sList->list + sList->nextPos;
+    struct sListPos* newPos = sList->list + sList->nextPos;
 
-    newPos->next = pos->next;
-    pos->next = sList->nextPos;
+    newPos->next = sPos->next;
+    sPos->next = sList->nextPos;
     newPos->elem = elem;
     sList->curLength++;
 
     return newPos;
 }
 
-sListItem removeSList(sListT sList, sListPosT pos) {
-    if (!sList || isEmptySList(sList) || !pos) {
+listElemT removeList(listT list, listPosT pos) {
+    if (!list || isEmptyList(list) || !pos) {
         return NULL;
     }
 
-    int posIndex;
-    for (posIndex = 0; posIndex < lengthSList(sList); ++posIndex) {
-        sList->accessCount++;
-        if (sList->list + posIndex == pos) {
-            break;
-        }
-    }
+    struct sList* sList = list;
+    struct sListPos* sPos = pos;
+    struct sListPos* aux = getFirstElementList(list);
 
-    sListPosT prevPos = getPrevElementSList(sList, pos); 
+    struct sListPos* prevPos = getPrevElementList(list, pos); 
     if (prevPos) {
-        prevPos->next = pos->next;
+        sList->nextPos = prevPos->next;
+        prevPos->next = sPos->next;
     } else {
-        sList->firstElem = pos->next;
+        sList->nextPos = sList->firstElem;
+        sList->firstElem = sPos->next;
     }
-
-    sList->nextPos = posIndex;
     
     sList->curLength--;
 
-    return pos->elem;
+    return sPos->elem;
 }
 
 
-sListItem getItemSList(sListT sList, sListPosT pos) {
-    if (!sList || !pos) {
+listElemT getElementList(listT list, listPosT pos) {
+    if (!list || !pos) {
         return NULL;
     }
 
-    return pos->elem;
+    struct sListPos* sPos = pos;
+    return sPos->elem;
 }
 
-void destroySList(sListT sList) {
-    if (!sList) {
+void destroyList(listT list) {
+    if (!list) {
         return;
     }
 
-    if (!isEmptySList(sList)) {
+    if (!isEmptyList(list)) {
         printf("\n------------\n");
         printf("ATENCAO:\nO desalocamento de elementos da lista nao e realizado automaticamente; caso seja necessario, modifique seu programa para realizar a remocao e desalocamento.\n");
     }
+
+    struct sList* sList = list;
 
     free(sList->list);
     free(sList);
