@@ -15,7 +15,7 @@ int charToNum(char num) {
 
 int stringToInt(char *num) {
     int result = 0;
-    for (; *num >= 0 && *num <= 9; ++num) {
+    for (; *num >= '0' && *num <= '9'; ++num) {
         result *= 10;
         result += charToNum(*num);
     }
