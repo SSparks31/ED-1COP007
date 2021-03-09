@@ -3,15 +3,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct dListPos {
+struct listPos {
     listElemT elem;
-    struct dListPos* next;
-    struct dListPos* prev;
+    listPosT next;
+    listPosT prev;
 };
 
-struct dList {
-    struct dListPos* first;
-    struct dListPos* last;
+struct list {
+    listPosT first;
+    listPosT last;
 
     int curLength;
     int maxLength;
@@ -24,20 +24,20 @@ listT createList(int maxElem) {
         return NULL;
     }
 
-    struct dList* dList = malloc(sizeof(struct dList));
-    if (!dList) {
+    listT list = malloc(sizeof(struct list));
+    if (!list) {
         return NULL;
     }
 
-    dList->first = NULL;
-    dList->last = NULL;
+    list->first = NULL;
+    list->last = NULL;
     
-    dList->curLength = 0;
-    dList->maxLength = maxElem;
+    list->curLength = 0;
+    list->maxLength = maxElem;
 
-    dList->accessCount = 0;
+    list->accessCount = 0;
 
-    return dList;
+    return list;
 }
 
 int isEmptyList(listT list) {
@@ -45,8 +45,7 @@ int isEmptyList(listT list) {
         return -1;
     }
 
-    struct dList* dList = list;
-    return dList->curLength == 0;
+    return list->curLength == 0;
 }
 
 int lengthList(listT list) {
@@ -54,8 +53,7 @@ int lengthList(listT list) {
         return -1;
     }
 
-    struct dList* dList = list;
-    return dList->curLength;
+    return list->curLength;
 }
 
 int isFullList(listT list) {
@@ -63,8 +61,7 @@ int isFullList(listT list) {
         return -1;
     }
     
-    struct dList* dList = list;
-    return dList->curLength == dList->maxLength;
+    return list->curLength == list->maxLength;
 }
 
 listPosT getFirstElementList(listT list) {
@@ -72,11 +69,9 @@ listPosT getFirstElementList(listT list) {
         return NULL;
     }
 
-    struct dList* dList = list;
-    
-    dList->accessCount++;
+    list->accessCount++;
 
-    return dList->first;
+    return list->first;
 }
 
 listPosT getNextElementList(listT list, listPosT pos) {
@@ -84,12 +79,9 @@ listPosT getNextElementList(listT list, listPosT pos) {
         return NULL;
     }
 
-    struct dList* dList = list;
-    struct dListPos* dPos = pos;
+    list->accessCount++;
 
-    dList->accessCount++;
-
-    return dPos->next;
+    return pos->next;
 }
 
 listPosT getLastElementList(listT list) {
@@ -97,9 +89,9 @@ listPosT getLastElementList(listT list) {
         return NULL;
     }
 
-    struct dList* dList = list;
+    list->accessCount++;
 
-    return dList->last;
+    return list->last;
 }
 
 listPosT getPrevElementList(listT list, listPosT pos) {
@@ -107,9 +99,9 @@ listPosT getPrevElementList(listT list, listPosT pos) {
         return NULL;
     }
 
-    struct dListPos* dPos = pos;
+    list->accessCount++;
 
-    return dPos->prev;
+    return pos->prev;
 }
 
 listPosT appendList(listT list, listElemT elem) {
@@ -117,27 +109,26 @@ listPosT appendList(listT list, listElemT elem) {
         return NULL;
     }
     
-    struct dList* dList = list;
-
-    struct dListPos* newPos = malloc(sizeof(struct dListPos));
+    listPosT newPos = malloc(sizeof(struct listPos));
     if (!newPos) {
         return NULL;
     }
 
-    struct dListPos* lastPos = getLastElementList(list);
+    listPosT lastPos = getLastElementList(list);
 
     if (lastPos) {
         lastPos->next = newPos;
         newPos->prev = lastPos;
     } else {
-        dList->first = newPos;
+        list->first = newPos;
+        newPos->prev = NULL;
     }
-    dList->last = newPos;
+    list->last = newPos;
 
     newPos->elem = elem;
     newPos->next = NULL;
 
-    dList->curLength++;
+    list->curLength++;
 
     return newPos;
 }
@@ -147,27 +138,24 @@ listPosT insertBeforeList(listT list, listPosT pos, listElemT elem) {
         return NULL;
     }
     
-    struct dList* dList = list;
-    struct dListPos* dPos = pos;
-    struct dListPos* firstPos = getFirstElementList(list);
-    
-    struct dListPos* newPos = malloc(sizeof(struct dListPos));
+    listPosT newPos = malloc(sizeof(struct listPos));
     if (!newPos) {
         return NULL;
     }
 
-    if (dPos == firstPos) {
-        dList->first = newPos;
+    listPosT firstPos = getFirstElementList(list);    
+    if (pos == firstPos) {
+        list->first = newPos;
     } else {
-        dPos->prev->next = newPos;
+        pos->prev->next = newPos;
     }
     
-    newPos->prev = dPos->prev;
-    newPos->next = dPos;
-    dPos->prev = newPos;
+    newPos->prev = pos->prev;
+    newPos->next = pos;
+    pos->prev = newPos;
 
     newPos->elem = elem;
-    dList->curLength++;
+    list->curLength++;
 
     return newPos;
 }
@@ -177,26 +165,24 @@ listPosT insertAfterList(listT list, listPosT pos, listElemT elem) {
         return NULL;
     }
     
-    struct dList* dList = list;
-    struct dListPos* dPos = pos;
-    struct dListPos* lastPos = getLastElementList(list);
     
-    struct dListPos* newPos = malloc(sizeof(struct dListPos));
+    listPosT lastPos = getLastElementList(list);
+    if (pos == lastPos) {
+        return appendList(list, elem);
+    }
+    
+    listPosT newPos = malloc(sizeof(struct listPos));
     if (!newPos) {
         return NULL;
     }
 
-    if (dPos == lastPos) {
-        return appendList(list, elem);
-    }
-    
-    newPos->prev = dPos;
-    newPos->next = dPos->next;
-    dPos->next->prev = newPos;
-    dPos->next = newPos;
+    newPos->prev = pos;
+    newPos->next = pos->next;
+    pos->next->prev = newPos;
+    pos->next = newPos;
 
     newPos->elem = elem;
-    dList->curLength++;
+    list->curLength++;
 
     return newPos;
 }
@@ -205,29 +191,26 @@ listElemT removeList(listT list, listPosT pos) {
     if (!list || isEmptyList(list) || !pos) {
         return NULL;
     }
-
-    struct dList* dList = list;
-    struct dListPos* dPos = pos;
-    
-    struct dListPos* prevPos = getPrevElementList(list, pos); 
-    struct dListPos* nextPos = getNextElementList(list, pos);
+   
+    listPosT prevPos = getPrevElementList(list, pos); 
+    listPosT nextPos = getNextElementList(list, pos);
 
     if (prevPos) {
         prevPos->next = nextPos;
     } else {
-        dList->first = nextPos;
+        list->first = nextPos;
     }
 
     if (nextPos) {
         nextPos->prev = prevPos;
     } else {
-        dList->last = prevPos;
+        list->last = prevPos;
     }
     
     listElemT elem = getElementList(list, pos);
     free(pos);
 
-    dList->curLength--;
+    list->curLength--;
 
     return elem;
 }
@@ -238,8 +221,7 @@ listElemT getElementList(listT list, listPosT pos) {
         return NULL;
     }
 
-    struct dListPos* dPos = pos;
-    return dPos->elem;
+    return pos->elem;
 }
 
 void destroyList(listT list) {
@@ -252,11 +234,9 @@ void destroyList(listT list) {
         printf("ATENCAO:\nO desalocamento de elementos da lista nao e realizado automaticamente; caso seja necessario, modifique seu programa para realizar a remocao e desalocamento.\n");
     }
 
-    struct dList* dList = list;
-    
     while (!isEmptyList(list)) {
         removeList(list, getFirstElementList(list));
     }
 
-    free(dList);
+    free(list);
 }

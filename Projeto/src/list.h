@@ -2,8 +2,8 @@
 #define LIB_LIST_H
 
 
-typedef void* listT;
-typedef void* listPosT;
+typedef struct list* listT;
+typedef struct listPos* listPosT;
 typedef void* listElemT;
 
 listT createList(int maxElem);
