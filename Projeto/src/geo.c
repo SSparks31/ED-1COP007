@@ -101,7 +101,7 @@ rectT createRect(char* borderColor, char* fillColor, char* command) {
 
 char* getIDRect(rectT rect) {
     if (!rect) {
-        return "";
+        return NULL;
     }
 
     return rect->rectID;
@@ -109,7 +109,7 @@ char* getIDRect(rectT rect) {
 
 char* getBorderColorRect(rectT rect) {
     if (!rect) {
-        return "";
+        return NULL;
     }
 
     return rect->borderColor;
@@ -117,7 +117,7 @@ char* getBorderColorRect(rectT rect) {
 
 char* getFillColorRect(rectT rect) {
     if (!rect) {
-        return "";
+        return NULL;
     }
 
     return rect->fillColor;
@@ -125,7 +125,7 @@ char* getFillColorRect(rectT rect) {
 
 char* getXRect(rectT rect) {
     if (!rect) {
-        return "";
+        return NULL;
     }
 
     return rect->xPos;
@@ -133,7 +133,7 @@ char* getXRect(rectT rect) {
 
 char* getYRect(rectT rect) {
     if (!rect) {
-        return "";
+        return NULL;
     }
 
     return rect->yPos;
@@ -141,7 +141,7 @@ char* getYRect(rectT rect) {
 
 char* getWidthRect(rectT rect) {
     if (!rect) {
-        return "";
+        return NULL;
     }
 
     return rect->width;
@@ -149,7 +149,7 @@ char* getWidthRect(rectT rect) {
 
 char* getHeightRect(rectT rect) {
     if (!rect) {
-        return "";
+        return NULL;
     }
 
     return rect->height;
