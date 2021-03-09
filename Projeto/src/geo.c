@@ -90,6 +90,7 @@ listT geoParser(char* geoPath) {
         fgetLine(geoFile, command, 999);
     }
 
+    fclose(geoFile);
     return rectList;
 }
 
@@ -147,4 +148,18 @@ char* getHeightRect(rectT rect) {
     }
 
     return rect->height;
+}
+
+void destroyRect(rectT rect) {
+    if (!rect) {
+        return;
+    }
+
+    free(rect->rectID);
+    free(rect->xPos);
+    free(rect->yPos);
+    free(rect->width);
+    free(rect->height);
+
+    free(rect);
 }

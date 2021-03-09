@@ -28,4 +28,6 @@ char* getWidthRect(rectT rect);
 
 char* getHeightRect(rectT rect);
 
+void destroyRect(rectT rect);
+
 #endif
