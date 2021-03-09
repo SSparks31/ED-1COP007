@@ -14,6 +14,8 @@ listT geoParser(char* geoPath);
 /* Dado um caminho pra .geo valido `geoPath`, le comandos e executa as respectivas acoes */
 /* Retorna lista contendo todos os retangulos */
 
+rectT createRect(char* borderColor, char fillColor, char* command);
+
 char* getIDRect(rectT rect);
 
 char* getBorderColorRect(rectT rect);

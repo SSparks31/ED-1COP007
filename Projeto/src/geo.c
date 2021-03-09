@@ -51,34 +51,8 @@ listT geoParser(char* geoPath) {
                 }
                 break;
             
-            case 'r':;
-                rectT newRect = malloc(sizeof(struct rect));
-                char* id = findCharacter(command, ' ') + 1;
-                char* x  = findCharacter(id, ' ') + 1;
-                char* y  = findCharacter(x , ' ') + 1;
-                char* w  = findCharacter(y , ' ') + 1;
-                char* h  = findCharacter(w , ' ') + 1;
-
-                x[-1] = '\0';
-                y[-1] = '\0';
-                w[-1] = '\0';
-                h[-1] = '\0';
-
-                strcpy(newRect->borderColor, borderColor);
-                strcpy(newRect->fillColor, fillColor);
-
-                newRect->rectID = malloc(strlen(id) + 1);
-                newRect->xPos   = malloc(strlen(x)  + 1);
-                newRect->yPos   = malloc(strlen(y)  + 1);
-                newRect->width  = malloc(strlen(w)  + 1);
-                newRect->height = malloc(strlen(h)  + 1);
-                
-                strcpy(newRect->rectID, id);
-                strcpy(newRect->xPos  , x);
-                strcpy(newRect->yPos  , y);
-                strcpy(newRect->width , w);
-                strcpy(newRect->height, h);
-
+            case 'r':;               
+                rectT newRect = createRect(borderColor, fillColor, command);
                 appendList(rectList, newRect);
                 
                 break;
@@ -92,6 +66,35 @@ listT geoParser(char* geoPath) {
 
     fclose(geoFile);
     return rectList;
+}
+
+rectT createRect(char* borderColor, char fillColor, char* command) {
+    rectT newRect = malloc(sizeof(struct rect));
+    char* id = findCharacter(command, ' ') + 1;
+    char* x  = findCharacter(id, ' ') + 1;
+    char* y  = findCharacter(x , ' ') + 1;
+    char* w  = findCharacter(y , ' ') + 1;
+    char* h  = findCharacter(w , ' ') + 1;
+
+    x[-1] = '\0';
+    y[-1] = '\0';
+    w[-1] = '\0';
+    h[-1] = '\0';
+
+    strcpy(newRect->borderColor, borderColor);
+    strcpy(newRect->fillColor, fillColor);
+
+    newRect->rectID = malloc(strlen(id) + 1);
+    newRect->xPos   = malloc(strlen(x)  + 1);
+    newRect->yPos   = malloc(strlen(y)  + 1);
+    newRect->width  = malloc(strlen(w)  + 1);
+    newRect->height = malloc(strlen(h)  + 1);
+    
+    strcpy(newRect->rectID, id);
+    strcpy(newRect->xPos  , x);
+    strcpy(newRect->yPos  , y);
+    strcpy(newRect->width , w);
+    strcpy(newRect->height, h);
 }
 
 char* getIDRect(rectT rect) {
