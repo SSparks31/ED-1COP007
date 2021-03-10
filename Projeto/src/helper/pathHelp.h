@@ -1,5 +1,5 @@
-#ifndef LIB_PATH_H
-#define LIB_PATH_H
+#ifndef LIB_PATHHELP_H
+#define LIB_PATHHELP_H
 
 /* 
 * Modulo voltado a manipulacao de nomes de arquivos e caminhos.
