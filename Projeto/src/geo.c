@@ -32,36 +32,32 @@ listT geoParser(char* geoPath) {
 
     char command[999];
 
-    fgetLine(geoFile, command, 999);
-
-    while (!isEmpty(command)) {
+    while (!isEmpty(fgetLine(geoFile, command, 999))) {
         switch (command[0]) {
-            case 'n':;
+            case 'n': {
                 char *numPos = rfindCharacter(command, ' ') + 1;
-                printf("%s\n", numPos);
                 rectList = createList(stringToInt(numPos));
-                
                 break;
+            }
             
-            case 'c':;
+            case 'c': {
                 if (command[1] == 'c') {
                     strcpy(borderColor, rfindCharacter(command, ' ') + 1);
                 } else {
                     strcpy(fillColor, rfindCharacter(command, ' ') + 1);
                 }
                 break;
+            }
             
-            case 'r':;               
+            case 'r': {
                 rectT newRect = createRect(borderColor, fillColor, command);
                 appendList(rectList, newRect);
-                
                 break;
+            }
 
             default:
                 break;
         }
-
-        fgetLine(geoFile, command, 999);
     }
 
     fclose(geoFile);
@@ -70,6 +66,10 @@ listT geoParser(char* geoPath) {
 
 rectT createRect(char* borderColor, char* fillColor, char* command) {
     rectT newRect = malloc(sizeof(struct rect));
+    if (!newRect) {
+        return NULL;
+    }
+
     char* id = findCharacter(command, ' ') + 1;
     char* x  = findCharacter(id, ' ') + 1;
     char* y  = findCharacter(x , ' ') + 1;
@@ -88,7 +88,8 @@ rectT createRect(char* borderColor, char* fillColor, char* command) {
     newRect->xPos   = malloc(strlen(x)  + 1);
     newRect->yPos   = malloc(strlen(y)  + 1);
     newRect->width  = malloc(strlen(w)  + 1);
-    newRect->height = malloc(strlen(h)  + 1);
+    newRect->height = malloc(strlen(h)  + 1); // TODO: Figure out a way to sanitize these without doing ten frees
+                                              // Maybe sanitize destroyRect() and call it here?
     
     strcpy(newRect->rectID, id);
     strcpy(newRect->xPos  , x);
