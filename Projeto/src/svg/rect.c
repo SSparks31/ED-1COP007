@@ -1,11 +1,10 @@
-#include "geo.h"
+#include "rect.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "stringHelp.h"
-#include "mathHelp.h"
+#include "../helper/stringHelp.h"
+#include "./svg.h"
 
 struct rect {
     char borderColor[SVG_COLOR_MAX_LEN];
@@ -19,62 +18,13 @@ struct rect {
 
 };
 
-listT geoParser(char* geoPath) {
-    FILE *geoFile = fopen(geoPath, "r");
-    if (!geoFile) {
-        printf("Arquivo .geo nao encontrado\n");
-        return NULL;
-    }
-
-    char borderColor[SVG_COLOR_MAX_LEN];
-    char fillColor[SVG_COLOR_MAX_LEN];
-    listT rectList = NULL;
-
-    char command[999];
-
-    while (!isEmpty(fgetLine(geoFile, command, 999))) {
-        switch (command[0]) {
-            case 'n': {
-                char *numPos = rfindCharacter(command, ' ') + 1;
-                rectList = createList(stringToInt(numPos));
-                break;
-            }
-            
-            case 'c': {
-                if (command[1] == 'c') {
-                    strcpy(borderColor, rfindCharacter(command, ' ') + 1);
-                } else {
-                    strcpy(fillColor, rfindCharacter(command, ' ') + 1);
-                }
-                break;
-            }
-            
-            case 'r': {
-                char* ID = command;
-                char* coordinates = findCharacter(ID, ' ') + 1;
-                coordinates[-1] = '\0';
-
-                rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
-                appendList(rectList, newRect);
-                break;
-            }
-
-            default:
-                break;
-        }
-    }
-
-    fclose(geoFile);
-    return rectList;
-}
-
 rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates) {
     rectT newRect = malloc(sizeof(struct rect));
     if (!newRect) {
         return NULL;
     }
 
-    char* x  = findCharacter(coordinates, ' ') + 1;
+    char* x  = coordinates;
     char* y  = findCharacter(x , ' ') + 1;
     char* w  = findCharacter(y , ' ') + 1;
     char* h  = findCharacter(w , ' ') + 1;
