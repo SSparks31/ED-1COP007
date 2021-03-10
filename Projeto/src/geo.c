@@ -50,7 +50,11 @@ listT geoParser(char* geoPath) {
             }
             
             case 'r': {
-                rectT newRect = createRect(borderColor, fillColor, command);
+                char* ID = command;
+                char* coordinates = findCharacter(ID, ' ') + 1;
+                coordinates[-1] = '\0';
+
+                rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
                 appendList(rectList, newRect);
                 break;
             }
@@ -64,14 +68,13 @@ listT geoParser(char* geoPath) {
     return rectList;
 }
 
-rectT createRect(char* borderColor, char* fillColor, char* command) {
+rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates) {
     rectT newRect = malloc(sizeof(struct rect));
     if (!newRect) {
         return NULL;
     }
 
-    char* id = findCharacter(command, ' ') + 1;
-    char* x  = findCharacter(id, ' ') + 1;
+    char* x  = findCharacter(coordinates, ' ') + 1;
     char* y  = findCharacter(x , ' ') + 1;
     char* w  = findCharacter(y , ' ') + 1;
     char* h  = findCharacter(w , ' ') + 1;
@@ -84,14 +87,14 @@ rectT createRect(char* borderColor, char* fillColor, char* command) {
     strcpy(newRect->borderColor, borderColor);
     strcpy(newRect->fillColor, fillColor);
 
-    newRect->rectID = malloc(strlen(id) + 1);
+    newRect->rectID = malloc(strlen(ID) + 1);
     newRect->xPos   = malloc(strlen(x)  + 1);
     newRect->yPos   = malloc(strlen(y)  + 1);
     newRect->width  = malloc(strlen(w)  + 1);
     newRect->height = malloc(strlen(h)  + 1); // TODO: Figure out a way to sanitize these without doing ten frees
                                               // Maybe sanitize destroyRect() and call it here?
     
-    strcpy(newRect->rectID, id);
+    strcpy(newRect->rectID, ID);
     strcpy(newRect->xPos  , x);
     strcpy(newRect->yPos  , y);
     strcpy(newRect->width , w);
