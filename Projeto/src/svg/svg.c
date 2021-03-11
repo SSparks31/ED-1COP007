@@ -7,8 +7,8 @@
 #include "../helper/stringHelp.h"
 #include "../helper/pathHelp.h"
 
-int startSVG(char* path, char* fileName, char* width, char* height) {
-    if (isEmpty(fileName) || isEmpty(width) || isEmpty(height)) {
+int startSVG(char* path, char* fileName) {
+    if (isEmpty(fileName)) {
         return -1;
     }
 
@@ -19,7 +19,7 @@ int startSVG(char* path, char* fileName, char* width, char* height) {
         return -1;
     }
 
-    fprintf(svg, "<svg viewBox = \"0 0 %s %s\">\n\n", width, height);
+    fprintf(svg, "<svg>\n\n");
     fclose(svg);
 
     return 0;

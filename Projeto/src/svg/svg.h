@@ -7,7 +7,7 @@
 #define SVG_COLOR_MAX_LEN 21
 /* Numero maximo de caracteres em nomes de cores dentro do padrao SVG mais '\0' */
 
-int startSVG(char* path, char* fileName, char* width, char* height);
+int startSVG(char* path, char* fileName);
 
 int addRectToSVG(char* path, char* fileName, rectT rect);
 
