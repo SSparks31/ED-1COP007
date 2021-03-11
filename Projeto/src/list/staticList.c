@@ -228,6 +228,14 @@ listElemT getElementList(listT list, listPosT pos) {
     return pos->elem;
 }
 
+int getAccessCountList(listT list) {
+    if (!list) {
+        return -1;
+    }
+
+    return list->accessCount;
+}
+
 void destroyList(listT list) {
     if (!list) {
         return;

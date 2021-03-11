@@ -32,6 +32,8 @@ listElemT removeList(listT list, listPosT pos);
 
 listElemT getElementList(listT list, listPosT pos);
 
+int getAccessCountList(listT list);
+
 void destroyList(listT list);
 
 /**/
