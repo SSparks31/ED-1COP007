@@ -44,8 +44,6 @@ int addRectToSVG(char* path, char* fileName, rectT rect) {
         strcpy(transparent, "0");
     }
 
-    printf("%s\n", getXRect(rect));
-
     fprintf(svg, rectFormat, getXRect(rect), getYRect(rect), getWidthRect(rect), getHeightRect(rect), getFillColorRect(rect), getBorderColorRect(rect), transparent);
 
     fclose(svg);
