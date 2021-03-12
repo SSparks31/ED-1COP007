@@ -17,4 +17,9 @@ int stringToInt(char *num);
 /* Dada uma string `num` representando um numero, retorna valor em forma inteira */
 /* Caso seja encontrado caracter nao numerico, processo e interrompido e resultado possivelmente parcial e retornado */
 
+double stringToDouble(char *num);
+/* Dada uma string `num` representando um numero, retorna valor em forma decimal */
+/* Caso seja encontrado caracter nao numerico, processo e interrompido e resultado possivelmente parcial e retornado */
+
+
 #endif

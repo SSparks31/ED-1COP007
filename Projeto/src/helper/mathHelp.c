@@ -21,3 +21,21 @@ int stringToInt(char *num) {
     }
     return result;
 }
+
+double stringToDouble(char *num) {
+    double result = 0;
+    for (; *num >= '0' && *num <= '9'; ++num) {
+        result *= 10;
+        result += charToNum(*num);
+    }
+
+    if (*(num++) != '.') {
+        return result;
+    }
+
+    for (double decPow = 0.1; *num >= '0' && *num <= '9'; decPow /= 10) {
+        result += charToNum(*num++) * decPow;
+    }
+
+    return result;
+}
