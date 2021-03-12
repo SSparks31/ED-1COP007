@@ -3,21 +3,32 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../progrData/progrData.h"
+
 #include "../svg/rect.h"
 #include "../svg/svg.h"
 
 #include "../helper/stringHelp.h"
 #include "../helper/mathHelp.h"
+#include "../helper/pathHelp.h"
 
-listT geoParser(char* geoPath) {
-    FILE *geoFile = fopen(geoPath, "r");
+void geoParser(progrDataT progrData) {
+    if (!progrData) {
+        return;
+    }
+
+    char* geoPath = getInputPathProgrData(progrData);
+    char* geoName = getGeoNameProgrData(progrData);
+    char* fullPath = concatPathFile(geoPath, geoName);
+
+    FILE* geoFile = fopen(fullPath, "r");
     if (!geoFile) {
-        printf("Arquivo .geo nao encontrado\n");
-        return NULL;
+        return;
     }
 
     char borderColor[SVG_COLOR_MAX_LEN];
     char fillColor[SVG_COLOR_MAX_LEN];
+
     listT rectList = NULL;
 
     char command[999];
@@ -41,8 +52,7 @@ listT geoParser(char* geoPath) {
             
             case 'r': {
                 char* ID = findCharacter(command, ' ') + 1;
-                char* coordinates = findCharacter(ID, ' ') + 1;
-                coordinates[-1] = '\0';
+                char* coordinates = splitString(ID, ' ');
 
                 rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
                 appendList(rectList, newRect);
@@ -54,6 +64,5 @@ listT geoParser(char* geoPath) {
         }
     }
 
-    fclose(geoFile);
-    return rectList;
+    setGeoListProgrData(progrData, rectList);
 }

@@ -3,10 +3,10 @@
 
 /* Modulo voltado a interacao com arquivos .geo */
 
+#include "../progrData/progrData.h"
+
 #include "../list/list.h"
 
-listT geoParser(char* geoPath);
-/* Dado um caminho pra .geo valido `geoPath`, le comandos e executa as respectivas acoes */
-/* Retorna lista contendo todos os retangulos */
+void geoParser(progrDataT progrData);
 
 #endif
