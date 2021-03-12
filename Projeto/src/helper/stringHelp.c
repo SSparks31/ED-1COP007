@@ -50,3 +50,13 @@ char *fgetLine(FILE *instream, char* retString, size_t stringLen) {
     retString[stringPos] = '\0';
     return retString;
 }
+
+char* splitString(char* str, char splitChar) {
+    if (!str || splitChar == '\0') {
+        return NULL;
+    }
+
+    char* str2 = findCharacter(str, splitChar);
+    str2[0] = '\0';
+    return str2 + 1;
+}
