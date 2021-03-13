@@ -1,6 +1,7 @@
 #include "geo.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "../progrData/progrData.h"
@@ -22,9 +23,16 @@ void geoParser(progrDataT progrData) {
     char* fullPath = concatPathFile(geoPath, geoName);
 
     FILE* geoFile = fopen(fullPath, "r");
+    free(fullPath);
     if (!geoFile) {
         return;
     }
+
+    char* outputPath = getOutputPathProgrData(progrData);
+    char* fileName = stripSuffix(getGeoNameProgrData(progrData));
+    char* svgName = concatFileSuffix(fileName, "svg");
+
+    startSVG(outputPath, svgName);
 
     char borderColor[SVG_COLOR_MAX_LEN];
     char fillColor[SVG_COLOR_MAX_LEN];
@@ -55,6 +63,7 @@ void geoParser(progrDataT progrData) {
                 char* coordinates = splitString(ID, ' ');
 
                 rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
+                addRectToSVG(outputPath, svgName, newRect);
                 appendList(rectList, newRect);
                 break;
             }
@@ -63,6 +72,13 @@ void geoParser(progrDataT progrData) {
                 break;
         }
     }
+    
+    fclose(geoFile);
 
-    setGeoListProgrData(progrData, rectList);
+    setRectListProgrData(progrData, rectList);
+   
+    finishSVG(outputPath, svgName);
+
+    free(fileName);
+    free(svgName);
 }
