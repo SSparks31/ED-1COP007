@@ -3,7 +3,7 @@
 
 /* Modulo voltado a interacao com arquivos .geo */
 
-#include "../progrData/progrData.h"
+#include "./progrData.h"
 
 #include "../list/list.h"
 
