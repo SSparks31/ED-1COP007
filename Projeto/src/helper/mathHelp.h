@@ -9,6 +9,10 @@ int max(int a, int b);
 int min(int a, int b);
 /* Dados dois inteiros `a` e `b`, retorna o menor entre eles */
 
+double dmax(double a, double b);
+
+double dmin(double a, double b);
+
 int charToNum(char num);
 /* Dado um caracter `num` entre '0' e '9', retorna valor inteiro por ele representado */
 /* Caso caracter nao pertenca ao intervalo valido, retorna -1 */

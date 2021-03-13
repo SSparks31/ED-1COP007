@@ -8,6 +8,14 @@ int min(int a, int b) {
     return a < b ? a : b;
 }
 
+double dmax(double a, double b) {
+    return a > b ? a : b;
+}
+
+double dmin(double a, double b) {
+    return a < b ? a : b;
+}
+
 int charToNum(char num) {
     if (num < '0' || num > '9') return -1;
     return num - '0';
