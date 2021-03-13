@@ -55,41 +55,6 @@ int inside(rectT rectA, rectT rectB) {
     return isInsideX && isInsideY;
 }
 
-listPosT findRectWithID(listT rectList, char* id) {
-    listPosT aux = getFirstElementList(rectList);
-    while (aux) {
-        rectT rect = getElementList(rectList, aux);
-        if (strcmp(getIDRect(rect), id) == 0) {
-            return aux;
-        }
-
-        aux = getNextElementList(rectList, aux);
-    }
-    return NULL;
-}
-
-
-
-char* tpColors[10] = {"red", "blue", "green", "yellow", "purple", "pink", "limegreen", "aqua", "orange", "darkorchid" };
-
-void qryTP(FILE* qryTXT, progrDataT progrData, char* command) {
-    
-}
-
-
-
-void qryD(FILE* qryTXT, progrDataT progrData, char* command) {
-    
-}
-
-
-
-void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
-    
-}
-
-
-
 void printRectData(FILE* qryTXT, rectT rect) {
     if (!qryTXT || !rect) {
         return;
@@ -113,6 +78,80 @@ void printRectData(FILE* qryTXT, rectT rect) {
 
     fprintf(qryTXT, "ID: %s; Ancora: (%s, %s); Largura: %s; Altura: %s; Borda: %s; Preenchimento: %s\n", id, xPos, yPos, width, height, fillColor, borderColor);
 }
+
+listPosT findRectWithID(listT rectList, char* id) {
+    listPosT aux = getFirstElementList(rectList);
+    while (aux) {
+        rectT rect = getElementList(rectList, aux);
+        if (strcmp(getIDRect(rect), id) == 0) {
+            return aux;
+        }
+
+        aux = getNextElementList(rectList, aux);
+    }
+    return NULL;
+}
+
+
+
+char* tpColors[10] = {"red", "blue", "green", "yellow", "purple", "pink", "limegreen", "aqua", "orange", "darkorchid" };
+
+void qryTP(FILE* qryTXT, progrDataT progrData, char* command) {
+    if (!qryTXT || !progrData || isEmpty(command)) {
+        return;
+    }
+}
+
+
+
+void qryD(FILE* qryTXT, progrDataT progrData, char* command) {
+    
+}
+
+
+
+rectT getBoundingBoxBBI()
+
+void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
+    if (!qryTXT || !progrData || isEmpty(command)) {
+        return;
+    }
+
+    command = findCharacter(command, ' ') + 1;
+
+    listT rectList = getRectListProgrData(progrData);
+    rectT bbox = NULL;
+
+    char *spacePos = findCharacter(command, ' ');
+    if (!spacePos) {
+        bbox = getElementList(rectList, findRectWithID(rectList, command));
+        if (bbox == NULL) {
+            printf("Nao foi possivel encontrar o retangulo com o id selecionado\n");
+        }
+    } else {
+    }
+
+    listPosT curPos = getFirstElementList(rectList);
+
+    while (curPos) {
+        rectT curRect = getElementList(rectList, curPos);
+        if (bbox != curRect && inside(curRect, bbox) == 1) {
+            printRectData(qryTXT, curRect);
+            
+            char temp[SVG_COLOR_MAX_LEN];
+            char* borderColor = getBorderColorRect(curRect);
+            char* fillColor = getFillColorRect(curRect);
+
+            strcpy(temp, borderColor);
+            strcpy(borderColor, fillColor);
+            strcpy(fillColor, temp);
+        }
+
+        curPos = getNextElementList(rectList, curPos);
+    }
+}
+
+
 
 void qryIID(FILE* qryTXT, progrDataT progrData, char* command) {
     if (!qryTXT || !progrData || isEmpty(command)) {
@@ -171,6 +210,14 @@ void qryParser(progrDataT progrData) {
 
     char* outputPath = getOutputPathProgrData(progrData);
     
+    char* qryPath = concatPathFile(getInputPathProgrData(progrData), getQryNameProgrData(progrData));
+    FILE* qryFile = fopen(qryPath, "r");
+    free(qryPath);
+    
+    if (!qryFile) {
+        return;
+    }
+
     char* geoName = stripSuffix(getGeoNameProgrData(progrData));
     char* qryName = stripSuffix(getQryNameProgrData(progrData));
     
@@ -191,18 +238,27 @@ void qryParser(progrDataT progrData) {
         return;
     }
 
-    char command[20] = "diid r.01 2";
+    char command[999];
 
-    qryIID(qryTXT, progrData, command);
+    while (!isEmpty(fgetLine(qryFile, command, 999))) {
+        
+        char* spacePos = findCharacter(command, ' ');
+        *spacePos = '\0';
+        fprintf(qryTXT, "%s\n", command);
+        *spacePos = ' ';
 
+        if (command[0] == 't') {
+            qryTP(qryTXT, progrData, command);
+        } else if (command[1] == 'i') {
+            qryIID(qryTXT, progrData, command);
+        } else if (command[0] == 'd') {
+            qryD(qryTXT, progrData, command);
+        } else if (command[0] == 'b') {
+            qryBBI(qryTXT, progrData, command);
+        }
+    }
 
-
-
-
-
-
-
-
+    fclose(qryFile);
 
     char* svgName = concatFileSuffix(outName, "svg");
     startSVG(outputPath, svgName);
