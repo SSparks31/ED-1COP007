@@ -5,8 +5,12 @@
 #include "./progrData/progrData.h"
 
 #include "./geo/geo.h"
+#include "./qry/qry.h"
+
+#include "./svg/svg.h"
 
 #include "./helper/argHelp.h"
+#include "./helper/pathHelp.h"
 #include "./helper/stringHelp.h"
 
 int main(int argc, char* argv[]) {
@@ -16,7 +20,9 @@ int main(int argc, char* argv[]) {
     char* outputPath = NULL;
     char* geoName = NULL;
     char* qryName = NULL;
+
     int collect = 0;
+    char* collectPath = NULL;
 
     while ((c = getArguments(argc, argv, "e:f:o:q:ic")) != -1) {
         switch (c) {
@@ -34,7 +40,12 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
             if (strcmp(optarg, "b") == 0) {
+                if (!optarg || optarg[0] == '-') {
+                    printf("Opcao -fb necessita de argumento\n");
+                    return -1;
+                }
                 collect = 3;
+                collectPath = optarg;
             } else {
                 geoName = optarg;
             }
@@ -87,10 +98,19 @@ int main(int argc, char* argv[]) {
     }
 
     progrDataT progrData = createProgrData(inputPath, outputPath, geoName, qryName, collect);
+    if (!progrData) {
+        return -1;
+    }
 
     geoParser(progrData);
 
-    // qryParser(progrData);
+    qryParser(progrData);
+
+    listT rectList = getRectListProgrData(progrData);
+
+    while (!isEmptyList(rectList)) {
+        destroyRect(removeList(rectList, getFirstElementList(rectList)));
+    }
 
     destroyProgrData(progrData);
 
