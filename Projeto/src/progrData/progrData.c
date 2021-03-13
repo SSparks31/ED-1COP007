@@ -18,7 +18,7 @@ struct progrData {
 };
 
 progrDataT createProgrData(char* inputPath, char* outputPath, char* geoName, char* qryName, int collect) {
-    if (isEmpty(inputPath) || isEmpty(outputPath) || isEmpty(geoName) || isEmpty(qryName)) {
+    if (!inputPath || isEmpty(outputPath) || isEmpty(geoName) || !qryName) {
         return NULL;
     }
 
