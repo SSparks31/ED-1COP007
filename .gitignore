@@ -3,3 +3,10 @@
 **/obj
 **/*.exe
 **/*old
+**/*.qry
+**/*.geo
+**/*.svg
+**/*.txt
+Projeto/src/progrdin
+Projeto/src/progrest
+**/a.out
