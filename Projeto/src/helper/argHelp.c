@@ -6,7 +6,7 @@ int optind = 1;
 char* optarg = NULL;
 
 int getArguments(int argc, char *argv[], char *optstring) {
-    if (argc == 1 || optind >= argc || !argv || *argv[optind] != '-' || isEmpty(optstring)) {
+    if (optind >= argc || !argv || *argv[optind] != '-' || isEmpty(optstring)) {
         return -1;
     }
 
