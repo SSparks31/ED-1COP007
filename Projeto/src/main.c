@@ -11,6 +11,9 @@
 
 #include "./svg/svg.h"
 
+#include "./svg/line.h"
+#include "./svg/circle.h"
+
 #include "./helper/argHelp.h"
 #include "./helper/mathHelp.h"
 #include "./helper/pathHelp.h"
@@ -27,7 +30,7 @@ int main(int argc, char* argv[]) {
     int collect = 0;
     char* collectPath = NULL;
     char* collectTitle = NULL;
-
+    
     while ((c = getArguments(argc, argv, "e:f:o:q:ic")) != -1) {
         switch (c) {
         case 'e':
