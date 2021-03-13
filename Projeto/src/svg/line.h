@@ -1,5 +1,5 @@
-#ifndef LIB_RECT_H
-#define LIB_RECT_H
+#ifndef LIB_LINE_H
+#define LIB_LINE_H
 
 typedef struct line* lineT;
 
