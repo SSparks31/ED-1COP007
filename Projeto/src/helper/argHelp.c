@@ -21,7 +21,6 @@ int getArguments(int argc, char *argv[], char *optstring) {
     if (optstringPos[1] == ':') {
         if (arg[2]) {
             optarg = arg + 2;
-            optind++;
         } else {
             if (optind == argc) {
                 optarg = NULL;
