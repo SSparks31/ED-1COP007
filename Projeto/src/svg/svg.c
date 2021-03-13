@@ -30,7 +30,7 @@ int addRectToSVG(char* path, char* fileName, rectT rect) {
         return -1;
     }
 
-    const char* rectFormat = "<rect x = \"%s\" y = \"%s\" width = \"%s\" height = \"%s\" fill=\"%s\" stroke = \"%s\" fill-opacity=\"%s\" stroke-opacity=\"100\" stroke-width=\"1\" />\n";
+    const char* rectFormat = "<rect x = \"%s\" y = \"%s\" width = \"%s\" height = \"%s\" fill=\"%s\" stroke = \"%s\" fill-opacity=\"%s\" stroke-opacity=\"%s\" stroke-width=\"1\" />\n";
 
     char* fullPath = concatPathFile(path, fileName);
     FILE* svg = fopen(fullPath, "a");
@@ -39,9 +39,14 @@ int addRectToSVG(char* path, char* fileName, rectT rect) {
         return -1;
     }
 
-    char transparent[4] = "100";
+    char borderOpacity[4] = "100";
+    if (strcmp(getBorderColorRect(rect), "@") == 0) {
+        strcpy(borderOpacity, "0");
+    }
+
+    char fillOpacity[4] = "100";
     if (strcmp(getFillColorRect(rect), "@") == 0) {
-        strcpy(transparent, "0");
+        strcpy(fillOpacity, "0");
     }
 
     char* xRect = getXRect(rect);
@@ -51,7 +56,7 @@ int addRectToSVG(char* path, char* fileName, rectT rect) {
     char* fillColorRect = getFillColorRect(rect);
     char* borderColorRect = getBorderColorRect(rect);
 
-    fprintf(svg, rectFormat, xRect, yRect, widthRect, heightRect, fillColorRect, borderColorRect, transparent);
+    fprintf(svg, rectFormat, xRect, yRect, widthRect, heightRect, fillColorRect, borderColorRect, fillOpacity, borderOpacity);
 
     fclose(svg);
     return 0;
