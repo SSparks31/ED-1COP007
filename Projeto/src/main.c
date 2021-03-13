@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
             if (strcmp(optarg, "b") == 0) {
-                if (!optarg || optarg[0] == '-') {
+                if (optind >= argc || *(optarg = argv[optind++]) == '-') {
                     printf("Opcao -fb necessita de argumento\n");
                     return -1;
                 }
