@@ -298,7 +298,10 @@ void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
 
     FILE* tempBBox = fopen("./tempBBox", "a");
     if (strcmp(getXRect(finalBBox), "-1")) {
-        fprintf(tempBBox, "%s %s %s %s %s %s \n", getBorderColorRect(finalBBox), getFillColorRect(finalBBox), getXRect(finalBBox), getYRect(finalBBox), getWidthRect(finalBBox), getHeightRect(finalBBox));
+        fprintf(tempBBox, "rect %s %s %s %s %s %s \n", getBorderColorRect(finalBBox), getFillColorRect(finalBBox), getXRect(finalBBox), getYRect(finalBBox), getWidthRect(finalBBox), getHeightRect(finalBBox));
+    }
+    if (spacePos) {
+        fprintf(tempBBox, "circle white black %s 1", command);
     }
     fclose(tempBBox);
 
@@ -438,12 +441,18 @@ void qryParser(progrDataT progrData) {
     if (tempBBox) {
         char buffer[999];
         while (!isEmpty(fgetLine(tempBBox, buffer, 999))) {
-            char* borderColor = buffer;
+            char* borderColor = findCharacter(buffer, ' ') + 1;
             char* fillColor = splitString(borderColor, ' ');
-            char* coordinates = splitString(fillColor, ' ');        
-            rectT rect = createRect(borderColor, fillColor, "bbox", coordinates);
-            addDottedRectToSVG(svgFile, rect);
-            destroyRect(rect);
+            char* coordinates = splitString(fillColor, ' ');
+            if (*buffer == 'r') {
+                rectT rect = createRect(borderColor, fillColor, "bbox", coordinates);
+                addDottedRectToSVG(svgFile, rect);
+                destroyRect(rect);
+            } else {
+                circleT circle = createCircle(borderColor, fillColor, coordinates);
+                addCircleToSVG(svgFile, circle);
+                destroyCircle(circle);
+            }
         }
 
         remove("./tempBBox");
