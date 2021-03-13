@@ -18,6 +18,8 @@ struct rect {
 };
 
 rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates) {
+    if (isEmpty(borderColor) || isEmpty(fillColor) || isEmpty(ID) || isEmpty(coordinates));
+    
     rectT newRect = malloc(sizeof(struct rect));
     if (!newRect) {
         return NULL;
@@ -34,8 +36,7 @@ rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates
     newRect->xPos   = malloc(strlen(x)  + 1);
     newRect->yPos   = malloc(strlen(y)  + 1);
     newRect->width  = malloc(strlen(w)  + 1);
-    newRect->height = malloc(strlen(h)  + 1); // TODO: Figure out a way to sanitize these without doing ten frees
-                                              // Maybe sanitize destroyRect() and call it here?
+    newRect->height = malloc(strlen(h)  + 1);
     
     strcpy(newRect->borderColor, borderColor);
     strcpy(newRect->fillColor, fillColor);
@@ -44,6 +45,11 @@ rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates
     strcpy(newRect->yPos  , y);
     strcpy(newRect->width , w);
     strcpy(newRect->height, h);
+
+    if (!newRect->borderColor || !newRect->fillColor || !newRect->rectID || !newRect->xPos || !newRect->yPos || !newRect->width || !newRect->height) {
+        destroyRect(newRect);
+        return NULL;
+    }
 
     return newRect;
 }
@@ -179,13 +185,13 @@ void destroyRect(rectT rect) {
         return;
     }
 
-    free(rect->borderColor);
-    free(rect->fillColor);
-    free(rect->rectID);
-    free(rect->xPos);
-    free(rect->yPos);
-    free(rect->width);
-    free(rect->height);
+    if (rect->borderColor) free(rect->borderColor);
+    if (rect->fillColor) free(rect->fillColor);
+    if (rect->rectID) free(rect->rectID);
+    if (rect->xPos) free(rect->xPos);
+    if (rect->yPos) free(rect->yPos);
+    if (rect->width) free(rect->width);
+    if (rect->height) free(rect->height);
 
     free(rect);
 }
