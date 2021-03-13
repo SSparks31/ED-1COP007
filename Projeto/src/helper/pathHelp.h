@@ -14,31 +14,38 @@ char* getPath(char* fullPath);
 /* Retorna uma string dinamicamente alocada. */
 
 char* getFileName(char* fullPath);
-/* Dado o nome possivelmente completamente qualificado de um arquivo, retorna o nome do arquivo, incluindo sua extensao. */
-/* Caso nome seja vazio ou invalido, retorna NULL. */
+/* Dada uma string `fullPath` representando o nome possivelmente completamente qualificado de um arquivo, retorna o nome do arquivo, incluindo sua extensao. */
+/* Caso `fullPath` seja vazio ou invalido, retorna NULL. */
 /* Retorna uma string dinamicamente alocada. */
 
 char* getSuffix(char* fileName); 
-/* Dado um nome de arquivo valido, retorna a sua extensao, sem incluir o '.' no inicio. */
-/* Caso arquivo nao tenha extensao, retorna uma string vazia. */
-/* Caso nome seja vazio ou invalido, retorna NULL. */
+/* Dada uma string `fileName` representando um nome de arquivo, retorna a sua extensao, sem incluir o '.' no inicio. */
+/* Caso `fileName` nao contenha extensao, retorna uma string vazia. */
+/* Caso `fileName` seja vazio ou invalido, retorna NULL. */
 /* Retorna uma string dinamicamente alocada. */
 
 char* stripSuffix(char* fileName);
+/* Dado uma string `fileName`, retorna apenas o nome do arquivo, removendo caminho e extensao */
+/* Caso `fileName` seja invalido ou vazio, retorna NULL */
+/* Retorna uma string dinamicamente alocada */
 
 int hasSlash(char* path); 
-/* Retorna verdadeiro se o dado caminho termina em '/'; falso, caso contrario. */
-/* Caso nome seja vazio ou invalido, retorna -1. */
+/* Dado uma string `path` representando um caminho, retorna verdadeiro se o dado caminho termina em '/'; falso, caso contrario. */
+/* Caso `path` seja vazia ou invalida, retorna -1. */
 /* Retorna um inteiro de valor -1, 0 ou 1, representando invalido, falso e verdadeiro, respectivamente. */
 
 char* concatPathFile(char* path, char* fileName); 
-/* Concatena caminho e nome de arquivo, a fim de retornar um nome de arquivo completamente qualificado. */
-/* Caso caminho nao termine em '/', esta e automaticamente adicionada. */
-/* Caso apenas o caminho seja vazio ou invalido, arquivo e considerado como caminho relativo ao diretorio atual. */
-/* Caso apenas o nome de arquivo seja vazio ou invalido, retorna apenas o caminho, com '/' no final. */
-/* Caso ambos sejam vazios ou invalidos, retorna NULL. */
+/* Dadas duas strings `path` e `fileName`, concatena ambas a fim de retornar um nome de arquivo completamente qualificado. */
+/* Caso `path` nao termine em '/', esta e automaticamente adicionada. */
+/* Caso apenas `path` seja vazio ou invalido, arquivo e considerado como caminho relativo ao diretorio atual. */
+/* Caso `fileName` seja vazio ou invalido, retorna NULL */
 /* Retorna uma string dinamicamente alocada. */
 
 char* concatFileSuffix(char* fileName, char* suffix);
+/* Dadas duas strings `fileName` e `suffix`, concatena ambas a fim de retornar um nome de arquivo com extensao */
+/* Caso `fileName` ja contenha extensao, nova extensao e concatenada ao final */
+/* Caso `fileName` seja invalido ou vazio, retorna NULL */
+/* Caso `suffix` seja invalido ou vazio, retorna nova string com conteudo identico a fileName */
+/* Retorna uma string dinamicamente alocada */
 
 #endif

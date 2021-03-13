@@ -66,8 +66,8 @@ char* stripSuffix(char* fileName) {
     if (slashPos) {
         fileName = slashPos + 1;
     }
+    
     char* dotPos = findCharacter(fileName, '.');
-
     if (!dotPos) {
         char* emptyString = "";
         dotPos = emptyString;
