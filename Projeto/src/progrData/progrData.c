@@ -11,8 +11,7 @@ struct progrData {
     char* geoName;
     char* qryName;
 
-    listT geoList;
-    listT qryList;
+    listT rectList;
 
     int collect;
 };
@@ -31,8 +30,7 @@ progrDataT createProgrData(char* inputPath, char* outputPath, char* geoName, cha
     progrData->outputPath = outputPath;
     progrData->geoName = geoName;
     progrData->qryName = qryName;
-    progrData->geoList = NULL;
-    progrData->qryList = NULL;
+    progrData->rectList = NULL;
     progrData->collect = collect;
 
     return progrData;
@@ -70,36 +68,20 @@ char* getQryNameProgrData(progrDataT progrData) {
     return progrData->qryName;
 }
 
-listT getGeoListProgrData(progrDataT progrData) {
+listT getRectListProgrData(progrDataT progrData) {
     if (!progrData) {
         return NULL;
     }
 
-    return progrData->geoList;
+    return progrData->rectList;
 }
 
-void setGeoListProgrData(progrDataT progrData, listT list) {
+void setRectListProgrData(progrDataT progrData, listT list) {
     if (!progrData) {
         return;
     }
 
-    progrData->geoList = list;
-}
-
-listT getQryListProgrData(progrDataT progrData) {
-    if (!progrData) {
-        return NULL;
-    }
-
-    return progrData->qryList;
-}
-
-void setQryListProgrData(progrDataT progrData, listT list) {
-    if (!progrData) {
-        return;
-    }
-
-    progrData->qryList = list;
+    progrData->rectList = list;
 }
 
 int getCollectProgrData(progrDataT progrData) {
@@ -115,8 +97,7 @@ void destroyProgrData(progrDataT progrData) {
         return;
     }
 
-    // destroyList(progrData->geoList);
-    // destroyList(progrData->qryList);
+    if (progrData->rectList) destroyList(progrData->rectList);
 
     free(progrData);
 }

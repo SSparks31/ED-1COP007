@@ -15,13 +15,9 @@ char* getGeoNameProgrData(progrDataT progrData);
 
 char* getQryNameProgrData(progrDataT progrData);
 
-listT getGeoListProgrData(progrDataT progrData);
+listT getRectListProgrData(progrDataT progrData);
 
-void setGeoListProgrData(progrDataT progrData, listT list);
-
-listT getQryListProgrData(progrDataT progrData);
-
-void setQryListProgrData(progrDataT progrData, listT list);
+void setRectListProgrData(progrDataT progrData, listT list);
 
 int getCollectProgrData(progrDataT progrData);
 
