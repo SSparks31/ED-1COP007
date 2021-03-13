@@ -62,6 +62,10 @@ char* stripSuffix(char* fileName) {
         return NULL;
     }
 
+    char* slashPos = rfindCharacter(fileName, '/');
+    if (slashPos) {
+        fileName = slashPos + 1;
+    }
     char* dotPos = findCharacter(fileName, '.');
 
     if (!dotPos) {
