@@ -6,8 +6,6 @@ extern int optind;
 
 int getArguments(int argc, char *argv[], char *optstring);
 
-void incrementOptind();
-
 /**/
 
 #endif
