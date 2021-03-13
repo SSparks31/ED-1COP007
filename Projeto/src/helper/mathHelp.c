@@ -15,27 +15,33 @@ int charToNum(char num) {
 
 int stringToInt(char *num) {
     int result = 0;
+    int negative = *num == '-';
+    num += negative;
+    
     for (; *num >= '0' && *num <= '9'; ++num) {
         result *= 10;
         result += charToNum(*num);
     }
-    return result;
+    return negative ? result * -1 : result;
 }
 
 double stringToDouble(char *num) {
     double result = 0;
+    int negative = *num == '-';
+    num += negative;
+
     for (; *num >= '0' && *num <= '9'; ++num) {
         result *= 10;
         result += charToNum(*num);
     }
 
     if (*(num++) != '.') {
-        return result;
+        return negative ? result * -1 : result;
     }
 
     for (double decPow = 0.1; *num >= '0' && *num <= '9'; decPow /= 10) {
         result += charToNum(*num++) * decPow;
     }
 
-    return result;
+    return negative ? result * -1 : result;
 }
