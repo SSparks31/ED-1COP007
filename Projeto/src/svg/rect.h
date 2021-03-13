@@ -11,6 +11,8 @@ char* getBorderColorRect(rectT rect);
 
 char* getFillColorRect(rectT rect);
 
+void setFillColorRect(rectT rect, char* fillColor);
+
 char* getXRect(rectT rect);
 
 char* getYRect(rectT rect);

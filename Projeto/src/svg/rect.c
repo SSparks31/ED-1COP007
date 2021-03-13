@@ -25,14 +25,9 @@ rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates
     }
 
     char* x  = coordinates;
-    char* y  = findCharacter(x , ' ') + 1;
-    char* w  = findCharacter(y , ' ') + 1;
-    char* h  = findCharacter(w , ' ') + 1;
-
-    x[-1] = '\0';
-    y[-1] = '\0';
-    w[-1] = '\0';
-    h[-1] = '\0';
+    char* y  = splitString(x , ' ');
+    char* w  = splitString(y , ' ');
+    char* h  = splitString(w , ' ');
 
     strcpy(newRect->borderColor, borderColor);
     strcpy(newRect->fillColor, fillColor);
@@ -75,6 +70,14 @@ char* getFillColorRect(rectT rect) {
     }
 
     return rect->fillColor;
+}
+
+void setFillColorRect(rectT rect, char* fillColor) {
+    if (!rect) {
+        return;
+    }
+
+    strcpy(rect->fillColor, fillColor);
 }
 
 char* getXRect(rectT rect) {
