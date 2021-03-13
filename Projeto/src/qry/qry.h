@@ -5,7 +5,7 @@
 
 #include "../list/list.h"
 
-listT qryParser(progrDataT progrData);
+void qryParser(progrDataT progrData);
 
 /**/
 
