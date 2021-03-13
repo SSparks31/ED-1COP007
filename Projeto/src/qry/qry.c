@@ -252,6 +252,7 @@ void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
 
     listT rectList = getRectListProgrData(progrData);
     rectT bbox = NULL;
+    rectT finalBBox = getNewBoundingBox(NULL, NULL);
 
     char *spacePos = findCharacter(command, ' ');
     if (!spacePos) {
@@ -280,6 +281,7 @@ void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
     while (curPos) {
         rectT curRect = getElementList(rectList, curPos);
         if (bbox != curRect && inside(curRect, bbox) == 1) {
+            finalBBox = getNewBoundingBox(finalBBox, curRect);
             printRectData(qryTXT, curRect);
             
             char temp[999];
@@ -294,7 +296,14 @@ void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
         curPos = getNextElementList(rectList, curPos);
     }
 
+    FILE* tempBBox = fopen("./tempBBox", "a");
+    if (strcmp(getXRect(finalBBox), "-1")) {
+        fprintf(tempBBox, "%s %s %s %s %s %s \n", getBorderColorRect(finalBBox), getFillColorRect(finalBBox), getXRect(finalBBox), getYRect(finalBBox), getWidthRect(finalBBox), getHeightRect(finalBBox));
+    }
+    fclose(tempBBox);
+
     if (spacePos) destroyRect(bbox);
+    destroyRect(finalBBox);
 }
 
 
@@ -425,13 +434,21 @@ void qryParser(progrDataT progrData) {
         aux = getNextElementList(rectList, aux);
     }
 
-    // FILE* bboxTemp = fopen("./bbox-temp", "r");
-    // char buffer[999];
-    // while (fgetLine(bboxTemp, buffer, 999)) {
-    //     // addBBoxToSVG()
-    // }
+    FILE* tempBBox = fopen("./tempBBox", "r");
+    if (tempBBox) {
+        char buffer[999];
+        while (!isEmpty(fgetLine(tempBBox, buffer, 999))) {
+            char* borderColor = buffer;
+            char* fillColor = splitString(borderColor, ' ');
+            char* coordinates = splitString(fillColor, ' ');        
+            rectT rect = createRect(borderColor, fillColor, "bbox", coordinates);
+            addDottedRectToSVG(svgFile, rect);
+            destroyRect(rect);
+        }
 
-    remove("./bbox-temp");
+        remove("./tempBBox");
+        fclose(tempBBox);
+    }
 
     finishSVG(svgFile);
 
