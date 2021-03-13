@@ -25,5 +25,9 @@ char* fgetLine(FILE *instream, char* retString, size_t stringLen);
 /* Valor de retorno: ponteiro para primeiro caracter de `retString` */
 
 char* splitString(char* str, char splitChar);
+/* Dada uma string `str` e um caracter `splitChar`, divide `str` em duas na primeira instancia encontrada de `splitChar` */
+/* Modifica `str`, substituindo a primeira instancia de `splitChar` por '\0', e retorna ponteiro para caracter seguinte, inicio da segunda string */
+/* Caso `splitChar` nao seja encontrado em `str`, nao realiza nenhuma acao */
+/* Caso `str` seja vazia ou invalida, retorna NULL */
 
 #endif
