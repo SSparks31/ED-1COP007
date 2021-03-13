@@ -7,6 +7,8 @@
 #include "./geo/geo.h"
 #include "./qry/qry.h"
 
+#include "./list/listEfficiency.h"
+
 #include "./svg/svg.h"
 
 #include "./helper/argHelp.h"
@@ -24,6 +26,7 @@ int main(int argc, char* argv[]) {
 
     int collect = 0;
     char* collectPath = NULL;
+    char* collectTitle = NULL;
 
     while ((c = getArguments(argc, argv, "e:f:o:q:ic")) != -1) {
         switch (c) {
@@ -41,12 +44,11 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
             if (strcmp(optarg, "b") == 0) {
-                if (optind >= argc || *(optarg = argv[optind++]) == '-') {
-                    printf("Opcao -fb necessita de argumento\n");
+                if (optind >= argc - 1 || *(collectPath = argv[optind++]) == '-' || *(collectTitle = argv[optind++]) == '-') {
+                    printf("Opcao -fb necessita de dois argumentos\n");
                     return -1;
                 }
                 collect = 3;
-                collectPath = optarg;
             } else {
                 geoName = optarg;
             }
@@ -108,6 +110,8 @@ int main(int argc, char* argv[]) {
     qryParser(progrData);
 
     listT rectList = getRectListProgrData(progrData);
+
+    reportListEfficiency(progrData, collect, collectPath, collectTitle);
 
     while (!isEmptyList(rectList)) {
         destroyRect(removeList(rectList, getFirstElementList(rectList)));
