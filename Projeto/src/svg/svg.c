@@ -7,37 +7,29 @@
 #include "../helper/stringHelp.h"
 #include "../helper/pathHelp.h"
 
-int startSVG(char* path, char* fileName) {
-    if (isEmpty(fileName)) {
-        return -1;
-    }
 
+FILE* startSVG(char* path, char* fileName) {
     char* fullPath = concatPathFile(path, fileName);
-    FILE* svg = fopen(fullPath, "w");
-    free(fullPath);
-    if (!svg) {
-        return -1;
+    if (isEmpty(fullPath)) {
+        return NULL;
     }
 
-    fprintf(svg, "<svg>\n\n");
-    fclose(svg);
+    FILE* svgFile = fopen(fullPath, "w");
+    free(fullPath);
+    if (!svgFile) {
+        return NULL;
+    }
 
-    return 0;
+    fprintf(svgFile, "<svg>\n\n");
+    return svgFile;
 }
 
-int addRectToSVG(char* path, char* fileName, rectT rect) {
-    if (isEmpty(fileName) || !rect) {
+int addRectToSVG(FILE* svgFile, rectT rect) {
+    if (!svgFile || !rect) {
         return -1;
     }
 
     const char* rectFormat = "<rect x = \"%s\" y = \"%s\" width = \"%s\" height = \"%s\" fill=\"%s\" stroke = \"%s\" fill-opacity=\"%s\" stroke-opacity=\"%s\" stroke-width=\"1\" />\n";
-
-    char* fullPath = concatPathFile(path, fileName);
-    FILE* svg = fopen(fullPath, "a");
-    free(fullPath);
-    if (!svg) {
-        return -1;
-    }
 
     char borderOpacity[4] = "100";
     if (strcmp(getBorderColorRect(rect), "@") == 0) {
@@ -56,26 +48,17 @@ int addRectToSVG(char* path, char* fileName, rectT rect) {
     char* fillColorRect = getFillColorRect(rect);
     char* borderColorRect = getBorderColorRect(rect);
 
-    fprintf(svg, rectFormat, xRect, yRect, widthRect, heightRect, fillColorRect, borderColorRect, fillOpacity, borderOpacity);
-
-    fclose(svg);
+    fprintf(svgFile, rectFormat, xRect, yRect, widthRect, heightRect, fillColorRect, borderColorRect, fillOpacity, borderOpacity);
     return 0;
 }
 
-int finishSVG(char* path, char* fileName) {
-    if (isEmpty(path)) {
+int finishSVG(FILE* svgFile) {
+    if (!svgFile) {
         return -1;
     }
 
-    char* fullPath = concatPathFile(path, fileName);
-    FILE* svg = fopen(fullPath, "a");
-    free(fullPath);
-    if (!svg) {
-        return -1;
-    }
-
-    fprintf(svg, "\n</svg>");
-    fclose(svg);
+    fprintf(svgFile, "\n</svg>");
+    fclose(svgFile);
 
     return 0;
 }
