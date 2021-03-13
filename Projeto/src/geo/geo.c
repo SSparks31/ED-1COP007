@@ -13,6 +13,8 @@
 #include "../helper/mathHelp.h"
 #include "../helper/pathHelp.h"
 
+#define SVG_COLOR_MAX_LEN 22
+
 void geoParser(progrDataT progrData) {
     if (!progrData) {
         return;
@@ -32,7 +34,13 @@ void geoParser(progrDataT progrData) {
     char* fileName = stripSuffix(getGeoNameProgrData(progrData));
     char* svgName = concatFileSuffix(fileName, "svg");
 
-    startSVG(outputPath, svgName);
+    FILE* svgFile = startSVG(outputPath, svgName);
+    free(svgName);
+    free(fileName);
+    if (!svgFile) {
+        fclose(geoFile);
+        return;
+    }
 
     char borderColor[SVG_COLOR_MAX_LEN];
     char fillColor[SVG_COLOR_MAX_LEN];
@@ -63,7 +71,8 @@ void geoParser(progrDataT progrData) {
                 char* coordinates = splitString(ID, ' ');
 
                 rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
-                addRectToSVG(outputPath, svgName, newRect);
+                
+                addRectToSVG(svgFile, newRect);
                 appendList(rectList, newRect);
                 break;
             }
@@ -77,8 +86,5 @@ void geoParser(progrDataT progrData) {
 
     setRectListProgrData(progrData, rectList);
    
-    finishSVG(outputPath, svgName);
-
-    free(fileName);
-    free(svgName);
+    finishSVG(svgFile);
 }

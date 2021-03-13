@@ -17,21 +17,24 @@ int intersect(rectT rectA, rectT rectB) {
     }
 
     double x1A = stringToDouble(getXRect(rectA));
-    double y1A = stringToDouble(getYRect(rectA));
-    double x2A = x1A + stringToDouble(getWidthRect(rectA));
-    double y2A = y1A + stringToDouble(getHeightRect(rectA));
-    
     double x1B = stringToDouble(getXRect(rectB));
-    double y1B = stringToDouble(getYRect(rectB));
+    double x1Max = dmax(x1A, x1B);
+    double x2A = x1A + stringToDouble(getWidthRect(rectA));
     double x2B = x1B + stringToDouble(getWidthRect(rectB));
+    double x2Min = dmin(x2A, x2B);
+
+    if (x1Max > x2Min) {
+        return 0;
+    }
+    
+    double y1A = stringToDouble(getYRect(rectA));
+    double y2A = y1A + stringToDouble(getHeightRect(rectA));
+    double y1B = stringToDouble(getYRect(rectB));
     double y2B = y1B + stringToDouble(getHeightRect(rectB));
+    double y1Max = dmax(y1A, y1B);
+    double y2Min = dmin(y2A, y2B);
 
-    double x1Max = max(x1A, x1B);
-    double x2Min = min(x2A, x2B);
-    double y1Max = max(y1A, y1B);
-    double y2Min = min(y2A, y2B);
-
-    return x1Max <= x2Min && y1Max <= y2Min;    
+    return y1Max <= y2Min;    
 }
 
 int inside(rectT rectA, rectT rectB) {
@@ -40,19 +43,27 @@ int inside(rectT rectA, rectT rectB) {
     }
 
     double x1A = stringToDouble(getXRect(rectA));
-    double y1A = stringToDouble(getYRect(rectA));
-    double x2A = x1A + stringToDouble(getWidthRect(rectA));
-    double y2A = y1A + stringToDouble(getHeightRect(rectA));
-    
     double x1B = stringToDouble(getXRect(rectB));
+    if (x1A < x1B) {
+        return 0;
+    }
+
+    double y1A = stringToDouble(getYRect(rectA));
     double y1B = stringToDouble(getYRect(rectB));
+    if (y1A < y1B) {
+        return 0;
+    }
+
+    double x2A = x1A + stringToDouble(getWidthRect(rectA));
     double x2B = x1B + stringToDouble(getWidthRect(rectB));
+    if (x2A > x2B) {
+        return 0;
+    }
+    
+    double y2A = y1A + stringToDouble(getHeightRect(rectA));    
     double y2B = y1B + stringToDouble(getHeightRect(rectB));
-
-    int isInsideX = x1A >= x1B && x2A <= x2B;
-    int isInsideY = y1A >= y1B && y2A <= y2B;
-
-    return isInsideX && isInsideY;
+    
+    return y2A <= y2B;
 }
 
 void printRectData(FILE* qryTXT, rectT rect) {
@@ -67,7 +78,7 @@ void printRectData(FILE* qryTXT, rectT rect) {
     char* height = getHeightRect(rect);
     char* fillColor = getFillColorRect(rect);
     char* borderColor = getBorderColorRect(rect);
-    char* transparent = "transparent";
+    char* transparent = "transparente";
 
     if (strcmp(fillColor, "@") == 0) {
         fillColor = transparent;
@@ -92,6 +103,17 @@ listPosT findRectWithID(listT rectList, char* id) {
     return NULL;
 }
 
+rectT getPointPseudoRect(char* coordinates) {
+    if (isEmpty(coordinates)) {
+        return NULL;
+    }
+
+    char newCoordinates[999];
+    sprintf(newCoordinates, "%s 0 0", coordinates);
+
+    rectT newRect = createRect("@", "@", "point", newCoordinates);
+    return newRect;
+}
 
 
 char* tpColors[10] = {"red", "blue", "green", "yellow", "purple", "pink", "limegreen", "aqua", "orange", "darkorchid" };
@@ -100,17 +122,126 @@ void qryTP(FILE* qryTXT, progrDataT progrData, char* command) {
     if (!qryTXT || !progrData || isEmpty(command)) {
         return;
     }
+
+    int tpIndex = 0;
+
+    rectT bbox = NULL;
+
+    char* spacePos = findCharacter(command, ' ');
+    if (spacePos) {
+        bbox = createRect("@", "@", "bbox", spacePos + 1);
+    }
+
+
+    listT rectList = getRectListProgrData(progrData);
+    listPosT curPos = getFirstElementList(rectList);
+
+    for (; curPos; curPos = getNextElementList(rectList, curPos)) {
+        rectT curRect = getElementList(rectList, curPos);
+        if (bbox && !inside(curRect, bbox)) {
+            continue;
+        }
+
+        listPosT aux = getNextElementList(rectList, curPos);
+        for (; aux; aux = getNextElementList(rectList, aux)) {
+            rectT auxRect = getElementList(rectList, aux);
+            if (bbox && !inside(auxRect, bbox)) {
+                continue;
+            }
+
+            if (intersect(curRect, auxRect)) {
+                fprintf(qryTXT, "%s %s\n", getIDRect(curRect), getIDRect(auxRect));
+                setFillColorRect(curRect, tpColors[tpIndex]);
+                setFillColorRect(auxRect, tpColors[tpIndex]);
+                
+                ++tpIndex;
+                tpIndex %= 10;
+            }
+        }
+    }
+
+    if (bbox) destroyRect(bbox);
+
 }
 
 
 
 void qryD(FILE* qryTXT, progrDataT progrData, char* command) {
-    
+    if (!qryTXT || !progrData || isEmpty(command)) {
+        return;
+    }
+
+    listT rectList = getRectListProgrData(progrData);
+    rectT pointRect = NULL;
+    rectT idRect = NULL;
+
+    command = findCharacter(command, ' ') + 1;
+    char* spacePos = findCharacter(command, ' ');
+    if (spacePos) {
+        pointRect = getPointPseudoRect(command);
+    } else {
+        idRect = getElementList(rectList, findRectWithID(rectList, command));
+    }
+
+    listPosT curPos = getFirstElementList(rectList);
+    while (curPos) {
+        rectT curRect = getElementList(rectList, curPos);
+
+        int remove = 0;
+
+        if (pointRect) {
+            remove = inside(pointRect, curRect);
+        } else {
+            remove = curRect != idRect && inside(curRect, idRect);
+        }
+
+        listPosT aux = getNextElementList(rectList, curPos);
+        if (remove) {
+            fprintf(qryTXT, "%s\n", getIDRect(curRect));
+            destroyRect(removeList(rectList, curPos));
+        }
+        curPos = aux;        
+    }
+
+
+    if (pointRect) destroyRect(pointRect);    
 }
 
 
 
-rectT getBoundingBoxBBI()
+rectT getNewBoundingBox(rectT curBBox, rectT newRect) {
+    if (!curBBox) {
+        char coordinates[13] = "-1 -1 -1 -1";
+        rectT newBBox = createRect("red", "@", "bbox", coordinates);
+        return newBBox;
+    }
+
+    if (!newRect) {
+        return curBBox;
+    }
+
+    double x1A = stringToDouble(getXRect(newRect));
+    double x2A = x1A + stringToDouble(getWidthRect(newRect));
+    double y1A = stringToDouble(getYRect(newRect));
+    double y2A = y1A + stringToDouble(getHeightRect(newRect));
+
+    double x1B = stringToDouble(getXRect(curBBox));
+    double x2B = x1B + stringToDouble(getWidthRect(curBBox));
+    double y1B = stringToDouble(getYRect(curBBox));
+    double y2B = y1B + stringToDouble(getHeightRect(curBBox));
+
+    double newX = x1B == -1 ? x1A : dmin(x1A, x1B);
+    double newY = y1B == -1 ? y1A : dmin(y1A, y1B);
+    double newX2 = dmax(x2A, x2B);
+    double newY2 = dmax(y2A, y2B);
+
+    char coordinates[999];
+    sprintf(coordinates, "%lf %lf %lf %lf", newX, newY, newX2 - newX, newY2 - newY);
+
+    setCoordinatesRect(curBBox, coordinates);
+
+    return curBBox;
+}
 
 void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
     if (!qryTXT || !progrData || isEmpty(command)) {
@@ -126,9 +257,22 @@ void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
     if (!spacePos) {
         bbox = getElementList(rectList, findRectWithID(rectList, command));
         if (bbox == NULL) {
-            printf("Nao foi possivel encontrar o retangulo com o id selecionado\n");
+            fprintf(qryTXT, "Nao foi possivel encontrar o retangulo com o id selecionado\n");
         }
     } else {
+        rectT pointRect = getPointPseudoRect(command);
+        bbox = getNewBoundingBox(NULL, NULL);
+        
+        listPosT aux = getFirstElementList(rectList);
+        while (aux) {
+            rectT auxRect = getElementList(rectList, aux);
+            if (inside(pointRect, auxRect)) {
+                bbox = getNewBoundingBox(bbox, auxRect);
+            }
+            aux = getNextElementList(rectList, aux);
+        }
+
+        destroyRect(pointRect);
     }
 
     listPosT curPos = getFirstElementList(rectList);
@@ -138,17 +282,19 @@ void qryBBI(FILE* qryTXT, progrDataT progrData, char* command) {
         if (bbox != curRect && inside(curRect, bbox) == 1) {
             printRectData(qryTXT, curRect);
             
-            char temp[SVG_COLOR_MAX_LEN];
+            char temp[999];
             char* borderColor = getBorderColorRect(curRect);
             char* fillColor = getFillColorRect(curRect);
 
             strcpy(temp, borderColor);
-            strcpy(borderColor, fillColor);
-            strcpy(fillColor, temp);
+            setBorderColorRect(curRect, fillColor);
+            setFillColorRect(curRect, temp);
         }
 
         curPos = getNextElementList(rectList, curPos);
     }
+
+    if (spacePos) destroyRect(bbox);
 }
 
 
@@ -166,7 +312,6 @@ void qryIID(FILE* qryTXT, progrDataT progrData, char* command) {
     char* spacePos = findCharacter(command, ' ');
     if (spacePos) {
         *spacePos = '\0';
-        printf("%s\n%s\n", command, spacePos + 1);
         k = stringToInt(spacePos + 1);
     }
 
@@ -243,9 +388,9 @@ void qryParser(progrDataT progrData) {
     while (!isEmpty(fgetLine(qryFile, command, 999))) {
         
         char* spacePos = findCharacter(command, ' ');
-        *spacePos = '\0';
+        if (spacePos) *spacePos = '\0';
         fprintf(qryTXT, "%s\n", command);
-        *spacePos = ' ';
+        if (spacePos) *spacePos = ' ';
 
         if (command[0] == 't') {
             qryTP(qryTXT, progrData, command);
@@ -256,18 +401,27 @@ void qryParser(progrDataT progrData) {
         } else if (command[0] == 'b') {
             qryBBI(qryTXT, progrData, command);
         }
+
+        fprintf(qryTXT, "\n");
     }
 
     fclose(qryFile);
 
     char* svgName = concatFileSuffix(outName, "svg");
-    startSVG(outputPath, svgName);
+    FILE* svgFile = startSVG(outputPath, svgName);
+    free(svgName);
+    free(outName);
+    if (!svgFile) {
+        fclose(qryTXT);
+        return;
+    }
+
 
     listT rectList = getRectListProgrData(progrData);
     listPosT aux = getFirstElementList(rectList);
     while (aux) {
         rectT rect = getElementList(rectList, aux);
-        addRectToSVG(outputPath, svgName, rect);
+        addRectToSVG(svgFile, rect);
         aux = getNextElementList(rectList, aux);
     }
 
@@ -279,9 +433,7 @@ void qryParser(progrDataT progrData) {
 
     remove("./bbox-temp");
 
-    finishSVG(outputPath, svgName);
+    finishSVG(svgFile);
 
-    free(svgName);
-    free(outName);
     fclose(qryTXT);
 }
