@@ -12,7 +12,7 @@ char* getPath(char* fullPath) {
     
     char* slashPos = rfindCharacter(fullPath, '/');
     if (!slashPos) {
-        return "";
+        return calloc(1, sizeof(char));
     }
 
     int pathLen = strlen(fullPath) - strlen(slashPos);
@@ -34,20 +34,20 @@ char* getFileName(char* fullPath) {
     }
 
     int nameLen = strlen(slashPos);
-    char* name = malloc(sizeof(char) * (nameLen));
-    strcpy(name, slashPos + 1);
+    char* fileName = malloc(sizeof(char) * (nameLen));
+    strcpy(fileName, slashPos + 1);
 
-    return name;
+    return fileName;
 }
 
-char* getSuffix(char* name) {
-    if (isEmpty(name)) {
+char* getSuffix(char* fileName) {
+    if (isEmpty(fileName)) {
         return NULL;
     }
 
-    char* dotPos = rfindCharacter(name, '.');
+    char* dotPos = rfindCharacter(fileName, '.');
     if (!dotPos) {
-        return "";
+        return calloc(1, sizeof(char));
     }
 
     int suffixLen = strlen(dotPos);
@@ -55,6 +55,30 @@ char* getSuffix(char* name) {
     strcpy(suffix, dotPos + 1);
 
     return suffix;
+}
+
+char* stripSuffix(char* fileName) {
+    if (isEmpty(fileName)) {
+        return NULL;
+    }
+
+    char* dotPos = findCharacter(fileName, '.');
+
+    if (!dotPos) {
+        char* emptyString = "";
+        dotPos = emptyString;
+    }
+
+    int nameLen = strlen(fileName) - strlen(dotPos);
+    char* noSuffix = malloc(sizeof(char) * (nameLen + 1));
+    if (!noSuffix) {
+        return NULL;
+    }
+
+    strncpy(noSuffix, fileName, nameLen);
+    noSuffix[nameLen] = '\0';
+
+    return noSuffix;
 }
 
 int hasSlash(char* path) {
@@ -65,33 +89,43 @@ int hasSlash(char* path) {
     return path[strlen(path) - 1] == '/';
 }
 
-char* concatPathFile(char *path, char* fileName) {
-    size_t pathSize = 0;
-    if (!isEmpty(path)) {
-        pathSize += strlen(path);
-    }
-    if (!isEmpty(fileName)) {
-        pathSize += strlen(fileName);
-    }
-
-    if (!pathSize) {
+char* concatPathFile(char* path, char* fileName) {
+    if (isEmpty(fileName)) {
         return NULL;
     }
 
-    if (pathSize == strlen(fileName)) {
-        pathSize += strlen(".");
+    char* format;
+    if (isEmpty(path)) {
+        char* relPath = "./";
+        path = relPath;        
+    } 
+    
+    if (hasSlash(path)) {
+        format = "%s%s";
+    } else {
+        format = "%s/%s";
     }
 
-    char* fullPath = malloc(sizeof(char) * (pathSize + !hasSlash(path) + 1));
-    if (isEmpty(path)) {
-        strcpy(fullPath, ".");
-    } else {
-        strcpy(fullPath, path);
-    }
-    if (!hasSlash(fullPath)) {
-        strcat(fullPath, "/");
-    } 
-    strcat(fullPath, fileName);
-    
+    char* fullPath = malloc(strlen(path) + !hasSlash(path) + strlen(fileName) + 1);
+    sprintf(fullPath, format, path, fileName);
+
     return fullPath;
+}
+
+char* concatFileSuffix(char* fileName, char* suffix) {
+    if (isEmpty(fileName)) {
+        return NULL;
+    }
+
+    char* fullName;
+    if (isEmpty(suffix)) {
+        fullName = malloc(sizeof(char) * (strlen(fileName) + 1));
+        strcpy(fullName, fileName);
+        return fullName;
+    }
+
+    fullName = malloc(sizeof(char) * (strlen(fileName) + strlen(".") + strlen(suffix) + 1));
+    sprintf(fullName, "%s.%s", fileName, suffix);
+
+    return fullName;
 }
