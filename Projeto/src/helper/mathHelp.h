@@ -10,8 +10,10 @@ int min(int a, int b);
 /* Dados dois inteiros `a` e `b`, retorna o menor entre eles */
 
 double dmax(double a, double b);
+/* Dados dois doubles `a` e `b`, retorna o maior entre eles */
 
 double dmin(double a, double b);
+/* Dados dois doubles `a` e `b`, retorna o menor entre eles */
 
 int charToNum(char num);
 /* Dado um caracter `num` entre '0' e '9', retorna valor inteiro por ele representado */
@@ -26,5 +28,7 @@ double stringToDouble(char *num);
 /* Caso seja encontrado caracter nao numerico, processo e interrompido e resultado possivelmente parcial e retornado */
 
 double dpow(double base, double exp);
+/* Dados dois doubles `base` e `exp`, retorna `base` elevado a `exp` */
+
 
 #endif
