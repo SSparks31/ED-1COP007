@@ -1,6 +1,8 @@
 #ifndef LIB_ARGHELP_H
 #define LIB_ARGHELP_H
 
+/* Modulo criado para facilitar a leitura de opcoes e argumentos em argv */ 
+
 extern char *optarg;
 /* Armazena ponteiro para argumento da ultima opcao lida por `getArguments`, ou NULL caso opcao nao contenha argumentos */
 
