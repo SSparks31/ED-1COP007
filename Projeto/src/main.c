@@ -10,6 +10,7 @@
 #include "./svg/svg.h"
 
 #include "./helper/argHelp.h"
+#include "./helper/mathHelp.h"
 #include "./helper/pathHelp.h"
 #include "./helper/stringHelp.h"
 
