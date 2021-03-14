@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../progrData/progrData.h"
+#include "./progrData.h"
 
-#include "./list.h"
+#include "../list/list.h"
 
 #include "../svg/svg.h"
 #include "../svg/rect.h"
