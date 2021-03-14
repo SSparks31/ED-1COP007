@@ -129,7 +129,7 @@ void qryTP(FILE* qryTXT, progrDataT progrData, char* command) {
 
     char* spacePos = findCharacter(command, ' ');
     if (spacePos) {
-        bbox = createRect("@", "@", "bbox", spacePos + 1);
+        bbox = createRect("magenta", "@", "bbox", spacePos + 1);
     }
 
 
@@ -160,7 +160,12 @@ void qryTP(FILE* qryTXT, progrDataT progrData, char* command) {
         }
     }
 
-    if (bbox) destroyRect(bbox);
+    if (bbox) {
+        FILE* tempBBox = fopen("./tempBBox", "a");
+        fprintf(tempBBox, "rect %s %s %s %s %s %s \n", getBorderColorRect(bbox), getFillColorRect(bbox), getXRect(bbox), getYRect(bbox), getWidthRect(bbox), getHeightRect(bbox));
+        fclose(tempBBox);
+        destroyRect(bbox);
+    }
 
 }
 
