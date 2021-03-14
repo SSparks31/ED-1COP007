@@ -3,16 +3,13 @@
 #include <string.h>
 
 #include "./progrData/progrData.h"
+#include "./progrData/geo.h"
+#include "./progrData/qry.h"
+#include "./progrData/listEfficiency.h"
 
-#include "./geo/geo.h"
-#include "./qry/qry.h"
-
-#include "./list/listEfficiency.h"
+#include "./list/list.h"
 
 #include "./svg/svg.h"
-
-#include "./svg/line.h"
-#include "./svg/circle.h"
 
 #include "./helper/argHelp.h"
 #include "./helper/mathHelp.h"
