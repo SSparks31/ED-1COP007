@@ -105,10 +105,11 @@ int finishReportListEfficiency(progrDataT progrData, char* collectPath, char* co
         sprintf(buffer, "%lf", newYCenter);
         setYCenterCircle(circle, buffer);
 
-        addCircleToSVG(reportFile, circle);
-        
         xCenter = getXCenterCircle(circle);
         yCenter = getYCenterCircle(circle);
+
+        addCircleToSVG(reportFile, circle);
+        destroyCircle(circle);        
 
         sprintf(coordinates, "50 %s %s %s", yCenter, xCenter, yCenter);
         lineT dottedLine = createLine("black", coordinates);
@@ -121,6 +122,8 @@ int finishReportListEfficiency(progrDataT progrData, char* collectPath, char* co
         destroyLine(dottedLine);
 
     }
+
+    destroyList(entryList);
 
     fclose(tempFile);
     remove("./tempReport");
