@@ -158,4 +158,6 @@ void  destroyLine(lineT line) {
     if (line->y1) free(line->y1);
     if (line->x2) free(line->x2);
     if (line->y2) free(line->y2);
+
+    free(line);
 }
