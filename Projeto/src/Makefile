@@ -24,6 +24,15 @@ $(OBJ):
 $(OBJ)/progrData.o: $(SRC)/progrData/progrData.c $(SRC)/progrData/progrData.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+$(OBJ)/geo.o: $(SRC)/progrData/geo.c $(SRC)/progrData/geo.h |$(OBJ)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ)/qry.o: $(SRC)/progrData/qry.c $(SRC)/progrData/qry.h |$(OBJ)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ)/listEfficiency.o: $(SRC)/progrData/listEfficiency.c $(SRC)/progrData/listEfficiency.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 
 
 $(OBJ)/svg.o: $(SRC)/svg/svg.c $(SRC)/svg/svg.h |$(OBJ)
@@ -40,21 +49,11 @@ $(OBJ)/circle.o: $(SRC)/svg/circle.c $(SRC)/svg/circle.h |$(OBJ)
 
 
 
-$(OBJ)/geo.o: $(SRC)/geo/geo.c $(SRC)/geo/geo.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/qry.o: $(SRC)/qry/qry.c $(SRC)/qry/qry.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-
 
 $(OBJ)/dynamicList.o: $(SRC)/list/dynamicList.c $(SRC)/list/list.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJ)/staticList.o: $(SRC)/list/staticList.c $(SRC)/list/list.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/listEfficiency.o: $(SRC)/list/listEfficiency.c $(SRC)/list/listEfficiency.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJ)/argHelp.o: $(SRC)/helper/argHelp.c $(SRC)/helper/argHelp.h |$(OBJ)
