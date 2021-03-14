@@ -44,7 +44,7 @@ int finishReportListEfficiency(progrDataT progrData, char* collectPath, char* co
 
     double xScale = 0, yScale = 0;
 
-    char buffer[99];
+    char buffer[999];
     while (!isEmpty(fgetLine(tempFile, buffer, 99))) {
         char* qryName = buffer;
         char* coordinates = splitString(qryName, '|');
@@ -57,33 +57,37 @@ int finishReportListEfficiency(progrDataT progrData, char* collectPath, char* co
         xScale = dmax(x, xScale);
         yScale = dmax(y, yScale);        
     }
+    strcpy(buffer, "");
 
-    xScale *= 1.05;
-    yScale *= 1.05;
+    xScale *= 1.1;
+    yScale *= 1.1;
 
-    fprintf(reportFile, "<svg viewBox=\"0 0 500 500\">\n\n");
+    fprintf(reportFile, "<svg viewBox=\"0 0 1500 1500\">\n\n");
     fprintf(reportFile, "<rect width =\"100%%\" height=\"100%%\" fill=\"white\" />\n");
-    fprintf(reportFile, "<text x=\"50%%\" y=\"30\" font-size=\"25\" text-anchor=\"middle\">%s</text>\n", collectTitle);
-    fprintf(reportFile, "<line x1=\"30\" y1=\"450\" x2=\"450\" y2=\"450\" stroke=\"black\" stroke-width=\"2\" />\n");
-    fprintf(reportFile, "<line x1=\"50\" y1=\"50\" x2=\"50\" y2=\"470\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<text x=\"50%%\" y=\"70\" font-size=\"60\" text-anchor=\"middle\">%s</text>\n", collectTitle);
+    
+    fprintf(reportFile, "<line x1=\"50\" y1=\"1400\" x2=\"1400\" y2=\"1400\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<line x1=\"100\" y1=\"100\" x2=\"100\" y2=\"1450\" stroke=\"black\" stroke-width=\"2\" />\n");
 
-    fprintf(reportFile, "<line x1=\"425\" y1=\"30\" x2=\"475\" y2=\"30\" stroke=\"black\" stroke-width=\"2\" />\n");
-    fprintf(reportFile, "<line x1=\"425\" y1=\"20\" x2=\"425\" y2=\"40\" stroke=\"black\" stroke-width=\"1\" />\n");
-    fprintf(reportFile, "<line x1=\"475\" y1=\"20\" x2=\"475\" y2=\"40\" stroke=\"black\" stroke-width=\"1\" />\n");
-    fprintf(reportFile, "<text text-anchor=\"middle\" x=\"425\" y=\"18\">0</text>\n");
-    fprintf(reportFile, "<text text-anchor=\"middle\" x=\"475\" y=\"18\">%.1lf</text>\n", xScale/8);
+    fprintf(reportFile, "<line x1=\"1300\" y1=\"80\" x2=\"1400\" y2=\"80\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<line x1=\"1300\" y1=\"60\" x2=\"1300\" y2=\"100\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<line x1=\"1350\" y1=\"60\" x2=\"1350\" y2=\"100\" stroke=\"black\" stroke-width=\"1\" />\n");
+    fprintf(reportFile, "<line x1=\"1400\" y1=\"60\" x2=\"1400\" y2=\"100\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<text text-anchor=\"middle\" x=\"1300\" y=\"50\">0</text>\n");
+    fprintf(reportFile, "<text text-anchor=\"middle\" x=\"1350\" y=\"50\">%.2lf</text>\n", xScale/24);
+    fprintf(reportFile, "<text text-anchor=\"middle\" x=\"1400\" y=\"50\">%.2lf</text>\n", xScale/12);
 
-    fprintf(reportFile, "<line x1=\"460\" y1=\"55\" x2=\"460\" y2=\"105\" stroke=\"black\" stroke-width=\"2\" />\n");
-    fprintf(reportFile, "<line x1=\"450\" y1=\"55\" x2=\"470\" y2=\"55\" stroke=\"black\" stroke-width=\"1\" />\n");
-    fprintf(reportFile, "<line x1=\"450\" y1=\"105\" x2=\"470\" y2=\"105\" stroke=\"black\" stroke-width=\"1\" />\n");
-    fprintf(reportFile, "<text text-anchor=\"middle\" x=\"460\" y=\"50\">0</text>\n");
-    fprintf(reportFile, "<text text-anchor=\"middle\" x=\"460\" y=\"118\">%.1lf</text>\n", yScale/8);
+    fprintf(reportFile, "<line x1=\"1350\" y1=\"140\" x2=\"1350\" y2=\"240\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<line x1=\"1330\" y1=\"140\" x2=\"1370\" y2=\"140\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<line x1=\"1330\" y1=\"190\" x2=\"1370\" y2=\"190\" stroke=\"black\" stroke-width=\"1\" />\n");
+    fprintf(reportFile, "<line x1=\"1330\" y1=\"240\" x2=\"1370\" y2=\"240\" stroke=\"black\" stroke-width=\"2\" />\n");
+    fprintf(reportFile, "<text text-anchor=\"start\" x=\"1380\" y=\"143\">0</text>\n");
+    fprintf(reportFile, "<text text-anchor=\"start\" x=\"1380\" y=\"193\">%.2lf</text>\n", yScale/24);
+    fprintf(reportFile, "<text text-anchor=\"start\" x=\"1380\" y=\"243\">%.2lf</text>\n", yScale/12);
 
-    for (int i = 1; i < 10; i++) {
-        fprintf(reportFile, "<line x1=\"60\" y1=\"%d\" x2=\"40\" y2=\"%d\" stroke=\"black\" stroke-width=\"1\" />\n", 50*i, 50*i);    
-        fprintf(reportFile, "<text x=\"30\" y=\"%d\" font-size=\"10\"></text>\n", 50*i);    
-        fprintf(reportFile, "<line x1=\"%d\" y1=\"440\" x2=\"%d\" y2=\"460\" stroke=\"black\" stroke-width=\"1\" />\n", 50*i, 50*i);    
-        fprintf(reportFile, "<text x=\"%d\" y=\"470\" font-size=\"10\"></text>\n", 50*i);    
+    for (int i = 150; i < 1400; i+= 50) {
+        fprintf(reportFile, "<line x1=\"80\" y1=\"%d\" x2=\"120\" y2=\"%d\" stroke=\"black\" stroke-width=\"%d\" />\n", i, i, 1 + (i/50 + 1)%2);
+        fprintf(reportFile, "<line x1=\"%d\" y1=\"1380\" x2=\"%d\" y2=\"1420\" stroke=\"black\" stroke-width=\"%d\" />\n", i, i, 1 + (i/50 + 1)%2);    
     }
 
     while (!isEmptyList(entryList)) {
@@ -91,14 +95,12 @@ int finishReportListEfficiency(progrDataT progrData, char* collectPath, char* co
         char* xCenter = getXCenterCircle(circle);
         char* yCenter = getYCenterCircle(circle);
 
-        double newXCenter = 50;
-        newXCenter += 400 * (stringToDouble(xCenter)/xScale);
+        double newXCenter = 100;
+        newXCenter += 1300 * (stringToDouble(xCenter)/xScale);
 
-        double newYCenter = 450;
-        newYCenter -= 400 * (stringToDouble(yCenter)/yScale);
-
+        double newYCenter = 1400;
+        newYCenter -= 1300 * (stringToDouble(yCenter)/yScale);
         
-        char coordinates[300];
         sprintf(buffer, "%lf", newXCenter);
         setXCenterCircle(circle, buffer);
 
@@ -108,19 +110,19 @@ int finishReportListEfficiency(progrDataT progrData, char* collectPath, char* co
         xCenter = getXCenterCircle(circle);
         yCenter = getYCenterCircle(circle);
 
-        addCircleToSVG(reportFile, circle);
-        destroyCircle(circle);        
-
-        sprintf(coordinates, "50 %s %s %s", yCenter, xCenter, yCenter);
+        char coordinates[300];
+        sprintf(coordinates, "100 %s %s %s", yCenter, xCenter, yCenter);
         lineT dottedLine = createLine("black", coordinates);
         addDottedLineToSVG(reportFile, dottedLine);
         destroyLine(dottedLine);
 
-        sprintf(coordinates, "%s 450 %s %s", xCenter, xCenter, yCenter);
+        sprintf(coordinates, "%s 1400 %s %s", xCenter, xCenter, yCenter);
         dottedLine = createLine("black", coordinates);
         addDottedLineToSVG(reportFile, dottedLine);
         destroyLine(dottedLine);
 
+        addCircleToSVG(reportFile, circle);
+        destroyCircle(circle);        
     }
 
     destroyList(entryList);
@@ -149,7 +151,7 @@ int reportListEfficiency(progrDataT progrData, int collect, char* collectPath, c
 
     listT rectList = getRectListProgrData(progrData);
     char* fileName = stripSuffix(getQryNameProgrData(progrData));
-    fprintf(tempFile, "%s|%d %d 3\n", fileName, lengthList(rectList), getAccessCountList(rectList));
+    fprintf(tempFile, "%s|%d %d 10\n", fileName, lengthList(rectList), getAccessCountList(rectList));
     if (fileName) free(fileName);
     fclose(tempFile);
 
