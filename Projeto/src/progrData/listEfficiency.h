@@ -1,6 +1,8 @@
 #ifndef LIB_LISTEFFICIENCY_H
 #define LIB_LISTEFFICIENCY_H
 
+/* Modulo voltado a calculo de eficiencia de lista ligada utilizada pelo programa */
+
 #include "./progrData.h"
 
 int reportListEfficiency(progrDataT progrData, int collect, char* collectPath, char* collectTitle);
