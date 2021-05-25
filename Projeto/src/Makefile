@@ -17,7 +17,7 @@ progrdin: $(SRC)/main.c $(MAINDEPS) $(OBJ)/dynamicList.o
 
 
 $(OBJ):
-	mkdir $(OBJ)
+	-mkdir $(OBJ)
 
 
 
