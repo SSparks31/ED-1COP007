@@ -341,23 +341,16 @@ void qryIID(FILE* qryTXT, progrDataT progrData, char* command) {
 
     printRectData(qryTXT, getElementList(rectList, curPos));
 
-    while (curPos && k-- > 0) {
-        curPos = getNextElementList(rectList, curPos);
+    int iter = k > 0 ? -1 : 1;
+    listPosT (*curSetter)(listT, listPosT) = k > 0 ? getPrevElementList : getNextElementList;
+    listPosT (*auxSetter)(listT, listPosT) = k > 0 ? getNextElementList : getPrevElementList;
+
+    while (curPos && (k += iter) != 0) {
+        curPos = curSetter(rectList, curPos);
         printRectData(qryTXT, getElementList(rectList, curPos));
 
         if (remove) {
-            listPosT aux = getPrevElementList(rectList, curPos);
-            destroyRect(removeList(rectList, curPos));
-            curPos = aux;
-        }
-    }
-
-    while (curPos && ++k < 0) {
-        curPos = getPrevElementList(rectList, curPos);
-        printRectData(qryTXT, getElementList(rectList, curPos));
-
-        if (remove) {
-            listPosT aux = getNextElementList(rectList, curPos);
+            listPosT aux = auxSetter(rectList, curPos);
             destroyRect(removeList(rectList, curPos));
             curPos = aux;
         }
