@@ -346,7 +346,7 @@ void qryIID(FILE* qryTXT, progrDataT progrData, char* command) {
         printRectData(qryTXT, getElementList(rectList, curPos));
 
         if (remove) {
-            listPosT aux = getNextElementList(rectList, curPos);
+            listPosT aux = getPrevElementList(rectList, curPos);
             destroyRect(removeList(rectList, curPos));
             curPos = aux;
         }
