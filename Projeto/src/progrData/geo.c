@@ -50,7 +50,7 @@ void r(progrData data, char* args) {
     char* borderColor = getRectBorder(data);
     char* fillColor = getRectFill(data);
 
-    rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
+    rectT newRect = createRect(borderColor, fillColor, "0.5", ID, coordinates);
 
     kdTree tree = getRectTree(data);
     appendKDTree(tree, newRect);
@@ -63,7 +63,7 @@ void c(progrData data, char* args) {
     char* borderColor = getCircleBorder(data);
     char* fillColor = getCircleFill(data);
 
-    circleT newCircle = createCircle(borderColor, fillColor, ID, coordinates);
+    circleT newCircle = createCircle(borderColor, fillColor, "0.5", ID, coordinates);
 
     kdTree tree = getCircleTree(data);
     appendKDTree(tree, newCircle);
@@ -97,6 +97,7 @@ void geoParser(progrData data) {
             return;
         }
         
+
         for (int i = 0; i < MENU_ITEMS; ++i) {
             if (strcmp(command, options[i]) == 0) {
                 menu[i](data, args);
@@ -109,7 +110,9 @@ void geoParser(progrData data) {
 }
 
 int main() {
-    progrData data = createData("./", "./", "a1.geo", NULL);
+    progrData data = createData("./", "./", "a1.geo", "");
     geoParser(data);
+
+    
     return 0;
 }
