@@ -57,6 +57,9 @@ char* splitString(char* str, char splitChar) {
     }
 
     char* str2 = findCharacter(str, splitChar);
+    if (!str2) {
+        return str;
+    }
     str2[0] = '\0';
     return str2 + 1;
 }
