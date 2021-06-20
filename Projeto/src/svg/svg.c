@@ -38,14 +38,18 @@ int addRectToSVG(FILE* svgFile, rectT rect) {
     char* fillColor = getFillColorRect(rect);
     char* borderColor = getBorderColorRect(rect);
 
-    char borderOpacity[4] = "100";
+    char borderOpacity[10];
     if (strcmp(borderColor, "@") == 0) {
         strcpy(borderOpacity, "0");
+    } else {
+        strcpy(borderOpacity, getOpacityRect(rect));
     }
 
-    char fillOpacity[4] = "100";
+    char fillOpacity[10];
     if (strcmp(fillColor, "@") == 0) {
         strcpy(fillOpacity, "0");
+    } else {
+        strcpy(fillOpacity, getOpacityRect(rect));
     }
 
     fprintf(svgFile, rectFormat, x, y, width, height, fillColor, borderColor, fillOpacity, borderOpacity);
@@ -66,14 +70,18 @@ int addDottedRectToSVG(FILE* svgFile, rectT rect) {
     char* fillColor = getFillColorRect(rect);
     char* borderColor = getBorderColorRect(rect);
 
-    char borderOpacity[4] = "100";
+    char borderOpacity[10];
     if (strcmp(borderColor, "@") == 0) {
         strcpy(borderOpacity, "0");
+    } else {
+        strcpy(borderOpacity, getOpacityRect(rect));
     }
 
-    char fillOpacity[4] = "100";
+    char fillOpacity[10];
     if (strcmp(fillColor, "@") == 0) {
         strcpy(fillOpacity, "0");
+    } else {
+        strcpy(fillOpacity, getOpacityRect(rect));
     }
 
     fprintf(svgFile, rectFormat, x, y, width, height, fillColor, borderColor, fillOpacity, borderOpacity);
@@ -126,14 +134,18 @@ int addCircleToSVG(FILE* svgFile, circleT circle) {
     char* yCenter = getYCenterCircle(circle); 
     char* radius = getRadiusCircle(circle);
 
-    char borderOpacity[4] = "100";
+    char borderOpacity[10];
     if (strcmp(borderColor, "@") == 0) {
         strcpy(borderOpacity, "0");
+    } else {
+        strcpy(borderOpacity, getOpacityCircle(circle));
     }
 
-    char fillOpacity[4] = "100";
+    char fillOpacity[10];
     if (strcmp(fillColor, "@") == 0) {
         strcpy(fillOpacity, "0");
+    } else {
+        strcpy(fillOpacity, getOpacityCircle(circle));
     }
 
     fprintf(svgFile, circleFormat, xCenter, yCenter, radius, borderColor, fillColor, borderOpacity, fillOpacity);
@@ -153,14 +165,18 @@ int addDottedCircleToSVG(FILE* svgFile, circleT circle) {
     char* yCenter = getYCenterCircle(circle); 
     char* radius = getRadiusCircle(circle); 
 
-    char borderOpacity[4] = "100";
+    char borderOpacity[10];
     if (strcmp(borderColor, "@") == 0) {
         strcpy(borderOpacity, "0");
+    } else {
+        strcpy(borderOpacity, getOpacityCircle(circle));
     }
 
-    char fillOpacity[4] = "100";
+    char fillOpacity[10];
     if (strcmp(fillColor, "@") == 0) {
         strcpy(fillOpacity, "0");
+    } else {
+        strcpy(fillOpacity, getOpacityCircle(circle));
     }
 
     fprintf(svgFile, circleFormat, xCenter, yCenter, radius, borderColor, fillColor, borderOpacity, fillOpacity);

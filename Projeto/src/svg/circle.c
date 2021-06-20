@@ -40,7 +40,7 @@ circleT createCircle(char* borderColor, char* fillColor, char* opacity, char* ID
     circle->yCenter = malloc(strlen(yCenter) + 1);
     circle->radius = malloc(strlen(radius) + 1);
 
-    if (!circle->circleID || !circle->borderColor || !circle->fillColor || circle->opacity || !circle->xCenter || !circle->yCenter || !circle->radius) {
+    if (!circle->circleID || !circle->borderColor || !circle->fillColor || !circle->opacity || !circle->xCenter || !circle->yCenter || !circle->radius) {
         destroyCircle(circle);
     }
 
@@ -101,7 +101,7 @@ char* getOpacityCircle(circleT circle) {
         return NULL;
     }
 
-    return circle->fillColor;
+    return circle->opacity;
 }
 
 void  setOpacityCircle(circleT circle, char* opacity) {
