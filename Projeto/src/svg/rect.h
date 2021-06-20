@@ -5,7 +5,7 @@
 
 typedef struct rect* rectT;
 
-rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates);
+rectT createRect(char* borderColor, char* fillColor, char* opacity, char* ID, char* coordinates);
 /* Dadas as strings `borderColor`, `fillColor`, `ID` e `coordinates`, cria retangulo com as informacoes nelas contidas */
 /* Caso `borderColor`, `fillColor`, `ID` ou `coordinates` sejam vazias ou invalidas, retorna -1 */
 /* Caso `borderColor` ou `fillColor` sejam "@", respectivo atributo e considerado transparente */
@@ -32,6 +32,9 @@ char* getFillColorRect(rectT rect);
 void  setFillColorRect(rectT rect, char* fillColor);
 /* Dado um retangulo `rect` e uma string `fillColor`, atualiza cor de preenchimento de `rect` */
 /* Caso `rect` seja invalido, ou `fillColor` invalida ou vazia, nao realiza nenhuma acao  */
+
+char* getOpacityRect(rectT rect);
+void  setOpacityRect(rectT rect, char* opacity);
 
 char* getXRect(rectT rect);
 /* Dado um retangulo `rect, retorna string representando sua coordenada X de ancora */

@@ -11,13 +11,15 @@ struct circle {
     char* borderColor;
     char* fillColor;
 
+    char* opacity;
+
     char* xCenter;
     char* yCenter;
     char* radius;
 };
 
-circleT createCircle(char* borderColor, char* fillColor, char* ID, char* coordinates) {
-    if (isEmpty(borderColor) || isEmpty(ID) || isEmpty(coordinates)) {
+circleT createCircle(char* borderColor, char* fillColor, char* opacity, char* ID, char* coordinates) {
+    if (isEmpty(borderColor) || isEmpty(ID) || isEmpty(opacity) || isEmpty(coordinates)) {
         return NULL;
     }
 
@@ -30,14 +32,15 @@ circleT createCircle(char* borderColor, char* fillColor, char* ID, char* coordin
     char* yCenter  = splitString(xCenter , ' ');
     char* radius  = splitString(yCenter , ' ');
 
-    circle->circleID = malloc(sizeof(char) * (strlen(ID) + 1));
-    circle->borderColor = malloc(sizeof(char) * (strlen(borderColor) + 1));
-    circle->fillColor = malloc(sizeof(char) * (strlen(fillColor) + 1));
-    circle->xCenter = malloc(sizeof(char) * (strlen(xCenter) + 1));
-    circle->yCenter = malloc(sizeof(char) * (strlen(yCenter) + 1));
-    circle->radius = malloc(sizeof(char) * (strlen(radius) + 1));
+    circle->circleID = malloc(strlen(ID) + 1);
+    circle->borderColor = malloc(strlen(borderColor) + 1);
+    circle->fillColor = malloc(strlen(fillColor) + 1);
+    circle->opacity = malloc(strlen(opacity) + 1);
+    circle->xCenter = malloc(strlen(xCenter) + 1);
+    circle->yCenter = malloc(strlen(yCenter) + 1);
+    circle->radius = malloc(strlen(radius) + 1);
 
-    if (!circle->circleID || !circle->borderColor || !circle->fillColor || !circle->xCenter || !circle->yCenter || !circle->radius) {
+    if (!circle->circleID || !circle->borderColor || !circle->fillColor || circle->opacity || !circle->xCenter || !circle->yCenter || !circle->radius) {
         destroyCircle(circle);
     }
 
@@ -91,6 +94,23 @@ void  setFillColorCircle(circleT circle, char* fillColor) {
 
     circle->fillColor = realloc(circle->fillColor, strlen(fillColor) + 1);
     strcpy(circle->fillColor, fillColor);
+}
+
+char* getOpacityCircle(circleT circle) {
+    if (!circle) {
+        return NULL;
+    }
+
+    return circle->fillColor;
+}
+
+void  setOpacityCircle(circleT circle, char* opacity) {
+    if (!circle || isEmpty(opacity)) {
+        return;
+    }
+
+    circle->opacity = realloc(circle->opacity, strlen(opacity) + 1);
+    strcpy(circle->opacity, opacity);
 }
 
 char* getXCenterCircle(circleT circle) {
@@ -166,6 +186,7 @@ void  destroyCircle(circleT circle) {
     if (circle->circleID) free(circle->circleID);
     if (circle->borderColor) free(circle->borderColor);
     if (circle->fillColor) free(circle->fillColor);
+    if (circle->opacity) free(circle->opacity);
     if (circle->xCenter) free(circle->xCenter);
     if (circle->yCenter) free(circle->yCenter);
     if (circle->radius) free(circle->radius);
