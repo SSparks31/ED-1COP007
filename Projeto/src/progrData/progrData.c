@@ -2,102 +2,121 @@
 
 #include <stdlib.h>
 
+#include "../tree/kdTree.h"
+
 #include "../helper/stringHelp.h"
 
+#define SVG_COLOR_MAX_LEN 22
+
 struct progrData {
-    char* inputPath;
-    char* outputPath;
+    char* BSD;
+    char* BED;
 
-    char* geoName;
-    char* qryName;
+    char rectBorder[SVG_COLOR_MAX_LEN];
+    char rectFill[SVG_COLOR_MAX_LEN];
 
-    listT rectList;
+    char circleBorder[SVG_COLOR_MAX_LEN];
+    char circleFill[SVG_COLOR_MAX_LEN];
 
-    int collect;
-};
-
-progrDataT createProgrData(char* inputPath, char* outputPath, char* geoName, char* qryName, int collect) {
-    if (!inputPath || isEmpty(outputPath) || isEmpty(geoName) || !qryName) {
-        return NULL;
-    }
-
-    progrDataT progrData = malloc(sizeof(struct progrData));
-    if (!progrData) {
-        return NULL;
-    }
-
-    progrData->inputPath = inputPath;
-    progrData->outputPath = outputPath;
-    progrData->geoName = geoName;
-    progrData->qryName = qryName;
-    progrData->rectList = NULL;
-    progrData->collect = collect;
-
-    return progrData;
+    kdTree rectTree;
+    kdTree circleTree;
 }
 
-char* getInputPathProgrData(progrDataT progrData) {
-    if (!progrData) {
+
+
+
+char* getBED(progrData data) {
+    if (!data) {
         return NULL;
     }
 
-    return progrData->inputPath;
+    return data->BED;
 }
 
-char* getOutputPathProgrData(progrDataT progrData) {
-    if (!progrData) {
+char* getBSD(progrData data) {
+    if (!data) {
         return NULL;
     }
 
-    return progrData->outputPath;
+    return data->BSD;
 }
 
-char* getGeoNameProgrData(progrDataT progrData) {
-    if (!progrData) {
+char* getRectBorder(progrData data) {
+    if (!data) {
         return NULL;
     }
 
-    return progrData->geoName;
+    return data->rectBorder;
 }
 
-char* getQryNameProgrData(progrDataT progrData) {
-    if (!progrData) {
-        return NULL;
-    }
-
-    return progrData->qryName;
-}
-
-listT getRectListProgrData(progrDataT progrData) {
-    if (!progrData) {
-        return NULL;
-    }
-
-    return progrData->rectList;
-}
-
-void setRectListProgrData(progrDataT progrData, listT list) {
-    if (!progrData) {
+void  setRectBorder(progrData data, char* args) {
+    if (!data) {
         return;
     }
 
-    progrData->rectList = list;
+    strcpy(data->rectBorder, args);
 }
 
-int getCollectProgrData(progrDataT progrData) {
-    if (!progrData) {
-        return -1;
+char* getRectFill(progrData data) {
+    if (!data) {
+        return NULL;
     }
 
-    return progrData->collect;
+    return data->rectFill;
 }
 
-void destroyProgrData(progrDataT progrData) {
-    if (!progrData) {
+void  setRectFill(progrData data, char* args) {
+    if (!data) {
         return;
     }
 
-    if (progrData->rectList) destroyList(progrData->rectList);
+    strcpy(data->rectFill, args);
+}
 
-    free(progrData);
+char* getCircleBorder(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+
+    return data->circleBorder;
+}
+
+void  setCircleBorder(progrData data, char* args) {
+    if (!data) {
+        return;
+    }
+
+    strcpy(data->circleBorder, args);
+}
+
+char* getCircleFill(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+
+    return data->circleFill;
+}
+
+void  setCircleFill(progrData data, char* args) {
+    if (!data) {
+        return;
+    }
+
+    strcpy(data->circleFill, args);
+}
+
+kdTree getRectTree(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+
+    return data->rectTree;
+}
+
+kdTree getCircleTree(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+
+    return data->circleTree;
 }

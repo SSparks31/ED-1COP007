@@ -3,44 +3,33 @@
 
 /* Programa de analise de arquivos .geo, contendo informacoes de diversos retangulos, e .qry, contendo pesquisas sobre os retangulos */
 
-#include "../list/list.h"
+#include "../tree/binaryTree.h"
+#include "../tree/kdTree.h"
 
-typedef struct progrData* progrDataT;
+typedef struct progrData* progrData;
 
-progrDataT createProgrData(char* inputPath, char* outputPath, char* geoName, char* qryName, int collect);
-/* Dadas as strings `inputPath`, `outputPath`, `geoName`, `qryName`, e o inteiro `collect`, */
-/* cria estrutura responsavel por armazenar e repassar informacoes vitais do programa */
-/* Caso `outputPath` ou `geoName` sejam invalidas ou vazias, retorna NULL */
+char* getBED(progrData data);
 
-char* getInputPathProgrData(progrDataT progrData);
-/* Dada a estrutura `progrData`, retorna caminho de entrada nela armazenado */
-/* Caso `progrData` seja invalida, retorna NULL */
+char* getBSD(progrData data);
 
-char* getOutputPathProgrData(progrDataT progrData);
-/* Dada a estrutura `progrData`, retorna caminho de saida nela armazenado */
-/* Caso `progrData` seja invalida, retorna NULL */
+char* getRectBorder(progrData data);
 
-char* getGeoNameProgrData(progrDataT progrData);
-/* Dada a estrutura `progrData`, retorna nome de arquivo .geo nela armazenado */
-/* Caso `progrData` seja invalida, retorna NULL */
+void  setRectBorder(progrData data, char* args);
 
-char* getQryNameProgrData(progrDataT progrData);
-/* Dada a estrutura `progrData`, retorna nome de arquivo .qry nela armazenado */
-/* Caso `progrData` seja invalida, retorna NULL */
+char* getRectFill(progrData data);
 
-listT getRectListProgrData(progrDataT progrData);
-/* Dada a estrutura `progrData`, retorna lista que armazena retangulos lidos do arquivo .geo */
-/* Caso `progrData` seja invalida, retorna NULL */
+void  setRectFill(progrData data, char* args);
 
-void setRectListProgrData(progrDataT progrData, listT list);
-/* Dada a estrutura `progrData` e uma lista ligada `list`, armazena `list` em `progrData` */
-/* Apenas para uso interno; seu uso por modulos nao relacionados pode acarretar em comportamento indefinido */
+char* getCircleBorder(progrData data);
 
-int getCollectProgrData(progrDataT progrData);
-/* Dada a estrutura `progrData`, retorna inteiro representando o argumento de coleta de informacoes para relatorio de eficiencia */
-/* Caso `progrData` seja invalida, retorna - 1*/
+void  setCircleBorder(progrData data, char* args);
 
-void destroyProgrData(progrDataT progrData);
-/* Dada a estrutura `progrData`, libera memoria por ela alocada */
+char* getCircleFill(progrData data);
+
+void  setCircleFill(progrData data, char* args);
+
+kdTree getRectTree(progrData data);
+
+kdTree getCircleTree(progrData data);
 
 #endif
