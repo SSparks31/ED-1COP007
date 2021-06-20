@@ -11,6 +11,8 @@
 #include "../svg/circle.h"
 #include "../svg/rect.h"
 
+#include "../helper/pathHelp.h"
+
 #define MENU_ITEMS 7
 
 void nx(progrData data, char* args) {
@@ -68,9 +70,9 @@ void c(progrData data, char* args) {
 }
 
 void geoParser(progrData data) {
-    // if (!data) {
-    //     return;
-    // }
+    if (!data) {
+        return;
+    }
     
     void (*menu[MENU_ITEMS])(progrData data, char* args) = { nx, cc, cp, bc, pc, r, c };
     const char* options[MENU_ITEMS] = { "nx", "cc", "cp", "bc", "pc", "r", "c" };
@@ -78,10 +80,18 @@ void geoParser(progrData data) {
     char command[999];
     char* args;
     
-    //TODO: Read from actual file
-    // Very important
+    char* BED = getBED(data);
+    char* geoName = getGeoName(data);
 
-    while (!isEmpty(fgetLine(stdin, command, 999))) {
+    char* fullPath = concatPathFile(BED, geoName);
+    FILE* geoFile = fopen(fullPath, "r");
+    free(fullPath);
+    
+    if (!geoFile) {
+        return;
+    }
+
+    while (!isEmpty(fgetLine(geoFile, command, 999))) {
         args = splitString(command, ' ');
         if (!args) {
             return;
@@ -93,10 +103,13 @@ void geoParser(progrData data) {
             }
         }
     }
+
+    fclose(geoFile);
     
 }
 
 int main() {
-    geoParser(NULL);
+    progrData data = createData("./", "./", "a1.geo", NULL);
+    geoParser(data);
     return 0;
 }
