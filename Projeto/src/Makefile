@@ -7,7 +7,7 @@ OBJ = ../obj
 MAINDEPS = $(OBJ)/progrData.o $(OBJ)/svg.o $(OBJ)/rect.o $(OBJ)/line.o $(OBJ)/circle.o $(OBJ)/geo.o $(OBJ)/kdTree.o $(OBJ)/binaryTree.o $(OBJ)/argHelp.o $(OBJ)/mathHelp.o $(OBJ)/pathHelp.o $(OBJ)/stringHelp.o
 
 progr: $(SRC)/main.c $(MAINDEPS)
-	$(CC) $(CFLAGS) -o progr $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 
 $(OBJ):
@@ -64,5 +64,4 @@ PHONY: clean
 
 clean:
 	-@rm -rf $(OBJ)
-	-@rm -f $(SRC)/progrest
-	-@rm -f $(SRC)/progrdin
+	-@rm -f $(SRC)/progr
