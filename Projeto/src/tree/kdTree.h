@@ -5,11 +5,16 @@ typedef struct kdTree* kdTree;
 typedef struct kdNode* kdNode;
 typedef void* kdTreeElem;
 
-kdTree createKDTree(int (*compare)(const kdTreeElem a, const kdTreeElem b));
-/* Dado um ponteiro para funcao de comparacao `compare`, cria e retorna arvore k-d */
-/* Funcao de comparacao deve retornar -1 caso `a` seja menor que `b`; 0 caso sejam iguais; e 1 caso `a` seja maior que `b` */
+kdTree createKDTree(int k, int (*compare)(const kdTreeElem a, const kdTreeElem b, int j));
+/* Dado um inteiro `k` e um ponteiro para funcao de comparacao `compare`, cria e retorna arvore k-dimensional */
+/* Funcao de comparacao deve retornar -1 caso j-esima dimensao de `a` seja menor que `b`; 0 caso sejam iguais; e 1 caso `a` seja maior que `b`,
+   sendo `j` a altura do node na arvore, modulo `k` */
+/* Caso k seja menor ou igual a zero, retorna NULL */
 /* Caso `compare` seja invalido, retorna NULL */
 /* Caso haja falha na alocacao de memoria, retorna NULL */
+
+int getDimensionsKDTree(kdTree tree);
+// Blablabla esqueci de comentar
 
 int isEmptyKDTree(kdTree tree);
 /* Dada uma arvore k-d valida `tree`, retorna 1 caso nao contenha elementos; 0 caso contrario */
