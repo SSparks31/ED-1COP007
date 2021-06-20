@@ -51,6 +51,14 @@ circleT createCircle(char* borderColor, char* fillColor, char* ID, char* coordin
     return circle;
 }
 
+char* getIDCircle(circleT circle) {
+    if (!circle) {
+        return NULL;
+    }
+
+    return circle->circleID;
+}
+
 char* getBorderColorCircle(circleT circle) {
     if (!circle) {
         return NULL;
@@ -155,6 +163,7 @@ void  destroyCircle(circleT circle) {
         return;
     }
 
+    if (circle->circleID) free(circle->circleID);
     if (circle->borderColor) free(circle->borderColor);
     if (circle->fillColor) free(circle->fillColor);
     if (circle->xCenter) free(circle->xCenter);
