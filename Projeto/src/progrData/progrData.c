@@ -42,10 +42,10 @@ int kdRectCompare(const kdTreeElem a, const kdTreeElem b, int j) {
     double aDimension = stringToDouble(getDimension(a));
     double bDimension = stringToDouble(getDimension(b));
 
-    if (a < b) {
+    if (aDimension < bDimension) {
         return -1;
     }
-    if (a > b) {
+    if (aDimension > bDimension) {
         return 1;
     }
 
@@ -63,10 +63,10 @@ int kdCircleCompare(const kdTreeElem a, const kdTreeElem b, int j) {
     double aDimension = stringToDouble(getDimension(a));
     double bDimension = stringToDouble(getDimension(b));
 
-    if (a < b) {
+    if (aDimension < bDimension) {
         return -1;
     }
-    if (a > b) {
+    if (aDimension > bDimension) {
         return 1;
     }
 
