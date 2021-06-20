@@ -1,90 +1,102 @@
 #include "geo.h"
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
 
-#include "../progrData/progrData.h"
-
-#include "../svg/rect.h"
-#include "../svg/svg.h"
+#include "./progrData.h"
 
 #include "../helper/stringHelp.h"
-#include "../helper/mathHelp.h"
-#include "../helper/pathHelp.h"
+#include <string.h>
 
-#define SVG_COLOR_MAX_LEN 22
+#include "../svg/circle.h"
+#include "../svg/rect.h"
 
-void geoParser(progrDataT progrData) {
-    if (!progrData) {
-        return;
+#define MENU_ITEMS 7
+
+void nx(progrData data, char* args) {
+   // Funcao sem uso; arvore nao tem limite de itens
+}
+
+void cc(progrData data, char* args) {
+    if (!isEmpty(args)) {
+        setRectBorder(data, args);
     }
+}   
 
-    char* geoPath = getInputPathProgrData(progrData);
-    char* geoName = getGeoNameProgrData(progrData);
-    char* fullPath = concatPathFile(geoPath, geoName);
-
-    FILE* geoFile = fopen(fullPath, "r");
-    free(fullPath);
-    if (!geoFile) {
-        return;
+void cp(progrData data, char* args) {
+    if (!isEmpty(args)) {
+        setRectFill(data, args);
     }
+}
 
-    char* outputPath = getOutputPathProgrData(progrData);
-    char* fileName = stripSuffix(getGeoNameProgrData(progrData));
-    char* svgName = concatFileSuffix(fileName, "svg");
-
-    FILE* svgFile = startSVG(outputPath, svgName);
-    free(svgName);
-    free(fileName);
-    if (!svgFile) {
-        fclose(geoFile);
-        return;
+void bc(progrData data, char* args) {
+    if (!isEmpty(args)) {
+        setCircleBorder(data, args);
     }
+}
 
-    char borderColor[SVG_COLOR_MAX_LEN];
-    char fillColor[SVG_COLOR_MAX_LEN];
+void pc(progrData data, char* args) {
+    if (!isEmpty(args)) {
+        setCircleFill(data, args);
+    }
+}
 
-    listT rectList = NULL;
+void r(progrData data, char* args) {
+    char* ID = args;
+    char* coordinates = splitString(args, ' ');
+
+    char* borderColor = getRectBorder(data);
+    char* fillColor = getRectFill(data);
+
+    rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
+
+    kdTree tree = getRectTree(data);
+    appendKDTree(tree, newRect);
+}
+
+void c(progrData data, char* args) {
+    char* ID = args;
+    char* coordinates = splitString(args, ' ');
+
+    char* borderColor = getCircleBorder(data);
+    char* fillColor = getCircleFill(data);
+
+    circleT newCircle = createCircle(borderColor, fillColor, ID, coordinates);
+
+    kdTree tree = getCircleTree(data);
+    appendKDTree(tree, newCircle);
+}
+
+void geoParser(progrData data) {
+    // if (!data) {
+    //     return;
+    // }
+    
+    void (*menu[MENU_ITEMS])(progrData data, char* args) = { nx, cc, cp, bc, pc, r, c };
+    const char* options[MENU_ITEMS] = { "nx", "cc", "cp", "bc", "pc", "r", "c" };
 
     char command[999];
+    char* args;
+    
+    //TODO: Read from actual file
+    // Very important
 
-    while (!isEmpty(fgetLine(geoFile, command, 999))) {
-        switch (command[0]) {
-            case 'n': {
-                char* numPos = rfindCharacter(command, ' ') + 1;
-                rectList = createList(stringToInt(numPos));
-                break;
+    while (!isEmpty(fgetLine(stdin, command, 999))) {
+        args = splitString(command, ' ');
+        if (!args) {
+            return;
+        }
+        
+        for (int i = 0; i < MENU_ITEMS; ++i) {
+            if (strcmp(command, options[i]) == 0) {
+                menu[i](data, args);
             }
-            
-            case 'c': {
-                if (command[1] == 'c') {
-                    strcpy(borderColor, rfindCharacter(command, ' ') + 1);
-                } else {
-                    strcpy(fillColor, rfindCharacter(command, ' ') + 1);
-                }
-                break;
-            }
-            
-            case 'r': {
-                char* ID = findCharacter(command, ' ') + 1;
-                char* coordinates = splitString(ID, ' ');
-
-                rectT newRect = createRect(borderColor, fillColor, ID, coordinates);
-                
-                addRectToSVG(svgFile, newRect);
-                appendList(rectList, newRect);
-                break;
-            }
-
-            default:
-                break;
         }
     }
     
-    fclose(geoFile);
+}
 
-    setRectListProgrData(progrData, rectList);
-   
-    finishSVG(svgFile);
+int main() {
+    geoParser(NULL);
+    return 0;
 }
