@@ -4,16 +4,10 @@ CFLAGS = -std=c99 -fstack-protector-all
 SRC = .
 OBJ = ../obj
 
-MAINDEPS = $(OBJ)/progrData.o $(OBJ)/svg.o $(OBJ)/rect.o $(OBJ)/line.o $(OBJ)/circle.o $(OBJ)/geo.o $(OBJ)/qry.o $(OBJ)/argHelp.o $(OBJ)/mathHelp.o $(OBJ)/pathHelp.o $(OBJ)/stringHelp.o $(OBJ)/listEfficiency.o
+MAINDEPS = $(OBJ)/progrData.o $(OBJ)/svg.o $(OBJ)/rect.o $(OBJ)/line.o $(OBJ)/circle.o $(OBJ)/geo.o $(OBJ)/kdTree.o $(OBJ)/binaryTree.o $(OBJ)/argHelp.o $(OBJ)/mathHelp.o $(OBJ)/pathHelp.o $(OBJ)/stringHelp.o
 
-progr: progrest progrdin
-
-progrest: $(SRC)/main.c $(MAINDEPS) $(OBJ)/staticList.o
-	$(CC) $(CFLAGS) -o $@ $^
-
-progrdin: $(SRC)/main.c $(MAINDEPS) $(OBJ)/dynamicList.o
-	$(CC) $(CFLAGS) -o $@ $^
-
+progr: $(SRC)/main.c $(MAINDEPS)
+	$(CC) $(CFLAGS) -o progr $^
 
 
 $(OBJ):
@@ -30,7 +24,12 @@ $(OBJ)/geo.o: $(SRC)/progrData/geo.c $(SRC)/progrData/geo.h |$(OBJ)
 $(OBJ)/qry.o: $(SRC)/progrData/qry.c $(SRC)/progrData/qry.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/listEfficiency.o: $(SRC)/progrData/listEfficiency.c $(SRC)/progrData/listEfficiency.h |$(OBJ)
+
+
+$(OBJ)/kdTree.o: $(SRC)/tree/kdTree.c $(SRC)/tree/kdTree.h |$(OBJ)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ)/binaryTree.o: $(SRC)/tree/binaryTree.c $(SRC)/tree/binaryTree.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
@@ -48,13 +47,6 @@ $(OBJ)/circle.o: $(SRC)/svg/circle.c $(SRC)/svg/circle.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<	
 
 
-
-$(OBJ)/dynamicList.o: $(SRC)/list/dynamicList.c $(SRC)/list/list.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/staticList.o: $(SRC)/list/staticList.c $(SRC)/list/list.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
 $(OBJ)/argHelp.o: $(SRC)/helper/argHelp.c $(SRC)/helper/argHelp.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
@@ -66,6 +58,7 @@ $(OBJ)/mathHelp.o: $(SRC)/helper/mathHelp.c $(SRC)/helper/mathHelp.h |$(OBJ)
 
 $(OBJ)/pathHelp.o: $(SRC)/helper/pathHelp.c $(SRC)/helper/pathHelp.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
+
 
 PHONY: clean
 
