@@ -3,10 +3,10 @@
 
 /* Modulo voltado a funcoes de utilidade relacionadas a matematica */
 
-int max(int a, int b);
+int imax(int a, int b);
 /* Dados dois inteiros `a` e `b`, retorna o maior entre eles */
 
-int min(int a, int b);
+int imin(int a, int b);
 /* Dados dois inteiros `a` e `b`, retorna o menor entre eles */
 
 double dmax(double a, double b);
@@ -27,8 +27,10 @@ double stringToDouble(char *num);
 /* Dada uma string `num` representando um numero, retorna valor em forma decimal */
 /* Caso seja encontrado caracter nao numerico, processo e interrompido e resultado possivelmente parcial e retornado */
 
-double dpow(double base, double exp);
-/* Dados dois doubles `base` e `exp`, retorna `base` elevado a `exp` */
+double dpow(double base, int exp);
+/* Dados um double `base` e um int `exp`, retorna `base` elevado a `exp` */
 
+int ipow(int base, int exp);
+/* Dados um int `base` e um int `exp`, retorna `base` elevado a `exp` */
 
 #endif
