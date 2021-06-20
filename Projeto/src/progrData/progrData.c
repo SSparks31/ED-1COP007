@@ -229,3 +229,23 @@ kdTree getCircleTree(progrData data) {
 
     return data->circleTree;
 }
+
+void destroyData(progrData data) {
+    if (!data) {
+        return;
+    }
+
+    kdTree rectTree = getRectTree(data);
+    while (!isEmptyKDTree(rectTree)) {
+        destroyRect(removeFromKDTree(rectTree, getRootKDTree(rectTree)));
+    }
+    destroyKDTree(rectTree);
+
+    kdTree circleTree = getCircleTree(data);
+    while (!isEmptyKDTree(circleTree)) {
+        destroyCircle(removeFromKDTree(circleTree, getRootKDTree(circleTree)));
+    }
+    destroyKDTree(circleTree);
+
+    free(data);
+}

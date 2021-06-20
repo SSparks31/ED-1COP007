@@ -38,4 +38,6 @@ kdTree getRectTree(progrData data);
 
 kdTree getCircleTree(progrData data);
 
+void destroyData(progrData data);
+
 #endif
