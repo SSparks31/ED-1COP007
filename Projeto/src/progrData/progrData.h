@@ -8,9 +8,15 @@
 
 typedef struct progrData* progrData;
 
+progrData createData(char* BED, char* BSD, char* geoName, char* qryName);
+
 char* getBED(progrData data);
 
 char* getBSD(progrData data);
+
+char* getGeoName(progrData data);
+
+char* getQryName(progrData data);
 
 char* getRectBorder(progrData data);
 
