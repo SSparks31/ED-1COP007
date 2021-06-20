@@ -284,7 +284,7 @@ kdNode appendKDTree(kdTree tree, kdTreeElem elem) {
                 break;
             }
         }
-
+        
         aux = next;
     }
 
@@ -352,6 +352,7 @@ kdTreeElem removeFromKDTree(kdTree tree, kdNode node) {
     
     int height = getKDNodeHeight(tree, node) % getDimensionsKDTree(tree);
     kdNode minDimension;
+    
     if (right) {
         minDimension = findMinimumDimensionInSubtree(tree, right, height);
         node->elem = minDimension->elem;
