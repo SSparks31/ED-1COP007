@@ -165,7 +165,7 @@ kdNode findKDNodeInTree(kdTree tree, kdTreeElem elem) {
             aux = getKDNodeRightChild(tree, aux);
         }
 
-        ++height;
+        height = (height + 1) % getDimensionsKDTree(tree);
     }
 
     return NULL;
@@ -267,7 +267,7 @@ kdNode appendKDTree(kdTree tree, kdTreeElem elem) {
 
     kdNode next;
 
-    for (int height = 1; aux; ++height) {
+    for (int height = 1; aux; height = (height + 1) % getDimensionsKDTree(tree)) {
         kdTreeElem auxElem = getElemInKDNode(tree, aux);
         if (tree->compare(elem, auxElem, height) == -1) {
             next = getKDNodeLeftChild(tree, aux);
@@ -365,7 +365,7 @@ kdTreeElem removeFromKDTree(kdTree tree, kdNode node) {
         node->left = NULL;
     }
 
-
+    return nodeElem;
 }
 
 kdTreeElem getElemInKDNode(kdTree tree, kdNode node) {
