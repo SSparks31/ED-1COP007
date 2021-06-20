@@ -5,6 +5,7 @@
 #include "../tree/kdTree.h"
 
 #include "../helper/stringHelp.h"
+#include <string.h>
 
 #define SVG_COLOR_MAX_LEN 22
 
@@ -20,8 +21,7 @@ struct progrData {
 
     kdTree rectTree;
     kdTree circleTree;
-}
-
+};
 
 
 
