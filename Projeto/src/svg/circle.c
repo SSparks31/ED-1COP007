@@ -47,6 +47,7 @@ circleT createCircle(char* borderColor, char* fillColor, char* opacity, char* ID
     strcpy(circle->circleID, ID);
     strcpy(circle->borderColor, borderColor);
     strcpy(circle->fillColor, fillColor);
+    strcpy(circle->opacity, opacity);
     strcpy(circle->xCenter, xCenter);
     strcpy(circle->yCenter, yCenter);
     strcpy(circle->radius, radius);
