@@ -74,7 +74,7 @@ int kdCircleCompare(const kdTreeElem a, const kdTreeElem b, int j) {
 }
 
 progrData createData(char* BED, char* BSD, char* geoName, char* qryName) {
-    if (isEmpty(BSD) || isEmpty(geoName)) {
+    if (isEmpty(BSD) != 0|| isEmpty(geoName) != 0) {
         return NULL;
     }
 
@@ -86,6 +86,9 @@ progrData createData(char* BED, char* BSD, char* geoName, char* qryName) {
     data->rectTree = createKDTree(2, kdRectCompare);
     data->circleTree = createKDTree(2, kdCircleCompare);
 
+    char* relPath = "./";
+    char* empty = "";
+
     if (!data->rectTree || !data->circleTree) {
         destroyKDTree(data->rectTree);
         destroyKDTree(data->circleTree);
@@ -94,20 +97,20 @@ progrData createData(char* BED, char* BSD, char* geoName, char* qryName) {
         return NULL;
     }
 
-    if (isEmpty(BED)) {
-        strcpy(data->BED, "./");
+    if (isEmpty(BED) != 0) {
+        data->BED = relPath;
     } else {
-        strcpy(data->BED, BED);
+        data->BED = BED;
     }
 
-    strcpy(data->BSD, BSD);
+    data->BSD = BSD;
 
-    strcpy(data->geoName, geoName);
+    data->geoName = geoName;
 
-    if (isEmpty(qryName)) {
-        strcpy(data->qryName, "");
+    if (isEmpty(qryName) != 0) {
+        data->qryName = empty;
     } else {
-        strcpy(data->qryName, qryName);
+        data->qryName = qryName;
     }
 
 
@@ -129,6 +132,22 @@ char* getBSD(progrData data) {
     }
 
     return data->BSD;
+}
+
+char* getGeoName(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+
+    return data->geoName;
+}
+
+char* getQryName(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+
+    return data->qryName;
 }
 
 char* getRectBorder(progrData data) {
