@@ -1,4 +1,4 @@
-#include "kdTree.h"
+#include "./kdTree.h"
 
 #include "../helper/mathHelp.h"
 

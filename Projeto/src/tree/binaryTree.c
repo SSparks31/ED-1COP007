@@ -1,4 +1,4 @@
-#include "binaryTree.h"
+#include "./binaryTree.h"
 
 #include "../helper/mathHelp.h"
 
