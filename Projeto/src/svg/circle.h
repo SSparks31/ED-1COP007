@@ -5,13 +5,17 @@
 
 typedef struct circle* circleT;
 
-circleT createCircle(char* borderColor, char* fillColor, char* coordinates);
-/* Dadas as strings `borderColor`, `fillColor`, e `coordinates`, cria circulo com as informacoes nelas contidas */
-/* Caso `borderColor`, `fillColor`, ou `coordinates` sejam vazias ou invalidas, retorna -1 */
+circleT createCircle(char* borderColor, char* fillColor, char* ID, char* coordinates);
+/* Dadas as strings `borderColor`, `fillColor`, `ID` e `coordinates`, cria circulo com as informacoes nelas contidas */
+/* Caso `borderColor`, `fillColor`, `ID` ou `coordinates` sejam vazias ou invalidas, retorna -1 */
 /* Caso `borderColor` ou `fillColor` sejam "@", respectivo atributo e considerado transparente */
 /* `coordinates` e uma string contendo as coordenadas x e y do centro do circulo, assim como seu raio, separados por espaco */
 /* `coordinates` e modificada ao longo da funcao, portanto e importante que nao seja passada const char* por acidente */
 /* Funcao nao sanitizada; caso `coordinates` nao contenha coordenadas suficientes, constara comportamento indefinido */
+
+char* getIDCircle(circleT circle);
+/* Dado um circulo `circle`, retorna seu ID */
+/* Caso `circle` seja invalido, retorna NULL */
 
 char* getBorderColorCircle(circleT circle);
 /* Dado um circulo `circle`, retorna string representando cor da borda */

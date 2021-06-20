@@ -6,6 +6,8 @@
 #include "../helper/stringHelp.h"
 
 struct circle {
+    char* circleID;
+
     char* borderColor;
     char* fillColor;
 
@@ -14,8 +16,8 @@ struct circle {
     char* radius;
 };
 
-circleT createCircle(char* borderColor, char* fillColor, char* coordinates) {
-    if (isEmpty(borderColor) || isEmpty(coordinates)) {
+circleT createCircle(char* borderColor, char* fillColor, char* ID, char* coordinates) {
+    if (isEmpty(borderColor) || isEmpty(ID) || isEmpty(coordinates)) {
         return NULL;
     }
 
@@ -28,16 +30,18 @@ circleT createCircle(char* borderColor, char* fillColor, char* coordinates) {
     char* yCenter  = splitString(xCenter , ' ');
     char* radius  = splitString(yCenter , ' ');
 
+    circle->circleID = malloc(sizeof(char) * (strlen(ID) + 1));
     circle->borderColor = malloc(sizeof(char) * (strlen(borderColor) + 1));
     circle->fillColor = malloc(sizeof(char) * (strlen(fillColor) + 1));
     circle->xCenter = malloc(sizeof(char) * (strlen(xCenter) + 1));
     circle->yCenter = malloc(sizeof(char) * (strlen(yCenter) + 1));
     circle->radius = malloc(sizeof(char) * (strlen(radius) + 1));
 
-    if (!circle->borderColor || !circle->fillColor || !circle->xCenter || !circle->yCenter || !circle->radius) {
+    if (!circle->circleID || !circle->borderColor || !circle->fillColor || !circle->xCenter || !circle->yCenter || !circle->radius) {
         destroyCircle(circle);
     }
 
+    strcpy(circle->circleID, ID);
     strcpy(circle->borderColor, borderColor);
     strcpy(circle->fillColor, fillColor);
     strcpy(circle->xCenter, xCenter);
