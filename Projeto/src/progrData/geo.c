@@ -8,6 +8,7 @@
 #include "../helper/stringHelp.h"
 #include <string.h>
 
+#include "../svg/svg.h"
 #include "../svg/circle.h"
 #include "../svg/rect.h"
 
@@ -15,35 +16,39 @@
 
 #define MENU_ITEMS 7
 
-void nx(progrData data, char* args) {
+void nx(progrData data, char* args, FILE* svgFile) {
    // Funcao sem uso; arvore nao tem limite de itens
 }
 
-void cc(progrData data, char* args) {
+void cc(progrData data, char* args, FILE* svgFile) {
     if (!isEmpty(args)) {
         setRectBorder(data, args);
     }
 }   
 
-void cp(progrData data, char* args) {
+void cp(progrData data, char* args, FILE* svgFile) {
     if (!isEmpty(args)) {
         setRectFill(data, args);
     }
 }
 
-void bc(progrData data, char* args) {
+void bc(progrData data, char* args, FILE* svgFile) {
     if (!isEmpty(args)) {
         setCircleBorder(data, args);
     }
 }
 
-void pc(progrData data, char* args) {
+void pc(progrData data, char* args, FILE* svgFile) {
     if (!isEmpty(args)) {
         setCircleFill(data, args);
     }
 }
 
-void r(progrData data, char* args) {
+void r(progrData data, char* args, FILE* svgFile) {
+    if (!svgFile) {
+        return;
+    }
+
     char* ID = args;
     char* coordinates = splitString(args, ' ');
 
@@ -54,9 +59,15 @@ void r(progrData data, char* args) {
 
     kdTree tree = getRectTree(data);
     appendKDTree(tree, newRect);
+
+    addRectToSVG(svgFile, newRect);
 }
 
-void c(progrData data, char* args) {
+void c(progrData data, char* args, FILE* svgFile) {
+    if (!svgFile) {
+        return;
+    }
+
     char* ID = args;
     char* coordinates = splitString(args, ' ');
 
@@ -67,6 +78,8 @@ void c(progrData data, char* args) {
 
     kdTree tree = getCircleTree(data);
     appendKDTree(tree, newCircle);
+
+    addCircleToSVG(svgFile, newCircle);
 }
 
 void geoParser(progrData data) {
@@ -74,7 +87,7 @@ void geoParser(progrData data) {
         return;
     }
     
-    void (*menu[MENU_ITEMS])(progrData data, char* args) = { nx, cc, cp, bc, pc, r, c };
+    void (*menu[MENU_ITEMS])(progrData data, char* args, FILE* svgFile) = { nx, cc, cp, bc, pc, r, c };
     const char* options[MENU_ITEMS] = { "nx", "cc", "cp", "bc", "pc", "r", "c" };
 
     char command[999];
@@ -91,6 +104,19 @@ void geoParser(progrData data) {
         return;
     }
 
+    char* BSD = getBSD(data);
+    geoName = stripSuffix(geoName);    
+    char* svgName = concatFileSuffix(geoName, "svg");
+
+    FILE* svgFile = startSVG(BSD, svgName);
+    free(svgName);
+    free(geoName);
+    
+    if (!svgFile) {
+        fclose(geoFile);
+        return;
+    }
+
     while (!isEmpty(fgetLine(geoFile, command, 999))) {
         args = splitString(command, ' ');
         if (!args) {
@@ -100,11 +126,12 @@ void geoParser(progrData data) {
 
         for (int i = 0; i < MENU_ITEMS; ++i) {
             if (strcmp(command, options[i]) == 0) {
-                menu[i](data, args);
+                menu[i](data, args, svgFile);
             }
         }
     }
 
+    finishSVG(svgFile);
     fclose(geoFile);
     
 }
@@ -113,6 +140,7 @@ int main() {
     progrData data = createData("./", "./", "a1.geo", "");
     geoParser(data);
 
-    
+    destroyData(data);
+
     return 0;
 }
