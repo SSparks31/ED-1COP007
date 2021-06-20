@@ -17,7 +17,7 @@ progrdin: $(SRC)/main.c $(MAINDEPS) $(OBJ)/dynamicList.o
 
 
 $(OBJ):
-	-mkdir $(OBJ)
+	-@mkdir $(OBJ)
 
 
 
@@ -30,7 +30,7 @@ $(OBJ)/geo.o: $(SRC)/progrData/geo.c $(SRC)/progrData/geo.h |$(OBJ)
 $(OBJ)/qry.o: $(SRC)/progrData/qry.c $(SRC)/progrData/qry.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/listEfficiency.o: $(SRC)/progrData/listEfficiency.c $(SRC)/progrData/listEfficiency.h
+$(OBJ)/listEfficiency.o: $(SRC)/progrData/listEfficiency.c $(SRC)/progrData/listEfficiency.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
@@ -46,7 +46,6 @@ $(OBJ)/line.o: $(SRC)/svg/line.c $(SRC)/svg/line.h |$(OBJ)
 
 $(OBJ)/circle.o: $(SRC)/svg/circle.c $(SRC)/svg/circle.h |$(OBJ)
 	$(CC) $(CFLAGS) -c -o $@ $<	
-
 
 
 
@@ -71,6 +70,6 @@ $(OBJ)/pathHelp.o: $(SRC)/helper/pathHelp.c $(SRC)/helper/pathHelp.h |$(OBJ)
 PHONY: clean
 
 clean:
-	rm -rf $(OBJ)
-	rm -f $(SRC)/progrest
-	rm -f $(SRC)/progrdin
+	-@rm -rf $(OBJ)
+	-@rm -f $(SRC)/progrest
+	-@rm -f $(SRC)/progrdin
