@@ -54,8 +54,22 @@ double stringToDouble(char *num) {
     return negative ? result * -1 : result;
 }
 
-double dpow(double base, double exp) {
-    int result;
+int ipow(int base, int exp) {
+    int result = 1;
+
+    while (exp-- > 0) {
+        result *= base;
+    }
+
+    while (exp++ < 0) {
+        result /= base;
+    }
+
+    return result;
+}
+
+double dpow(double base, int exp) {
+    double result = 1;
 
     while (exp-- > 0) {
         result *= base;
