@@ -135,12 +135,3 @@ void geoParser(progrData data) {
     fclose(geoFile);
     
 }
-
-int main() {
-    progrData data = createData("./", "./", "a1.geo", "");
-    geoParser(data);
-
-    destroyData(data);
-
-    return 0;
-}
