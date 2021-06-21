@@ -56,9 +56,10 @@ void r(progrData data, char* args, FILE* svgFile) {
     char* fillColor = getRectFill(data);
 
     rectT newRect = createRect(borderColor, fillColor, "0.5", ID, coordinates);
+    building build = createBuilding(newRect);
 
-    kdTree tree = getRectTree(data);
-    appendKDTree(tree, newRect);
+    kdTree tree = getBuildingTree(data);
+    appendKDTree(tree, build);
 
     addRectToSVG(svgFile, newRect);
 }
@@ -75,9 +76,10 @@ void c(progrData data, char* args, FILE* svgFile) {
     char* fillColor = getCircleFill(data);
 
     circleT newCircle = createCircle(borderColor, fillColor, "0.5", ID, coordinates);
+    person guy = createPerson(newCircle);
 
-    kdTree tree = getCircleTree(data);
-    appendKDTree(tree, newCircle);
+    kdTree tree = getPersonTree(data);
+    appendKDTree(tree, guy);
 
     addCircleToSVG(svgFile, newCircle);
 }

@@ -27,11 +27,22 @@ struct progrData {
     char circleBorder[SVG_COLOR_MAX_LEN];
     char circleFill[SVG_COLOR_MAX_LEN];
 
-    kdTree rectTree;
-    kdTree circleTree;
+    kdTree buildingTree;
+    kdTree personTree;
 };
 
-int kdRectCompare(const kdTreeElem a, const kdTreeElem b, int j) {
+struct building {
+    rectT rect;
+    int peopleInside;
+};
+
+struct person {
+    circleT circle;
+    double radiation;
+    int dead;
+};
+
+int kdBuildingCompare(const kdTreeElem a, const kdTreeElem b, int j) {
     char* (*getDimension)(rectT rect);
     if (j) {
         getDimension = getXRect;
@@ -39,8 +50,11 @@ int kdRectCompare(const kdTreeElem a, const kdTreeElem b, int j) {
         getDimension = getYRect;
     }
 
-    double aDimension = stringToDouble(getDimension(a));
-    double bDimension = stringToDouble(getDimension(b));
+    rectT rectA = buildingGetRect(a);
+    rectT rectB = buildingGetRect(b);
+
+    double aDimension = stringToDouble(getDimension(rectA));
+    double bDimension = stringToDouble(getDimension(rectB));
 
     if (aDimension < bDimension) {
         return -1;
@@ -52,7 +66,7 @@ int kdRectCompare(const kdTreeElem a, const kdTreeElem b, int j) {
     return 0;
 }
 
-int kdCircleCompare(const kdTreeElem a, const kdTreeElem b, int j) {
+int kdPersonCompare(const kdTreeElem a, const kdTreeElem b, int j) {
     char* (*getDimension)(circleT circle);
     if (j) {
         getDimension = getXCenterCircle;
@@ -60,8 +74,11 @@ int kdCircleCompare(const kdTreeElem a, const kdTreeElem b, int j) {
         getDimension = getYCenterCircle;
     }
 
-    double aDimension = stringToDouble(getDimension(a));
-    double bDimension = stringToDouble(getDimension(b));
+    circleT circleA = personGetCircle(a);
+    circleT circleB = personGetCircle(b);
+
+    double aDimension = stringToDouble(getDimension(circleA));
+    double bDimension = stringToDouble(getDimension(circleB));
 
     if (aDimension < bDimension) {
         return -1;
@@ -83,15 +100,15 @@ progrData createData(char* BED, char* BSD, char* geoName, char* qryName) {
         return NULL;
     }
 
-    data->rectTree = createKDTree(2, kdRectCompare);
-    data->circleTree = createKDTree(2, kdCircleCompare);
+    data->buildingTree = createKDTree(2, kdBuildingCompare);
+    data->personTree = createKDTree(2, kdPersonCompare);
 
     char* relPath = "./";
     char* empty = "";
 
-    if (!data->rectTree || !data->circleTree) {
-        destroyKDTree(data->rectTree);
-        destroyKDTree(data->circleTree);
+    if (!data->buildingTree || !data->personTree) {
+        destroyKDTree(data->buildingTree);
+        destroyKDTree(data->personTree);
         free(data);
         
         return NULL;
@@ -112,8 +129,6 @@ progrData createData(char* BED, char* BSD, char* geoName, char* qryName) {
     } else {
         data->qryName = qryName;
     }
-
-
 
     return data;
 }
@@ -214,20 +229,20 @@ void  setCircleFill(progrData data, char* args) {
     strcpy(data->circleFill, args);
 }
 
-kdTree getRectTree(progrData data) {
+kdTree getBuildingTree(progrData data) {
     if (!data) {
         return NULL;
     }
 
-    return data->rectTree;
+    return data->buildingTree;
 }
 
-kdTree getCircleTree(progrData data) {
+kdTree getPersonTree(progrData data) {
     if (!data) {
         return NULL;
     }
 
-    return data->circleTree;
+    return data->personTree;
 }
 
 void destroyData(progrData data) {
@@ -235,17 +250,134 @@ void destroyData(progrData data) {
         return;
     }
 
-    kdTree rectTree = getRectTree(data);
-    while (!isEmptyKDTree(rectTree)) {
-        destroyRect(removeFromKDTree(rectTree, getRootKDTree(rectTree)));
+    kdTree buildingTree = getBuildingTree(data);
+    while (!isEmptyKDTree(buildingTree)) {
+        demolishBuilding(removeFromKDTree(buildingTree, getRootKDTree(buildingTree)));
     }
-    destroyKDTree(rectTree);
+    destroyKDTree(buildingTree);
 
-    kdTree circleTree = getCircleTree(data);
-    while (!isEmptyKDTree(circleTree)) {
-        destroyCircle(removeFromKDTree(circleTree, getRootKDTree(circleTree)));
+    kdTree personTree = getPersonTree(data);
+    while (!isEmptyKDTree(personTree)) {
+        destroyPerson(removeFromKDTree(personTree, getRootKDTree(personTree)));
     }
-    destroyKDTree(circleTree);
+    destroyKDTree(personTree);
 
     free(data);
+}
+
+
+building createBuilding(rectT rect) {
+    if (!rect) {
+        return NULL;
+    }
+
+    building build = malloc(sizeof(struct building));
+    if (!build) {
+        return NULL;
+    }
+
+    build->rect = rect;
+    build->peopleInside = 0;
+
+    return build;
+}
+
+rectT buildingGetRect(building build) {
+    if (!build) {
+        return NULL;
+    }
+
+    return build->rect;
+}
+
+int buildingGetPeopleInside(building build) {
+    if (!build) {
+        return -1;
+    }
+
+    return build->peopleInside;
+}
+
+void buildingAddPerson(building build) {
+    if (!build) {
+        return;
+    }
+
+    build->peopleInside++;
+}
+
+void demolishBuilding(building build) {
+    if (!build) {
+        return;
+    }
+
+    rectT rect = buildingGetRect(build);
+    destroyRect(rect);
+
+    free(build);
+}
+
+
+person createPerson(circleT circle) {
+    if (!circle) {
+        return NULL;
+    }
+
+    person guy = malloc(sizeof(struct person));
+    if (!guy) {
+        return NULL;
+    }
+
+    guy->circle = circle;
+    guy->radiation = 0;
+    guy->dead = 0;
+
+    return guy;
+}
+
+circleT personGetCircle(person guy) {
+    if (!guy) {
+        return NULL;
+    }
+
+    return guy->circle;
+}
+
+double personGetRadiation(person guy) {
+    if (!guy) {
+        return -1;
+    }
+
+    return guy->radiation;
+}
+
+void personAddRadiation(person guy, int radiation) {
+    if (!guy || radiation < 0) {
+        return;
+    }
+
+    guy->radiation += radiation;
+}
+
+int personIsDead(person guy) {
+    return guy && guy->dead;
+}
+
+void killPerson(person guy) {
+    if (!guy) {
+        return;
+    }
+
+    guy->dead = 1;
+}
+
+void destroyPerson(person guy) {
+    if (!guy) {
+        return;
+    }
+
+    circleT circle = personGetCircle(guy);
+    destroyCircle(circle);
+
+    free(guy);
 }

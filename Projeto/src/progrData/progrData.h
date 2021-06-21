@@ -6,7 +6,14 @@
 #include "../tree/binaryTree.h"
 #include "../tree/kdTree.h"
 
+#include "../svg/rect.h"
+#include "../svg/circle.h"
+
 typedef struct progrData* progrData;
+
+typedef struct person* person;
+
+typedef struct building* building;
 
 progrData createData(char* BED, char* BSD, char* geoName, char* qryName);
 
@@ -34,10 +41,37 @@ char* getCircleFill(progrData data);
 
 void  setCircleFill(progrData data, char* args);
 
-kdTree getRectTree(progrData data);
+kdTree getBuildingTree(progrData data);
 
-kdTree getCircleTree(progrData data);
+kdTree getPersonTree(progrData data);
 
 void destroyData(progrData data);
 
+
+building createBuilding(rectT rect);
+
+rectT buildingGetRect(building build);
+
+int buildingGetPeopleInside(building build);
+
+void buildingAddPerson(building build);
+
+void demolishBuilding(building build);
+
+
+person createPerson(circleT circle);
+
+circleT personGetCircle(person guy);
+
+double personGetRadiation(person guy);
+
+void personAddRadiation(person guy, int radiation);
+
+int personIsDead(person guy);
+
+void killPerson(person guy);
+
+void destroyPerson(person guy);
+
 #endif
+
