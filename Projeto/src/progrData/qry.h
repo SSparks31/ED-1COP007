@@ -5,8 +5,6 @@
 
 #include "./progrData.h"
 
-#include "../list/list.h"
-
 void qryParser(progrDataT progrData);
 /* Dada estrutura de armazenamento de dados `progrData`, analisa e executa comandos lidos no arquivo .qry indicado pelo argumento -q */
 /* Caso -q nao tenha sido passado ao programa, nao realiza nenhuma acao */

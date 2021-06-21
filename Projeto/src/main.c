@@ -7,6 +7,8 @@
 // #include "./progrData/qry.h"
 
 #include "./svg/svg.h"
+#include "./svg/line.h"
+#include "./svg/intersect.h"
 
 #include "./helper/argHelp.h"
 #include "./helper/stringHelp.h"
