@@ -1,5 +1,5 @@
-#ifndef LIB_PROGRPERSON_H
-#define LIB_PROGRPERSON_H
+#ifndef LIB_PROGRMETEOR_H
+#define LIB_PROGRMETEOR_H
 
 #include "../svg/circle.h"
 

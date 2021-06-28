@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./progrData/progrData.h"
-#include "./progrData/geo.h"
-// #include "./progrData/qry.h"
+#include "./progrlib/progrData.h"
+#include "./progrlib/geo.h"
+#include "./progrlib/qry.h"
 
 #include "./svg/svg.h"
 #include "./svg/line.h"
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
     geoParser(data);
 
-    // qryParser(data);
+    qryParser(data);
 
     destroyData(data);
 

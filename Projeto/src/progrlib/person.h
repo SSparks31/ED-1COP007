@@ -11,7 +11,7 @@ circleT personGetCircle(Person person);
 
 double personGetRadiation(Person person);
 
-void personAddRadiation(Person person, int radiation);
+void personAddRadiation(Person person, double radiation);
 
 int personIsDead(Person person);
 

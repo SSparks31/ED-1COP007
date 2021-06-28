@@ -1,6 +1,8 @@
 #include "./building.h"
 
-struct Building {
+#include <stdlib.h>
+
+struct building {
     rectT rect;
     int peopleInside;
 };
@@ -10,7 +12,7 @@ Building createBuilding(rectT rect) {
         return NULL;
     }
 
-    Building building = malloc(sizeof(struct Building));
+    Building building = malloc(sizeof(struct building));
     if (!building) {
         return NULL;
     }

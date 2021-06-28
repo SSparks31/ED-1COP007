@@ -1,5 +1,7 @@
 #include "./person.h"
 
+#include <stdlib.h>
+
 struct person {
     circleT circle;
     double radiation;
@@ -11,7 +13,7 @@ Person createPerson(circleT circle) {
         return NULL;
     }
 
-    Person person = malloc(sizeof(struct Person));
+    Person person = malloc(sizeof(struct person));
     if (!person) {
         return NULL;
     }
