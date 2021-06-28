@@ -20,13 +20,18 @@ int llIntersect(lineT lineA, lineT lineB) {
     double x2B = stringToDouble(getX2Line(lineB)); // x4
     double y2B = stringToDouble(getY2Line(lineB)); // y4
 
-    double uA = ((x2B - x1B) * (y1A - y1B) - (y2B - y1B) * (x1A - x1B)) / ((y2B - y1B) * (x2A - x1A) - (x2B - x1B) * (y2A - y1A));
+    double det = ((y2B - y1B) * (x2A - x1A) - (x2B - x1B) * (y2A - y1A));
+    if (det == 0) {
+        return 0;
+    }
+
+    double uA = ((x2B - x1B) * (y1A - y1B) - (y2B - y1B) * (x1A - x1B)) / det;
 
     if (uA < 0 || uA > 1) {
         return 0;
     }
 
-    double uB = ((x2A - x1A) * (y1A - y1B) - (y2A - y1A) * (x1A - x1B)) / ((y2B - y1B) * (x2A - x1A) - (x2B - x1B) * (y2A - y1A));
+    double uB = ((x2A - x1A) * (y1A - y1B) - (y2A - y1A) * (x1A - x1B)) / det;
 
     return uB >=0 && uB <= 1;
 

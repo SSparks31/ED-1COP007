@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 
+#include "./person.h"
+#include "./building.h"
+
 #include "../tree/kdTree.h"
 
 #include "../svg/rect.h"

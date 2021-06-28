@@ -1,7 +1,7 @@
 #ifndef LIB_PROGRBUILDING_H
 #define LIB_PROGRBUILDING_H
 
-#include "../svg/circle.h"
+#include "../svg/rect.h"
 
 typedef struct building* Building;
 

@@ -44,30 +44,5 @@ kdTree getPersonTree(progrData data);
 void destroyData(progrData data);
 
 
-building createBuilding(rectT rect);
-
-rectT buildingGetRect(building build);
-
-int buildingGetPeopleInside(building build);
-
-void buildingAddPerson(building build);
-
-void demolishBuilding(building build);
-
-
-person createPerson(circleT circle);
-
-circleT personGetCircle(person guy);
-
-double personGetRadiation(person guy);
-
-void personAddRadiation(person guy, int radiation);
-
-int personIsDead(person guy);
-
-void killPerson(person guy);
-
-void destroyPerson(person guy);
-
 #endif
 

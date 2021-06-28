@@ -1,9 +1,11 @@
-#include "geo.h"
+#include "./geo.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "./progrData.h"
+#include "./person.h"
+#include "./building.h"
 
 #include "../helper/stringHelp.h"
 #include <string.h>
@@ -56,10 +58,10 @@ void r(progrData data, char* args, FILE* svgFile) {
     char* fillColor = getRectFill(data);
 
     rectT newRect = createRect(borderColor, fillColor, "0.5", ID, coordinates);
-    building build = createBuilding(newRect);
+    Building building = createBuilding(newRect);
 
     kdTree tree = getBuildingTree(data);
-    appendKDTree(tree, build);
+    appendKDTree(tree, building);
 
     addRectToSVG(svgFile, newRect);
 }
@@ -76,10 +78,10 @@ void c(progrData data, char* args, FILE* svgFile) {
     char* fillColor = getCircleFill(data);
 
     circleT newCircle = createCircle(borderColor, fillColor, "0.5", ID, coordinates);
-    person guy = createPerson(newCircle);
+    Person person = createPerson(newCircle);
 
     kdTree tree = getPersonTree(data);
-    appendKDTree(tree, guy);
+    appendKDTree(tree, person);
 
     addCircleToSVG(svgFile, newCircle);
 }

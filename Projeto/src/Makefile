@@ -4,66 +4,43 @@ CFLAGS = -std=c99 -fstack-protector-all
 SRC = .
 OBJ = ../obj
 
-MAINDEPS = $(OBJ)/progrData.o $(OBJ)/svg.o $(OBJ)/rect.o $(OBJ)/line.o $(OBJ)/circle.o $(OBJ)/intersect.o $(OBJ)/inside.o $(OBJ)/geo.o $(OBJ)/kdTree.o $(OBJ)/binaryTree.o $(OBJ)/argHelp.o $(OBJ)/mathHelp.o $(OBJ)/pathHelp.o $(OBJ)/stringHelp.o
+TREE = tree
+PROGR = progrlib
+SVG = svg
+HELPER = helper
 
-progr: $(SRC)/main.c $(MAINDEPS)
-	$(CC) $(CFLAGS) -o $@ $^
+TREEDEPS = $(OBJ)/$(TREE)/kdTree.o $(OBJ)/$(TREE)/binaryTree.o
+
+PROGRDEPS = $(OBJ)/$(PROGR)/progrData.o $(OBJ)/$(PROGR)/building.o $(OBJ)/$(PROGR)/person.o $(OBJ)/$(PROGR)/meteor.o $(OBJ)/$(PROGR)/polygon.o $(OBJ)/$(PROGR)/geo.o $(OBJ)/$(PROGR)/qry.o
+
+SVGDEPS = $(OBJ)/$(SVG)/circle.o $(OBJ)/$(SVG)/inside.o $(OBJ)/$(SVG)/intersect.o $(OBJ)/$(SVG)/line.o $(OBJ)/$(SVG)/rect.o $(OBJ)/$(SVG)/svg.o
+
+HELPERDEPS = $(OBJ)/$(HELPER)/argHelp.o $(OBJ)/$(HELPER)/mathHelp.o $(OBJ)/$(HELPER)/pathHelp.o $(OBJ)/$(HELPER)/stringHelp.o
+
+
+
+progr: $(SRC)/main.c $(TREEDEPS) $(PROGRDEPS) $(SVGDEPS) $(HELPERDEPS)
+	$(CC) $(CFLAGS) -g -o $@ $^
 
 
 $(OBJ):
 	-@mkdir $(OBJ)
 
+$(OBJ)/%/: |$(OBJ)
+	-@mkdir $@
 
-
-$(OBJ)/progrData.o: $(SRC)/progrData/progrData.c $(SRC)/progrData/progrData.h |$(OBJ)
+$(OBJ)/$(TREE)/%.o: $(SRC)/$(TREE)/%.c $(SRC)/$(TREE)/%.h |$(OBJ)/$(TREE)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/geo.o: $(SRC)/progrData/geo.c $(SRC)/progrData/geo.h |$(OBJ)
+$(OBJ)/$(PROGR)/%.o: $(SRC)/$(PROGR)/%.c $(SRC)/$(PROGR)/%.h |$(OBJ)/$(PROGR)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/qry.o: $(SRC)/progrData/qry.c $(SRC)/progrData/qry.h |$(OBJ)
+$(OBJ)/$(SVG)/%.o: $(SRC)/$(SVG)/%.c $(SRC)/$(SVG)/%.h |$(OBJ)/$(SVG)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-
-
-$(OBJ)/kdTree.o: $(SRC)/tree/kdTree.c $(SRC)/tree/kdTree.h |$(OBJ)
+$(OBJ)/$(HELPER)/%.o: $(SRC)/$(HELPER)/%.c $(SRC)/$(HELPER)/%.h |$(OBJ)/$(HELPER)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/binaryTree.o: $(SRC)/tree/binaryTree.c $(SRC)/tree/binaryTree.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-
-
-$(OBJ)/svg.o: $(SRC)/svg/svg.c $(SRC)/svg/svg.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/rect.o: $(SRC)/svg/rect.c $(SRC)/svg/rect.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/line.o: $(SRC)/svg/line.c $(SRC)/svg/line.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<	
-
-$(OBJ)/circle.o: $(SRC)/svg/circle.c $(SRC)/svg/circle.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<	
-
-$(OBJ)/intersect.o: $(SRC)/svg/intersect.c $(SRC)/svg/intersect.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<	
-
-$(OBJ)/inside.o: $(SRC)/svg/inside.c $(SRC)/svg/inside.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<	
-
-
-$(OBJ)/argHelp.o: $(SRC)/helper/argHelp.c $(SRC)/helper/argHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/stringHelp.o: $(SRC)/helper/stringHelp.c $(SRC)/helper/stringHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/mathHelp.o: $(SRC)/helper/mathHelp.c $(SRC)/helper/mathHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/pathHelp.o: $(SRC)/helper/pathHelp.c $(SRC)/helper/pathHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
 
 
 PHONY: clean

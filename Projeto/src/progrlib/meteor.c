@@ -1,5 +1,7 @@
 #include "./meteor.h"
 
+#include <stdlib.h>
+
 struct meteor {
     circleT circle;
     double radiation;
@@ -45,5 +47,5 @@ void destroyMeteor(Meteor meteor) {
     circleT circle = meteorGetCircle(meteor);
     destroyCircle(circle);
 
-    free(meteor)
+    free(meteor);
 }
