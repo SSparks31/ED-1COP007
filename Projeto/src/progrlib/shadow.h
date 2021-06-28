@@ -2,22 +2,16 @@
 #define LIB_PROGRSHADOW_H
 
 #include "../svg/line.h"
+#include "./meteor.h"
 
 typedef struct shadow* Shadow;
 
-Shadow createPerson( circle);
+Shadow createShadow(char* wallCoordinates, Meteor meteor);
 
-circleT personGetCircle(Person person);
+lineT shadowGetGeneratingWall(Shadow shadow);
 
-double personGetRadiation(Person person);
+Meteor shadowGetMeteor(Shadow shadow);
 
-void personAddRadiation(Person person, int radiation);
-
-int personIsDead(Person person);
-
-void killPerson(Person person);
-
-void destroyPerson(Person person);
-
+void destroyShadow(Shadow shadow);
 
 #endif

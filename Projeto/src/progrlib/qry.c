@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define COMMANDS 5
+#define COMMANDS 6
 
 const double radiationLevels[7] = {25, 50, 100, 250, 500, 1000, 8000};
 
@@ -27,6 +27,19 @@ typedef struct txtOutput {
     void* elem;
     int num;
 }* TxtOutput;
+
+
+int rectIDCompare(const kdTreeElem a, const void* b) {
+    char* idA = getIDRect(buildingGetRect(a));
+    char* idB = (char*) b;
+
+    return strcmp(idA, idB);
+}
+
+rectT findRectWithID(kdTree tree, char* id) {
+    kdNode rectNode = findKDNodeCustomSearch(tree, id, rectIDCompare);
+    return buildingGetRect(getElemInKDNode(tree, rectNode));
+}
 
 int comparePersonID(const void* a, const void* b) {
     Person personA = *(Person*) a;
@@ -64,8 +77,8 @@ int compareRectangleLeft(const void* a, const void* b, int j) {
         getDimension = getYRect;
     }
 
-    rectT rectA = a;
-    rectT rectB = b;
+    rectT rectA = (rectT) a;
+    rectT rectB = (rectT) b;
 
     double aDimension = stringToDouble(getDimension(rectA));
     double bDimension = stringToDouble(getDimension(rectB));
@@ -81,9 +94,6 @@ int compareRectangleLeft(const void* a, const void* b, int j) {
 }
 
 int compareRectangleRight(const void* a, const void* b, int j) {
-    rectT rectA = (rectT) a;
-    rectT rectB = (rectT) b;
-
     char* (*getDimension)(rectT rect);
     char* (*getLength)(rectT rect);
     if (j) {
@@ -94,15 +104,19 @@ int compareRectangleRight(const void* a, const void* b, int j) {
         getLength = getHeightRect;
     }
 
-    double dimA = stringToDouble(getDimension(rectA)) + stringToDouble(getLength(rectA));
-    double dimB = stringToDouble(getDimension(rectB)) + stringToDouble(getLength(rectB));
+    rectT rectA = (rectT) a;
+    rectT rectB = (rectT) b;
 
-    if (dimA < dimB) {
+    double aDimension = stringToDouble(getDimension(rectA)) + stringToDouble(getLength(rectA));
+    double bDimension = stringToDouble(getDimension(rectB)) + stringToDouble(getLength(rectB));
+
+    if (aDimension < bDimension) {
         return -1;
     }
-    if (dimA > dimB) {
+    if (aDimension > bDimension) {
         return 1;
     }
+
     return 0;
 }
 
@@ -114,31 +128,28 @@ void qryDRecursive(kdTree tree, kdNode node, rectT rect, int height, int isPoint
     Building building = getElemInKDNode(tree, node);
     rectT buildingRect = buildingGetRect(building);
 
-    int compLeft;
-    int compRight;
+    int compLeft = compareRectangleLeft(rect, buildingRect, height);
+    int compRight = compareRectangleRight(rect, buildingRect, height);
     
-    int inside;
-    char* width = getWidthRect(rect);  
-    if (isPoint) {
-        inside = rrInside(rect, buildingRect);        
-        compLeft = compareRectangleLeft(rect, buildingRect, height);
-        compRight = compareRectangleRight(rect, buildingRect, height);
-    } else {
-        inside = rrInside(buildingRect, rect);        
-        compLeft = compareRectangleLeft(buildingRect, rect, height);
-        compRight = compareRectangleRight(buildingRect, rect, height);
-    }
-
     kdNode left = getKDNodeLeftChild(tree, node);
     kdNode right = getKDNodeRightChild(tree, node);
-    
-    if (compLeft == -1) {
-        right = NULL;
+
+    int inside;
+    if (isPoint) {
+        inside = rrInside(rect, buildingRect);        
+        if (compLeft == -1) {
+            right = NULL;
+        }
+        if (compRight == 1) {
+            left = NULL;
+        }
+    } else {
+        inside = rrInside(buildingRect, rect); 
+        if (compLeft == 1) {
+            left = NULL;
+        }
     }
 
-    if (compRight == 1) {
-        left = NULL;
-    }
 
     qryDRecursive(tree, left, rect, (height + 1) % 2, isPoint, output);
     qryDRecursive(tree, right, rect, (height + 1) % 2, isPoint, output);
@@ -174,11 +185,33 @@ void qryDpi(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
     destroyRect(point);
 }
 
-void qryDr(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
+void qryDr(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
+    kdTree tree = getBuildingTree(data);
+    rectT rect = findRectWithID(tree, args);
+    
+    qryDRecursive(tree, getRootKDTree(tree), rect, 1, 0, output);
+
+    qsort(output->elem, output->num, sizeof(Person*), compareBuildingID);
+
+    Building* removedBuildings = output->elem;
+    for (int i = 0; i < output->num; ++i) {
+        fprintf(qryTXT, "\t%s\n", getIDRect(buildingGetRect(removedBuildings[i])));
+        demolishBuilding(removedBuildings[i]);
+    }
+
+}
 
 void qryFg(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
 
-void qryIm(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
+void createShadows(progrData data, Meteor meteor, kdTree tree, kdNode node) {
+
+}
+
+void qryIm(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
+    circleT circle = createCircle("gray", "gray", ".8", "", args);
+    
+    // createMeteor
+}
 
 void qryT30Recursion(kdTree tree, kdNode node, TxtOutput output) {
     if (!node) {
@@ -209,6 +242,9 @@ void qryT30(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
         fprintf(qryTXT, "\t%s\n", getIDCircle(personGetCircle(deadPeople[i])));
     }
 }
+
+
+void qryNve(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
 
 
 
@@ -262,8 +298,8 @@ void qryParser(progrData data) {
 
     char command[999];
 
-    const char* commands[COMMANDS] = {"dpi", "dr", "fg", "im", "t30"};
-    void (*functions[COMMANDS])(progrData data, char* args, FILE* qryTXT, TxtOutput output) = {qryDpi, qryDr, qryFg, qryIm, qryT30};
+    const char* commands[COMMANDS] = {"dpi", "dr", "fg", "im", "t30", "nve"};
+    void (*functions[COMMANDS])(progrData data, char* args, FILE* qryTXT, TxtOutput output) = {qryDpi, qryDr, qryFg, qryIm, qryT30, qryNve};
     
     TxtOutput output = malloc(sizeof(struct txtOutput));
     if (!output) {
@@ -286,7 +322,6 @@ void qryParser(progrData data) {
                 break;
             }
         }
-        //printf("%d\n", output->num);
 
         free(output->elem);
     }
