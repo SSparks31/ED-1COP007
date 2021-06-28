@@ -11,17 +11,18 @@
 
 #include "../tree/kdTree.h"
 
+#include "../list/list.h"
+
 #include "./person.h"
 #include "./building.h"
 #include "./meteor.h"
+#include "./shadow.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define COMMANDS 6
-
-const double radiationLevels[7] = {25, 50, 100, 250, 500, 1000, 8000};
 
 typedef struct txtOutput {
     void* elem;
@@ -174,7 +175,7 @@ void qryDpi(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
 
     qryDRecursive(tree, getRootKDTree(tree), point, 1, 1, output);
 
-    qsort(output->elem, output->num, sizeof(Person*), compareBuildingID);
+    qsort(output->elem, output->num, sizeof(Building*), compareBuildingID);
 
     Building* removedBuildings = output->elem;
     for (int i = 0; i < output->num; ++i) {
@@ -191,7 +192,7 @@ void qryDr(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
     
     qryDRecursive(tree, getRootKDTree(tree), rect, 1, 0, output);
 
-    qsort(output->elem, output->num, sizeof(Person*), compareBuildingID);
+    qsort(output->elem, output->num, sizeof(Building*), compareBuildingID);
 
     Building* removedBuildings = output->elem;
     for (int i = 0; i < output->num; ++i) {
@@ -203,14 +204,142 @@ void qryDr(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
 
 void qryFg(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
 
+
+const double radiationLevels[7] = { 25, 50, 100, 250, 500, 1000, 8000 };
+
+char* colors[8] = { "cyan", "lime", "magenta", "blue", "darkmagenta", "darkblue", "red", "black" };
+
 void createShadows(progrData data, Meteor meteor, kdTree tree, kdNode node) {
+    if (!node) {
+        return;
+    }
+
+    rectT buildingRect = buildingGetRect(getElemInKDNode(tree, node));
+    double x1 = stringToDouble(getXRect(buildingRect));
+    double x2 = x1 + stringToDouble(getWidthRect(buildingRect));
+    double y1 = stringToDouble(getYRect(buildingRect));
+    double y2 = y1 + stringToDouble(getHeightRect(buildingRect));
+
+    listT shadowList = getShadowList(data);
+
+
+    char coordinates[999];
+    sprintf(coordinates, "%lf %lf %lf %lf", x1, y1, x1, y2);
+    appendList(shadowList, createShadow(coordinates, meteor));
+
+    sprintf(coordinates, "%lf %lf %lf %lf", x1, y1, x2, y1);
+    appendList(shadowList, createShadow(coordinates, meteor));
+
+    sprintf(coordinates, "%lf %lf %lf %lf", x1, y2, x2, y2);
+    appendList(shadowList, createShadow(coordinates, meteor));
+
+    sprintf(coordinates, "%lf %lf %lf %lf", x2, y1, x2, y2);
+    appendList(shadowList, createShadow(coordinates, meteor));
 
 }
 
-void qryIm(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
-    circleT circle = createCircle("gray", "gray", ".8", "", args);
+double getAttenuation(Person person, Shadow shadow) {
+    Meteor meteor = shadowGetMeteor(shadow);
     
-    // createMeteor
+    circleT personCircle = personGetCircle(person);
+    circleT meteorCircle = meteorGetCircle(meteor);
+
+    char* x1 = getXCenterCircle(personCircle);
+    char* y1 = getYCenterCircle(personCircle);
+    char* x2 = getXCenterCircle(meteorCircle);
+    char* y2 = getYCenterCircle(meteorCircle);
+
+    char coordinates[999];
+    sprintf(coordinates, "%s %s %s %s", x1, y1, x2, y2);
+    lineT sight = createLine("green", coordinates);
+    lineT wall = shadowGetGeneratingWall(shadow);
+
+    return llIntersect(sight, wall)? 0.8 : 1;
+}
+
+void chernobyl(progrData data, listT list, listPosT firstShadow, kdTree tree, kdNode node, TxtOutput output) {
+    if (!node) {
+        return;
+    }
+    
+    listPosT aux = firstShadow;
+    Shadow shadow = getElementList(list, firstShadow);
+
+    Meteor meteor = shadowGetMeteor(shadow);
+    double radiation = meteorGetRadiation(meteor);
+    
+    Person person = getElemInKDNode(tree, node);
+    circleT personCircle = personGetCircle(person);
+
+    while (aux) {
+        shadow = getElementList(list, aux);
+        radiation *= getAttenuation(person, shadow);
+        aux = getNextElementList(list, aux);
+    }
+    
+    personAddRadiation(person, radiation);
+    
+    double totalRadiation = personGetRadiation(person);
+    int i;
+    for (i = 0; i < 7; ++i) {
+        if (radiationLevels[i] > totalRadiation) {
+            break;
+        }
+    }
+
+    if (i == 7) {
+        killPerson(person);
+    }
+    
+    if (i >= 6 && !personIsDead(person)) {
+        output->elem = realloc(output->elem, (output->num + 1) * sizeof(Person*));
+        memcpy(output->elem + (sizeof(Person*) * output->num), &person, sizeof(Person*));
+        output->num++;
+    }
+
+    setFillColorCircle(personCircle, colors[i]);
+    setBorderColorCircle(personCircle, colors[i]);
+    
+    kdNode left = getKDNodeLeftChild(tree, node);
+    kdNode right = getKDNodeRightChild(tree, node);
+
+    chernobyl(data, list, firstShadow, tree, left, output);
+    chernobyl(data, list, firstShadow, tree, right, output);
+}
+
+void qryIm(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
+    double radiation = stringToDouble(rfindCharacter(args, ' ') + 1);
+    
+    circleT circle = createCircle("gray", "gray", ".8", "a", args);
+    
+    Meteor meteor = createMeteor(circle, radiation);
+    
+    listT meteorList = getMeteorList(data);
+    appendList(meteorList, meteor);
+
+    listT shadowList = getShadowList(data);
+    listPosT aux = getLastElementList(shadowList);
+
+    kdTree buildingTree = getBuildingTree(data);
+
+    createShadows(data, meteor, buildingTree, getRootKDTree(buildingTree));
+
+    kdTree personTree = getPersonTree(data);
+    chernobyl(data, shadowList, aux, personTree, getRootKDTree(personTree), output);
+
+    qsort(output->elem, output->num, sizeof(Person*), comparePersonID);
+
+    Person* reportPeople = output->elem;
+    for (int i = 0; i < output->num; ++i) {
+        if (personGetRadiation(reportPeople[i]) > radiationLevels[6]) {
+            fprintf(qryTXT, "\tMorte instantanea - ");    
+        } else {
+            fprintf(qryTXT, "\tMorte iminente - ");
+        }
+        
+        fprintf(qryTXT, "%s (%lf)\n", getIDCircle(personGetCircle(reportPeople[i])), personGetRadiation(reportPeople[i]));
+        
+    }
 }
 
 void qryT30Recursion(kdTree tree, kdNode node, TxtOutput output) {
@@ -219,7 +348,7 @@ void qryT30Recursion(kdTree tree, kdNode node, TxtOutput output) {
     }
 
     Person person = getElemInKDNode(tree, node);
-    if (personGetRadiation(person) >= radiationLevels[5]) {
+    if (personGetRadiation(person) >= radiationLevels[5] && !personIsDead(person)) {
         killPerson(person);
         
         output->elem = realloc(output->elem, (output->num + 1) * sizeof(Person*));
@@ -243,10 +372,38 @@ void qryT30(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
     }
 }
 
-
 void qryNve(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
 
 
+void printBuildings(FILE* svgFile, kdTree tree, kdNode node) {
+    if (!node) {
+        return;
+    }
+
+    rectT rect = buildingGetRect(getElemInKDNode(tree, node));
+    addRectToSVG(svgFile, rect);
+
+    kdNode left = getKDNodeLeftChild(tree, node);
+    kdNode right = getKDNodeRightChild(tree, node);
+
+    printBuildings(svgFile, tree, left);
+    printBuildings(svgFile, tree, right);
+}
+
+void printPeople(FILE* svgFile, kdTree tree, kdNode node) {
+    if (!node) {
+        return;
+    }
+
+    circleT circle = personGetCircle(getElemInKDNode(tree, node));
+    addCircleToSVG(svgFile, circle);
+
+    kdNode left = getKDNodeLeftChild(tree, node);
+    kdNode right = getKDNodeRightChild(tree, node);
+
+    printPeople(svgFile, tree, left);
+    printPeople(svgFile, tree, right);
+}
 
 void qryParser(progrData data) {
     if (isEmpty(getQryName(data))) {
@@ -325,6 +482,22 @@ void qryParser(progrData data) {
 
         free(output->elem);
     }
+
+    kdTree buildingTree = getBuildingTree(data);
+    printBuildings(svgFile, buildingTree, getRootKDTree(buildingTree));
+
+    kdTree personTree = getPersonTree(data);
+    printPeople(svgFile, personTree, getRootKDTree(personTree));
+
+    listT meteorList = getMeteorList(data);
+    listPosT aux = getFirstElementList(meteorList);
+    while (aux) {
+        circleT circle = meteorGetCircle(getElementList(meteorList, aux));
+        addCircleToSVG(svgFile, circle);
+
+        aux = getNextElementList(meteorList, aux);
+    }
+   
 
     free(output);
     fclose(qryFile);

@@ -4,6 +4,8 @@
 
 #include "./person.h"
 #include "./building.h"
+#include "./meteor.h"
+#include "./shadow.h"
 
 #include "../svg/rect.h"
 #include "../svg/circle.h"
@@ -275,11 +277,17 @@ void destroyData(progrData data) {
     }
     destroyKDTree(personTree);
 
+    listT meteorList = getMeteorList(data);
+    while (!isEmptyList(meteorList)) {
+        destroyMeteor(removeList(meteorList, getFirstElementList(meteorList)));
+    }
+    destroyList(meteorList);
+
+    listT shadowList = getShadowList(data);
+    while (!isEmptyList(shadowList)) {
+        destroyShadow(removeList(shadowList, getFirstElementList(shadowList)));
+    }
+    destroyList(shadowList);
+
     free(data);
 }
-
-
-
-
-
-
