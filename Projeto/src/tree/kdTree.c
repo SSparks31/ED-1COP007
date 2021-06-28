@@ -15,12 +15,11 @@ struct kdNode {
 struct kdTree {
     kdNode root;
     
+    int dimensions;
     int numElements;
 
-    int (*compare)(const kdTreeElem a, const kdTreeElem b);
+    int (*compare)(const kdTreeElem a, const kdTreeElem b, int j);
 };
-
-kdNode recursiveFindKDNode(kdTree tree, kdNode node, kdTreeElem elem);
 
 int findHeightKDTree(kdTree tree, kdNode node);
 
@@ -30,8 +29,10 @@ kdNode recursiveKDCustomSearch(kdTree tree, kdNode candidate, void* elem, int (*
 
 kdNode recursiveFindKDNodeParent(kdTree tree, kdNode node, kdNode parentCandidate);
 
-kdTree createKDTree(int (*compare)(const kdTreeElem a, const kdTreeElem b)) {
-    if (!compare) {
+kdNode findMinimumDimensionInSubtree(kdTree tree, kdNode node, int j);
+
+kdTree createKDTree(int k, int (*compare)(const kdTreeElem a, const kdTreeElem b, int j)) {
+    if (k <= 0 || !compare) {
         return NULL;
     }
     
@@ -42,11 +43,20 @@ kdTree createKDTree(int (*compare)(const kdTreeElem a, const kdTreeElem b)) {
 
     tree->root = NULL;
 
+    tree->dimensions = k;
     tree->numElements = 0;
 
     tree->compare = compare;
 
     return tree;
+}
+
+int getDimensionsKDTree(kdTree tree) {
+    if (!tree) {
+        return -1;
+    }
+    
+    return tree->dimensions;
 }
 
 int isEmptyKDTree(kdTree tree) {
@@ -76,7 +86,7 @@ int findHeightKDTree(kdTree tree, kdNode node) {
     int leftHeight = findHeightKDTree(tree, left);
     int rightHeight = findHeightKDTree(tree, right);
 
-    return max(1 + leftHeight, 1 + rightHeight);
+    return imax(1 + leftHeight, 1 + rightHeight);
 }
 
 int getHeightKDTree(kdTree tree) {
@@ -132,31 +142,33 @@ kdNode getRootKDTree(kdTree tree) {
     return tree->root;
 }
 
-kdNode recursiveFindKDNode(kdTree tree, kdNode node, kdTreeElem elem) {
-    if (!node) {
+kdNode findKDNodeInTree(kdTree tree, kdTreeElem elem) {
+    if (!tree || !elem) {
         return NULL;
     }
 
-    kdTreeElem nodeElem = getElemInKDNode(tree, node);
-    if (tree->compare(nodeElem, elem) == 0) {
-        return node;
+    kdNode aux = getRootKDTree(tree);
+    int height = 1;
+    if (!aux) {
+        return NULL;
     }
 
-    kdNode leftSubtree = recursiveFindKDNode(tree, getKDNodeLeftChild(tree, node), elem);
-    if (leftSubtree) {
-        return leftSubtree;
-    }
+    while (aux) {
+        kdTreeElem auxElem = getElemInKDNode(tree, aux);
+        if (auxElem == elem) {
+            return aux;
+        }
 
-    kdNode rightSubtree = recursiveFindKDNode(tree, getKDNodeRightChild(tree, node), elem);
-    if (rightSubtree) {
-        return rightSubtree;
+        if (tree->compare(elem, auxElem, height) == -1) {
+            aux = getKDNodeLeftChild(tree, aux);
+        } else {
+            aux = getKDNodeRightChild(tree, aux);
+        }
+
+        height = (height + 1) % getDimensionsKDTree(tree);
     }
 
     return NULL;
-}
-
-kdNode findKDNodeInTree(kdTree tree, kdTreeElem elem) {
-    return recursiveFindKDNode(tree, getRootKDTree(tree), elem);
 }
 
 kdNode recursiveKDCustomSearch(kdTree tree, kdNode candidate, void* elem, int (*compare) (const kdTreeElem a, const void* b)) {
@@ -242,46 +254,73 @@ kdNode appendKDTree(kdTree tree, kdTreeElem elem) {
     }
 
     newNode->elem = elem;
-
     newNode->left = NULL;
     newNode->right = NULL;
 
     kdNode aux = getRootKDTree(tree);
     if (!aux) {
         tree->root = newNode;
-
+        
+        tree->numElements++;
         return newNode;
     }
 
-    while (aux) {
-        kdTreeElem auxElem = getElemInKDNode(tree, aux);
-        kdTreeElem next;
-        int comp = tree->compare(elem, auxElem);
+    kdNode next;
 
-        if (comp == -1) {
+    for (int height = 1; aux; height = (height + 1) % getDimensionsKDTree(tree)) {
+        kdTreeElem auxElem = getElemInKDNode(tree, aux);
+        if (tree->compare(elem, auxElem, height) == -1) {
             next = getKDNodeLeftChild(tree, aux);
             
             if (!next) {
                 aux->left = newNode;
                 break;
             }
-
-        } else if (comp == 1) {
+        } else {
             next = getKDNodeRightChild(tree, aux);
 
             if (!next) {
                 aux->right = newNode;
                 break;
             }
-
-        } else {
-            return NULL;
         }
-
+        
         aux = next;
     }
 
+    tree->numElements++;
     return newNode;
+}
+
+kdNode findMinimumDimensionInSubtree(kdTree tree, kdNode node, int j) {
+    if (!node) {
+        return NULL;
+    }
+
+    kdNode bestNode = node;
+    kdTreeElem bestElem = getElemInKDNode(tree, bestNode);
+    kdNode leftBestNode = findMinimumDimensionInSubtree(tree, getKDNodeLeftChild(tree, node), j);
+    kdNode rightBestNode = findMinimumDimensionInSubtree(tree, getKDNodeRightChild(tree, node), j);
+
+    if (leftBestNode) {
+        kdTreeElem leftElem = getElemInKDNode(tree, leftBestNode);
+
+        if (tree->compare(bestElem, leftElem, j) != -1) {
+            bestNode = leftBestNode;
+            bestElem = leftElem;
+        }
+    }
+
+    if (rightBestNode) {
+        kdTreeElem rightElem = getElemInKDNode(tree, rightBestNode);
+
+        if (tree->compare(bestElem, rightElem, j) != -1) {
+            bestNode = rightBestNode;
+            bestElem = rightElem;
+        }
+    }
+
+    return bestNode;
 }
 
 kdTreeElem removeFromKDTree(kdTree tree, kdNode node) {
@@ -310,37 +349,22 @@ kdTreeElem removeFromKDTree(kdTree tree, kdNode node) {
         tree->numElements--;
         return nodeElem;
     }
-
-    if (left && right) {
-        kdNode rightmostNode = left;
-        kdNode next;
-        while ((next = getKDNodeRightChild(tree, rightmostNode))) {
-            rightmostNode = next;
-        }
-
-        kdTreeElem newElem = removeFromKDTree(tree, rightmostNode);
-        node->elem = newElem;
-
-        return nodeElem;
-    }
-
-    kdNode aux;
-    if (left) {
-        aux = left;
+    
+    int height = getKDNodeHeight(tree, node) % getDimensionsKDTree(tree);
+    kdNode minDimension;
+    
+    if (right) {
+        minDimension = findMinimumDimensionInSubtree(tree, right, height);
+        node->elem = minDimension->elem;
+        removeFromKDTree(tree, minDimension);
     } else {
-        aux = right;
+        minDimension = findMinimumDimensionInSubtree(tree, left, height);
+        node->elem = minDimension->elem;
+        removeFromKDTree(tree, minDimension);
+        node->right = node->left;
+        node->left = NULL;
     }
 
-    if (!parent) {
-        tree->root = aux;
-    } else if (node == parentLeftChild) {
-        parent->left = aux;
-    } else {
-        parent->right = aux;
-    }
-
-    free(node);
-    tree->numElements--;
     return nodeElem;
 }
 

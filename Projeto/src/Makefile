@@ -4,73 +4,47 @@ CFLAGS = -std=c99 -fstack-protector-all
 SRC = .
 OBJ = ../obj
 
-MAINDEPS = $(OBJ)/progrData.o $(OBJ)/svg.o $(OBJ)/rect.o $(OBJ)/line.o $(OBJ)/circle.o $(OBJ)/geo.o $(OBJ)/qry.o $(OBJ)/argHelp.o $(OBJ)/mathHelp.o $(OBJ)/pathHelp.o $(OBJ)/stringHelp.o $(OBJ)/listEfficiency.o
+TREE = tree
+PROGR = progrlib
+SVG = svg
+HELPER = helper
 
-progr: progrest progrdin
+TREEDEPS = $(OBJ)/$(TREE)/kdTree.o $(OBJ)/$(TREE)/binaryTree.o
 
-progrest: $(SRC)/main.c $(MAINDEPS) $(OBJ)/staticList.o
-	$(CC) $(CFLAGS) -o $@ $^
+PROGRDEPS = $(OBJ)/$(PROGR)/progrData.o $(OBJ)/$(PROGR)/building.o $(OBJ)/$(PROGR)/person.o $(OBJ)/$(PROGR)/meteor.o $(OBJ)/$(PROGR)/polygon.o $(OBJ)/$(PROGR)/geo.o $(OBJ)/$(PROGR)/qry.o
 
-progrdin: $(SRC)/main.c $(MAINDEPS) $(OBJ)/dynamicList.o
-	$(CC) $(CFLAGS) -o $@ $^
+SVGDEPS = $(OBJ)/$(SVG)/circle.o $(OBJ)/$(SVG)/inside.o $(OBJ)/$(SVG)/intersect.o $(OBJ)/$(SVG)/line.o $(OBJ)/$(SVG)/rect.o $(OBJ)/$(SVG)/svg.o
 
+HELPERDEPS = $(OBJ)/$(HELPER)/argHelp.o $(OBJ)/$(HELPER)/mathHelp.o $(OBJ)/$(HELPER)/pathHelp.o $(OBJ)/$(HELPER)/stringHelp.o
+
+
+
+progr: $(SRC)/main.c $(TREEDEPS) $(PROGRDEPS) $(SVGDEPS) $(HELPERDEPS)
+	$(CC) $(CFLAGS) -g -o $@ $^
 
 
 $(OBJ):
-	-mkdir $(OBJ)
+	-@mkdir $(OBJ)
 
+$(OBJ)/%/: |$(OBJ)
+	-@mkdir $@
 
-
-$(OBJ)/progrData.o: $(SRC)/progrData/progrData.c $(SRC)/progrData/progrData.h |$(OBJ)
+$(OBJ)/$(TREE)/%.o: $(SRC)/$(TREE)/%.c $(SRC)/$(TREE)/%.h |$(OBJ)/$(TREE)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/geo.o: $(SRC)/progrData/geo.c $(SRC)/progrData/geo.h |$(OBJ)
+$(OBJ)/$(PROGR)/%.o: $(SRC)/$(PROGR)/%.c $(SRC)/$(PROGR)/%.h |$(OBJ)/$(PROGR)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/qry.o: $(SRC)/progrData/qry.c $(SRC)/progrData/qry.h |$(OBJ)
+$(OBJ)/$(SVG)/%.o: $(SRC)/$(SVG)/%.c $(SRC)/$(SVG)/%.h |$(OBJ)/$(SVG)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/listEfficiency.o: $(SRC)/progrData/listEfficiency.c $(SRC)/progrData/listEfficiency.h
+$(OBJ)/$(HELPER)/%.o: $(SRC)/$(HELPER)/%.c $(SRC)/$(HELPER)/%.h |$(OBJ)/$(HELPER)/
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
-
-$(OBJ)/svg.o: $(SRC)/svg/svg.c $(SRC)/svg/svg.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/rect.o: $(SRC)/svg/rect.c $(SRC)/svg/rect.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/line.o: $(SRC)/svg/line.c $(SRC)/svg/line.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<	
-
-$(OBJ)/circle.o: $(SRC)/svg/circle.c $(SRC)/svg/circle.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<	
-
-
-
-
-$(OBJ)/dynamicList.o: $(SRC)/list/dynamicList.c $(SRC)/list/list.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/staticList.o: $(SRC)/list/staticList.c $(SRC)/list/list.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/argHelp.o: $(SRC)/helper/argHelp.c $(SRC)/helper/argHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/stringHelp.o: $(SRC)/helper/stringHelp.c $(SRC)/helper/stringHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/mathHelp.o: $(SRC)/helper/mathHelp.c $(SRC)/helper/mathHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ)/pathHelp.o: $(SRC)/helper/pathHelp.c $(SRC)/helper/pathHelp.h |$(OBJ)
-	$(CC) $(CFLAGS) -c -o $@ $<
 
 PHONY: clean
 
 clean:
-	rm -rf $(OBJ)
-	rm -f $(SRC)/progrest
-	rm -f $(SRC)/progrdin
+	-@rm -rf $(OBJ)
+	-@rm -f $(SRC)/progr

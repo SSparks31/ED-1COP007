@@ -6,9 +6,12 @@
 #include "../helper/stringHelp.h"
 
 struct rect {
+    char* rectID;
+
     char* borderColor;
     char* fillColor;
-    char* rectID;
+
+    char* opacity;
 
     char* xPos;
     char* yPos;
@@ -17,8 +20,8 @@ struct rect {
 
 };
 
-rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates) {
-    if (isEmpty(borderColor) || isEmpty(fillColor) || isEmpty(ID) || isEmpty(coordinates));
+rectT createRect(char* borderColor, char* fillColor, char* opacity, char* ID, char* coordinates) {
+    if (isEmpty(borderColor) || isEmpty(fillColor) || isEmpty(opacity) || isEmpty(ID) || isEmpty(coordinates));
     
     rectT newRect = malloc(sizeof(struct rect));
     if (!newRect) {
@@ -30,8 +33,9 @@ rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates
     char* w  = splitString(y , ' ');
     char* h  = splitString(w , ' ');
 
-    newRect->borderColor = malloc(sizeof(char) * (strlen(borderColor) +1));
-    newRect->fillColor = malloc(sizeof(char) * (strlen(fillColor) +1));
+    newRect->borderColor = malloc(strlen(borderColor) +1);
+    newRect->fillColor = malloc(strlen(fillColor) +1);
+    newRect->opacity = malloc(strlen(opacity) + 1);
     newRect->rectID = malloc(strlen(ID) + 1);
     newRect->xPos   = malloc(strlen(x)  + 1);
     newRect->yPos   = malloc(strlen(y)  + 1);
@@ -40,13 +44,14 @@ rectT createRect(char* borderColor, char* fillColor, char* ID, char* coordinates
     
     strcpy(newRect->borderColor, borderColor);
     strcpy(newRect->fillColor, fillColor);
+    strcpy(newRect->opacity, opacity);
     strcpy(newRect->rectID, ID);
     strcpy(newRect->xPos  , x);
     strcpy(newRect->yPos  , y);
     strcpy(newRect->width , w);
     strcpy(newRect->height, h);
 
-    if (!newRect->borderColor || !newRect->fillColor || !newRect->rectID || !newRect->xPos || !newRect->yPos || !newRect->width || !newRect->height) {
+    if (!newRect->borderColor || !newRect->fillColor || !newRect->opacity || !newRect->rectID || !newRect->xPos || !newRect->yPos || !newRect->width || !newRect->height) {
         destroyRect(newRect);
         return NULL;
     }
@@ -75,7 +80,7 @@ void setBorderColorRect(rectT rect, char* borderColor) {
         return;
     }
 
-    rect->borderColor = realloc(rect->borderColor, sizeof(char) * (strlen(borderColor) + 1));
+    rect->borderColor = realloc(rect->borderColor, strlen(borderColor) + 1);
     strcpy(rect->borderColor, borderColor);
 }
 
@@ -92,8 +97,25 @@ void setFillColorRect(rectT rect, char* fillColor) {
         return;
     }
 
-    rect->fillColor = realloc(rect->fillColor, sizeof(char) * (strlen(fillColor) + 1));
+    rect->fillColor = realloc(rect->fillColor, strlen(fillColor) + 1);
     strcpy(rect->fillColor, fillColor);
+}
+
+char* getOpacityRect(rectT rect) {
+    if (!rect) {
+        return NULL;
+    }
+
+    return rect->opacity;
+}
+
+void setOpacityRect(rectT rect, char* opacity) {
+    if (!rect) {
+        return;
+    }
+
+    rect->opacity = realloc(rect->opacity, strlen(opacity) + 1);
+    strcpy(rect->opacity, opacity);
 }
 
 char* getXRect(rectT rect) {
@@ -109,7 +131,7 @@ void setXRect(rectT rect, char* x) {
         return;
     }
 
-    rect->xPos = realloc(rect->xPos, sizeof(char) * (strlen(x) + 1));
+    rect->xPos = realloc(rect->xPos, strlen(x) + 1);
     strcpy(rect->xPos, x);
 }
 
@@ -126,7 +148,7 @@ void setYRect(rectT rect, char* y) {
         return;
     }
 
-    rect->yPos = realloc(rect->yPos, sizeof(char) * (strlen(y) + 1));
+    rect->yPos = realloc(rect->yPos, strlen(y) + 1);
     strcpy(rect->yPos, y);
 }
 
@@ -143,7 +165,7 @@ void setWidthRect(rectT rect, char* w) {
         return;
     }
 
-    rect->width = realloc(rect->width, sizeof(char) * (strlen(w) + 1));
+    rect->width = realloc(rect->width, strlen(w) + 1);
     strcpy(rect->width, w);
 }
 
@@ -160,7 +182,7 @@ void setHeightRect(rectT rect, char* h) {
         return;
     }
 
-    rect->height = realloc(rect->height, sizeof(char) * (strlen(h) + 1));
+    rect->height = realloc(rect->height, strlen(h) + 1);
     strcpy(rect->height, h);
 }
 
@@ -185,9 +207,10 @@ void destroyRect(rectT rect) {
         return;
     }
 
+    if (rect->rectID) free(rect->rectID);
     if (rect->borderColor) free(rect->borderColor);
     if (rect->fillColor) free(rect->fillColor);
-    if (rect->rectID) free(rect->rectID);
+    if (rect->opacity) free(rect->opacity);
     if (rect->xPos) free(rect->xPos);
     if (rect->yPos) free(rect->yPos);
     if (rect->width) free(rect->width);

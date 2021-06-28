@@ -78,7 +78,7 @@ int findHeightBinaryTree(binaryTree tree, binaryNode node) {
     int leftHeight = findHeightBinaryTree(tree, left);
     int rightHeight = findHeightBinaryTree(tree, right);
 
-    return max(1 + leftHeight, 1 + rightHeight);
+    return imax(1 + leftHeight, 1 + rightHeight);
 }
 
 int getHeightBinaryTree(binaryTree tree) {
@@ -252,6 +252,7 @@ binaryNode appendBinaryTree(binaryTree tree, binaryTreeElem elem) {
     if (!aux) {
         tree->root = newNode;
 
+        tree->numElements++;
         return newNode;
     }
 
@@ -283,6 +284,7 @@ binaryNode appendBinaryTree(binaryTree tree, binaryTreeElem elem) {
         aux = next;
     }
 
+    tree->numElements++;
     return newNode;
 }
 

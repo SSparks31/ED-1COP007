@@ -5,9 +5,7 @@
 
 #include "./progrData.h"
 
-#include "../list/list.h"
-
-void geoParser(progrDataT progrData);
+void geoParser(progrData data);
 /* Dada estrutura de armazenamento de dados `progrData`, analisa e executa comandos lidos no arquivo .geo indicado pelo argumento -f */
 /* Responsavel por inicializar a lista de retangulos presente em `progrData` */
 /* Caso arquivo nao seja encontrado, nao realiza nenhuma acao */
