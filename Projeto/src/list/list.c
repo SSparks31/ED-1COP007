@@ -19,10 +19,6 @@ struct list {
 };
 
 listT createList() {
-    if (maxElem <= 0) {
-        return NULL;
-    }
-
     listT list = malloc(sizeof(struct list));
     if (!list) {
         return NULL;
@@ -95,7 +91,7 @@ listPosT getPrevElementList(listT list, listPosT pos) {
 }
 
 listPosT appendList(listT list, listElemT elem) {
-    if (!list || isFullList(list) || !elem) {
+    if (!list || !elem) {
         return NULL;
     }
     
@@ -124,7 +120,7 @@ listPosT appendList(listT list, listElemT elem) {
 }
 
 listPosT insertBeforeList(listT list, listPosT pos, listElemT elem) {
-    if (!list || isFullList(list) || !pos || !elem) {
+    if (!list || !pos || !elem) {
         return NULL;
     }
     
@@ -151,7 +147,7 @@ listPosT insertBeforeList(listT list, listPosT pos, listElemT elem) {
 }
 
 listPosT insertAfterList(listT list, listPosT pos, listElemT elem) {
-    if (!list || isFullList(list) || !pos || !elem) {
+    if (!list || !pos || !elem) {
         return NULL;
     }
     

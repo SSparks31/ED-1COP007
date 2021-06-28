@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define COMMANDS 5
+#define COMMANDS 6
 
 const double radiationLevels[7] = {25, 50, 100, 250, 500, 1000, 8000};
 
@@ -203,7 +203,15 @@ void qryDr(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
 
 void qryFg(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
 
-void qryIm(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
+void createShadows(progrData data, Meteor meteor, kdTree tree, kdNode node) {
+
+}
+
+void qryIm(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
+    circleT circle = createCircle("gray", "gray", ".8", "", args);
+    
+    // createMeteor
+}
 
 void qryT30Recursion(kdTree tree, kdNode node, TxtOutput output) {
     if (!node) {
@@ -234,6 +242,9 @@ void qryT30(progrData data, char* args, FILE* qryTXT, TxtOutput output) {
         fprintf(qryTXT, "\t%s\n", getIDCircle(personGetCircle(deadPeople[i])));
     }
 }
+
+
+void qryNve(progrData data, char* args, FILE* qryTXT, TxtOutput output) {}
 
 
 
@@ -287,8 +298,8 @@ void qryParser(progrData data) {
 
     char command[999];
 
-    const char* commands[COMMANDS] = {"dpi", "dr", "fg", "im", "t30"};
-    void (*functions[COMMANDS])(progrData data, char* args, FILE* qryTXT, TxtOutput output) = {qryDpi, qryDr, qryFg, qryIm, qryT30};
+    const char* commands[COMMANDS] = {"dpi", "dr", "fg", "im", "t30", "nve"};
+    void (*functions[COMMANDS])(progrData data, char* args, FILE* qryTXT, TxtOutput output) = {qryDpi, qryDr, qryFg, qryIm, qryT30, qryNve};
     
     TxtOutput output = malloc(sizeof(struct txtOutput));
     if (!output) {

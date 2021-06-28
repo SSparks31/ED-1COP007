@@ -5,6 +5,7 @@
 
 #include "../tree/binaryTree.h"
 #include "../tree/kdTree.h"
+#include "../list/list.h"
 
 #include "../svg/rect.h"
 #include "../svg/circle.h"
@@ -40,6 +41,10 @@ void  setCircleFill(progrData data, char* args);
 kdTree getBuildingTree(progrData data);
 
 kdTree getPersonTree(progrData data);
+
+listT getMeteorList(progrData data);
+
+listT getShadowList(progrData data);
 
 void destroyData(progrData data);
 

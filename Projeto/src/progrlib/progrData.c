@@ -5,10 +5,6 @@
 #include "./person.h"
 #include "./building.h"
 
-#include "../list/list.h"
-
-#include "../tree/kdTree.h"
-
 #include "../svg/rect.h"
 #include "../svg/circle.h"
 
@@ -34,6 +30,7 @@ struct progrData {
 
     kdTree buildingTree;
     kdTree personTree;
+    listT meteorList;
     listT shadowList;
 };
 
@@ -97,14 +94,18 @@ progrData createData(char* BED, char* BSD, char* geoName, char* qryName) {
 
     data->buildingTree = createKDTree(2, kdBuildingCompare);
     data->personTree = createKDTree(2, kdPersonCompare);
-    data->shadowList = createList()
+    data->meteorList = createList();
+    data->shadowList = createList();
 
     char* relPath = "./";
     char* empty = "";
 
-    if (!data->buildingTree || !data->personTree) {
+    if (!data->buildingTree || !data->personTree || !data->meteorList || !data->shadowList) {
         destroyKDTree(data->buildingTree);
         destroyKDTree(data->personTree);
+        destroyList(data->meteorList);
+        destroyList(data->shadowList);
+
         free(data);
         
         return NULL;
@@ -239,6 +240,22 @@ kdTree getPersonTree(progrData data) {
     }
 
     return data->personTree;
+}
+
+listT getMeteorList(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+    
+    return data->meteorList;
+}
+
+listT getShadowList(progrData data) {
+    if (!data) {
+        return NULL;
+    }
+
+    return data->shadowList;
 }
 
 void destroyData(progrData data) {
