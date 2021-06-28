@@ -11,10 +11,6 @@
 
 typedef struct progrData* progrData;
 
-typedef struct person* person;
-
-typedef struct building* building;
-
 progrData createData(char* BED, char* BSD, char* geoName, char* qryName);
 
 char* getBED(progrData data);

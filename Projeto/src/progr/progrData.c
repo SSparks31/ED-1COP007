@@ -31,17 +31,6 @@ struct progrData {
     kdTree personTree;
 };
 
-struct building {
-    rectT rect;
-    int peopleInside;
-};
-
-struct person {
-    circleT circle;
-    double radiation;
-    int dead;
-};
-
 int kdBuildingCompare(const kdTreeElem a, const kdTreeElem b, int j) {
     char* (*getDimension)(rectT rect);
     if (j) {
@@ -266,118 +255,7 @@ void destroyData(progrData data) {
 }
 
 
-building createBuilding(rectT rect) {
-    if (!rect) {
-        return NULL;
-    }
-
-    building build = malloc(sizeof(struct building));
-    if (!build) {
-        return NULL;
-    }
-
-    build->rect = rect;
-    build->peopleInside = 0;
-
-    return build;
-}
-
-rectT buildingGetRect(building build) {
-    if (!build) {
-        return NULL;
-    }
-
-    return build->rect;
-}
-
-int buildingGetPeopleInside(building build) {
-    if (!build) {
-        return -1;
-    }
-
-    return build->peopleInside;
-}
-
-void buildingAddPerson(building build) {
-    if (!build) {
-        return;
-    }
-
-    build->peopleInside++;
-}
-
-void demolishBuilding(building build) {
-    if (!build) {
-        return;
-    }
-
-    rectT rect = buildingGetRect(build);
-    destroyRect(rect);
-
-    free(build);
-}
 
 
-person createPerson(circleT circle) {
-    if (!circle) {
-        return NULL;
-    }
 
-    person guy = malloc(sizeof(struct person));
-    if (!guy) {
-        return NULL;
-    }
 
-    guy->circle = circle;
-    guy->radiation = 0;
-    guy->dead = 0;
-
-    return guy;
-}
-
-circleT personGetCircle(person guy) {
-    if (!guy) {
-        return NULL;
-    }
-
-    return guy->circle;
-}
-
-double personGetRadiation(person guy) {
-    if (!guy) {
-        return -1;
-    }
-
-    return guy->radiation;
-}
-
-void personAddRadiation(person guy, int radiation) {
-    if (!guy || radiation < 0) {
-        return;
-    }
-
-    guy->radiation += radiation;
-}
-
-int personIsDead(person guy) {
-    return guy && guy->dead;
-}
-
-void killPerson(person guy) {
-    if (!guy) {
-        return;
-    }
-
-    guy->dead = 1;
-}
-
-void destroyPerson(person guy) {
-    if (!guy) {
-        return;
-    }
-
-    circleT circle = personGetCircle(guy);
-    destroyCircle(circle);
-
-    free(guy);
-}

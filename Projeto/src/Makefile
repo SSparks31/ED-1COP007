@@ -4,7 +4,7 @@ CFLAGS = -std=c99 -fstack-protector-all
 SRC = .
 OBJ = ../obj
 
-MAINDEPS = $(OBJ)/progrData.o $(OBJ)/svg.o $(OBJ)/rect.o $(OBJ)/line.o $(OBJ)/circle.o $(OBJ)/intersect.o $(OBJ)/inside.o $(OBJ)/geo.o $(OBJ)/qry.o $(OBJ)/kdTree.o $(OBJ)/binaryTree.o $(OBJ)/argHelp.o $(OBJ)/mathHelp.o $(OBJ)/pathHelp.o $(OBJ)/stringHelp.o
+MAINDEPS = $(OBJ)/progrData.o $(OBJ)/svg.o $(OBJ)/rect.o $(OBJ)/line.o $(OBJ)/circle.o $(OBJ)/intersect.o $(OBJ)/inside.o $(OBJ)/geo.o $(OBJ)/kdTree.o $(OBJ)/binaryTree.o $(OBJ)/argHelp.o $(OBJ)/mathHelp.o $(OBJ)/pathHelp.o $(OBJ)/stringHelp.o
 
 progr: $(SRC)/main.c $(MAINDEPS)
 	$(CC) $(CFLAGS) -o $@ $^
