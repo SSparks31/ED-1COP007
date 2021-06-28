@@ -2,6 +2,8 @@
 
 #include "../helper/stringHelp.h"
 
+#include <stdlib.h>
+
 struct shadow {
     lineT wall;
     Meteor meteor;

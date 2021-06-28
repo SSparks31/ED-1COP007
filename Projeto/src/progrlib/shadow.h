@@ -6,7 +6,7 @@
 
 typedef struct shadow* Shadow;
 
-Shadow createShadow(lineT line, Meteor meteor);
+Shadow createShadow(char* wallCoordinates, Meteor meteor);
 
 lineT shadowGetGeneratingWall(Shadow shadow);
 
