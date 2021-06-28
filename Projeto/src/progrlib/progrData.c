@@ -5,6 +5,8 @@
 #include "./person.h"
 #include "./building.h"
 
+#include "../list/list.h"
+
 #include "../tree/kdTree.h"
 
 #include "../svg/rect.h"
@@ -32,6 +34,7 @@ struct progrData {
 
     kdTree buildingTree;
     kdTree personTree;
+    listT shadowList;
 };
 
 int kdBuildingCompare(const kdTreeElem a, const kdTreeElem b, int j) {
@@ -94,6 +97,7 @@ progrData createData(char* BED, char* BSD, char* geoName, char* qryName) {
 
     data->buildingTree = createKDTree(2, kdBuildingCompare);
     data->personTree = createKDTree(2, kdPersonCompare);
+    data->shadowList = createList()
 
     char* relPath = "./";
     char* empty = "";

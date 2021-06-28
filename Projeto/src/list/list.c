@@ -14,12 +14,11 @@ struct list {
     listPosT last;
 
     int curLength;
-    int maxLength;
 
     size_t accessCount;
 };
 
-listT createList(int maxElem) {
+listT createList() {
     if (maxElem <= 0) {
         return NULL;
     }
@@ -33,7 +32,6 @@ listT createList(int maxElem) {
     list->last = NULL;
     
     list->curLength = 0;
-    list->maxLength = maxElem;
 
     list->accessCount = 0;
 
@@ -54,14 +52,6 @@ int lengthList(listT list) {
     }
 
     return list->curLength;
-}
-
-int isFullList(listT list) {
-    if (!list) {
-        return -1;
-    }
-    
-    return list->curLength == list->maxLength;
 }
 
 listPosT getFirstElementList(listT list) {

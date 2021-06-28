@@ -9,9 +9,8 @@ typedef struct list* listT;
 typedef struct listPos* listPosT;
 typedef void* listElemT;
 
-listT createList(int maxElem);
-/* Dado um inteiro `maxElem`, cria lista contendo no maximo `maxElem` elementos */
-/* Caso `maxElem` seja menor ou igual a zero, retorna NULL */
+listT createList();
+/* Cria lista contendo no maximo `maxElem` elementos */
 /* Caso haja problema na alocacao de memoria, retorna NULL */
 /* Retorna ponteiro para lista criada */
 
@@ -21,10 +20,6 @@ int isEmptyList(listT list);
 
 int lengthList(listT list);
 /* Dada uma lista ligada `list`, retorna numero de elementos armazenados em `list` */
-/* Caso `list` seja invalida, retorna -1 */
-
-int isFullList(listT list);
-/* Dada uma lista ligada `list`, retorna verdadeiro caso `list` esteja cheia; falso, caso contrario */
 /* Caso `list` seja invalida, retorna -1 */
 
 listPosT getFirstElementList(listT list);
@@ -46,19 +41,16 @@ listPosT getPrevElementList(listT list, listPosT pos);
 listPosT appendList(listT list, listElemT elem);
 /* Dados uma lista ligada `list` e um elemento `elem`, insere `elem` no final de `list` */
 /* Caso `list` ou `elem` sejam invalidos, retorna NULL */
-/* Caso lista esteja cheia, retorna NULL */
 /* Retorna posicao na qual `elem` foi inserido */
 
 listPosT insertBeforeList(listT list, listPosT pos, listElemT elem);
 /* Dados uma lista ligada `list`, uma posicao `pos` e um elemento `elem`, insere `elem` logo antes de `pos` */
 /* Caso `list`, `pos` ou `elem` sejam invalidos, retorna NULL */
-/* Caso lista esteja cheia, retorna NULL */
 /* Retorna posicao na qual `elem` foi inserido */
 
 listPosT insertAfterList(listT list, listPosT pos, listElemT elem);
 /* Dados uma lista ligada `list`, uma posicao `pos` e um elemento `elem`, insere `elem` logo em seguida de `pos` */
 /* Caso `list`, `pos` ou `elem` sejam invalidos, retorna NULL */
-/* Caso lista esteja cheia, retorna NULL */
 /* Retorna posicao na qual `elem` foi inserido */
 
 listElemT removeList(listT list, listPosT pos);
