@@ -236,6 +236,12 @@ void createShadows(progrData data, Meteor meteor, kdTree tree, kdNode node) {
     sprintf(coordinates, "%lf %lf %lf %lf", x2, y1, x2, y2);
     appendList(shadowList, createShadow(coordinates, meteor));
 
+    kdNode left = getKDNodeLeftChild(tree, node);
+    kdNode right = getKDNodeRightChild(tree, node);
+
+    createShadows(data, meteor, tree, left);
+    createShadows(data, meteor, tree, right);
+
 }
 
 double getAttenuation(Person person, Shadow shadow) {
