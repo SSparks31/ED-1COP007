@@ -21,6 +21,15 @@ int main(int argc, char* argv[]) {
     char* geoName = NULL;
     char* qryName = NULL;
 
+
+    listT lists[10];
+    for (int i = 0; i < 10; ++i) {
+        lists[i] = list_create()
+    }
+
+
+    pilha_insere(pilha)
+
     while ((c = getArguments(argc, argv, "e:f:o:q:")) != -1) {
         switch (c) {
         case 'e':

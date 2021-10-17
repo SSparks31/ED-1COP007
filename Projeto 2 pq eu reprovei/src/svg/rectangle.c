@@ -1,7 +1,5 @@
 #include "rectangle.h"
 
-#include "../helper/stringHelp.h"
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -17,15 +15,9 @@ struct rectangle {
     char* fill_color;
 };
 
-Rectangle create_rectangle(char* id, double coordinates[4], char* colors[2]) {
+Rectangle create_rectangle(char* id, double coordinates[4], char colors[2][999]) {
     if (!id || !coordinates || !colors) {
         return NULL;
-    }
-
-    for (int i = 0; i < 2; ++i) {
-        if (isEmpty(colors[i])) {
-            return NULL;
-        }
     }
 
     Rectangle rectangle = malloc(sizeof(struct rectangle));
@@ -34,19 +26,15 @@ Rectangle create_rectangle(char* id, double coordinates[4], char* colors[2]) {
     }
 
     rectangle->id = malloc(strlen(id) + 1);
+    strcpy(rectangle->id, id);
 
-    int error = 0;
-
-    rectangle_set_x     (rectangle, coordinates[0]);
-    rectangle_set_y     (rectangle, coordinates[1]);
-    rectangle_set_width (rectangle, coordinates[2]);
+    rectangle_set_x(rectangle, coordinates[0]);
+    rectangle_set_y(rectangle, coordinates[1]);
+    rectangle_set_width(rectangle, coordinates[2]);
     rectangle_set_height(rectangle, coordinates[3]);
 
-    if (!rectangle->id || rectangle_set_border_color(rectangle, colors[0]) || rectangle_set_fill_color  (rectangle, colors[1])) {
-        rectangle_destroy(&rectangle);
-    }
-
-    strcpy(rectangle->id, id);
+    rectangle_set_border_color(rectangle, colors[0]);
+    rectangle_set_fill_color(rectangle, colors[1]);
 
     return rectangle;
 }
@@ -59,33 +47,33 @@ char* rectangle_get_id(Rectangle rectangle) {
     return rectangle->id;
 }
 
-char* rectangle_get_x(Rectangle rectangle) {
+double rectangle_get_x(Rectangle rectangle) {
     if (!rectangle) {
-        return NULL;
+        return -1;
     }
 
     return rectangle->x;
 }
 
-char* rectangle_get_y(Rectangle rectangle) {
+double rectangle_get_y(Rectangle rectangle) {
     if (!rectangle) {
-        return NULL;
+        return -1;
     }
 
     return rectangle->y;
 }
 
-char* rectangle_get_width(Rectangle rectangle) {
+double rectangle_get_width(Rectangle rectangle) {
     if (!rectangle) {
-        return NULL;
+        return -1;
     }
 
     return rectangle->width;
 }
 
-char* rectangle_get_height(Rectangle rectangle) {
+double rectangle_get_height(Rectangle rectangle) {
     if (!rectangle) {
-        return NULL;
+        return -1;
     }
 
     return rectangle->height;
@@ -98,7 +86,6 @@ char* rectangle_get_border_color(Rectangle rectangle) {
 
     return rectangle->border_color;
 }
-
 char* rectangle_get_fill_color(Rectangle rectangle) {
     if (!rectangle) {
         return NULL;
@@ -107,9 +94,8 @@ char* rectangle_get_fill_color(Rectangle rectangle) {
     return rectangle->fill_color;
 }
 
-
 void rectangle_set_x(Rectangle rectangle, double x) {
-    if (!rectangle) {
+    if (!rectangle || x < 0) {
         return;
     }
 
@@ -117,7 +103,7 @@ void rectangle_set_x(Rectangle rectangle, double x) {
 }
 
 void rectangle_set_y(Rectangle rectangle, double y) {
-    if (!rectangle) {
+    if (!rectangle || y < 0) {
         return;
     }
 
@@ -125,7 +111,7 @@ void rectangle_set_y(Rectangle rectangle, double y) {
 }
 
 void rectangle_set_width(Rectangle rectangle, double width) {
-    if (!rectangle) {
+    if (!rectangle || width < 0) {
         return;
     }
 
@@ -133,17 +119,16 @@ void rectangle_set_width(Rectangle rectangle, double width) {
 }
 
 void rectangle_set_height(Rectangle rectangle, double height) {
-    if (!rectangle) {
+    if (!rectangle || height < 0) {
         return;
     }
 
     rectangle->height = height;
 }
 
-
-int rectangle_set_border_color(Rectangle rectangle, char* border_color) {
-    if (!rectangle || isEmpty(border_color)) {
-        return 1;
+void rectangle_set_border_color(Rectangle rectangle, char* border_color) {
+    if (!rectangle || !border_color) {
+        return;
     }
 
     if (!rectangle->border_color) {
@@ -152,17 +137,12 @@ int rectangle_set_border_color(Rectangle rectangle, char* border_color) {
         rectangle->border_color = realloc(rectangle->border_color, strlen(border_color) + 1);
     }
 
-    if(!rectangle->border_color) {
-        return 1;
-    }
-
     strcpy(rectangle->border_color, border_color);
-	return 0;
 }
 
-int rectangle_set_fill_color(Rectangle rectangle, char* fill_color) {
-    if (!rectangle || isEmpty(fill_color)) {
-        return 1;
+void rectangle_set_fill_color(Rectangle rectangle, char* fill_color) {
+    if (!rectangle || !fill_color) {
+        return;
     }
 
     if (!rectangle->fill_color) {
@@ -171,12 +151,7 @@ int rectangle_set_fill_color(Rectangle rectangle, char* fill_color) {
         rectangle->fill_color = realloc(rectangle->fill_color, strlen(fill_color) + 1);
     }
 
-    if(!rectangle->fill_color) {
-        return 1;
-    }
-
     strcpy(rectangle->fill_color, fill_color);
-	return 0;
 }
 
 void rectangle_destroy(Rectangle* rectangle) {
@@ -184,11 +159,29 @@ void rectangle_destroy(Rectangle* rectangle) {
         return;
     }
 
-    if ((*rectangle)->id) free((*rectangle)->id);
-
-    if ((*rectangle)->border_color) free((*rectangle)->border_color);
-    if ((*rectangle)->fill_color) free((*rectangle)->fill_color);
+    if ((*rectangle)->id) free((*rectangle)->id); 
+    
+    if ((*rectangle)->border_color) free((*rectangle)->border_color); 
+    if ((*rectangle)->fill_color) free((*rectangle)->fill_color); 
 
     free(*rectangle);
     *rectangle = NULL;
+}
+
+void rectangle_write_to_SVG(FILE* svg_file, Rectangle rectangle) {
+    if (!svg_file || !rectangle) {
+        return;
+    }
+
+    const char* format = "<rect x = \"%.6lf\" y = \"%.6lf\" width = \"%.6lf\" height = \"%.6lf\" stroke = \"%s\" fill=\"%s\" />\n" ;
+
+    double x = rectangle_get_x(rectangle);
+    double y = rectangle_get_y(rectangle);
+    double width = rectangle_get_width(rectangle);
+    double height = rectangle_get_height(rectangle);
+
+    char* border_color = rectangle_get_border_color(rectangle);
+    char* fill_color = rectangle_get_fill_color(rectangle);
+
+    fprintf(svg_file, format, x, y, width, height, border_color, fill_color);
 }

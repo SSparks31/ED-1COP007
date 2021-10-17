@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "progrdata.h": "c",
-        "line.h": "c"
+        "line.h": "c",
+        "stringhelp.h": "c"
     }
 }

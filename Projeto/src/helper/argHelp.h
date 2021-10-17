@@ -26,5 +26,5 @@ int getArguments(int argc, char *argv[], char *optstring);
 /* Ler mais: https://man7.org/linux/man-pages/man3/getopt.3.html */
 
 /**/
-
+0
 #endif
