@@ -5,7 +5,7 @@
 
 typedef struct rectangle* Rectangle;
 
-Rectangle create_rectangle(char* id, double coordinates[4], char colors[2][999]);
+Rectangle create_rectangle(char* id, double coordinates[4], char* border_color, char* fill_color);
 
 char* rectangle_get_id(Rectangle rectangle);
 

@@ -15,8 +15,8 @@ struct rectangle {
     char* fill_color;
 };
 
-Rectangle create_rectangle(char* id, double coordinates[4], char colors[2][999]) {
-    if (!id || !coordinates || !colors) {
+Rectangle create_rectangle(char* id, double coordinates[4], char* border_color, char* fill_color) {
+    if (!id || !coordinates || !border_color || !fill_color) {
         return NULL;
     }
 
@@ -26,6 +26,9 @@ Rectangle create_rectangle(char* id, double coordinates[4], char colors[2][999])
     }
 
     rectangle->id = malloc(strlen(id) + 1);
+    rectangle->border_color = NULL;
+    rectangle->fill_color = NULL;
+
     strcpy(rectangle->id, id);
 
     rectangle_set_x(rectangle, coordinates[0]);
@@ -33,8 +36,8 @@ Rectangle create_rectangle(char* id, double coordinates[4], char colors[2][999])
     rectangle_set_width(rectangle, coordinates[2]);
     rectangle_set_height(rectangle, coordinates[3]);
 
-    rectangle_set_border_color(rectangle, colors[0]);
-    rectangle_set_fill_color(rectangle, colors[1]);
+    rectangle_set_border_color(rectangle, border_color);
+    rectangle_set_fill_color(rectangle, fill_color);
 
     return rectangle;
 }

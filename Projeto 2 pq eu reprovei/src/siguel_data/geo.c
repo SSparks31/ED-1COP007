@@ -63,7 +63,7 @@ void c(List circles, FILE* geo_file, FILE* svg_file) {
     double coordinates[3];    
     char colors[2][999];
 
-    fscanf(geo_file, "%s %lf %lf %lf %s %s", id, coordinates, coordinates + 1, coordinates + 2, colors, colors + 1);
+    fscanf(geo_file, "%s %lf %lf %lf %s %s", id, coordinates, coordinates + 1, coordinates + 2, colors[0], colors[1]);
 
     Circle circle = create_circle(id, coordinates, colors);
     list_append(circles, circle);
@@ -74,11 +74,11 @@ void l(List lines, FILE* geo_file, FILE* svg_file) {
     char id[999];
     
     double coordinates[4];    
-    char colors[999];
+    char color[999];
 
-    fscanf(geo_file, "%s %lf %lf %lf %lf %s", id, coordinates, coordinates + 1, coordinates + 2, coordinates + 3, colors);
+    fscanf(geo_file, "%s %lf %lf %lf %lf %s", id, coordinates, coordinates + 1, coordinates + 2, coordinates + 3, color);
 
-    Line line = create_line(id, coordinates, colors);
+    Line line = create_line(id, coordinates, color);
     list_append(lines, line);
     line_write_to_SVG(svg_file, line);
 }
@@ -87,11 +87,14 @@ void r(List rectangles, FILE* geo_file, FILE* svg_file) {
     char id[999];
     
     double coordinates[4];    
-    char colors[2][999];
+    char border_color[999];
+    char fill_color[999];
 
-    fscanf(geo_file, "%s %lf %lf %lf %lf %s %s", id, coordinates, coordinates + 1, coordinates + 2, coordinates + 3, colors, colors + 1);
+    fscanf(geo_file, "%s %lf %lf %lf %lf %s %s", id, coordinates, coordinates + 1, coordinates + 2, coordinates + 3, border_color, fill_color);
 
-    Rectangle rectangle = create_rectangle(id, coordinates, colors);
+    printf("%s %lf %lf %lf %lf %s %s\n", id, coordinates[0], coordinates[1], coordinates[2], coordinates[3], border_color, fill_color);
+
+    Rectangle rectangle = create_rectangle(id, coordinates, border_color, fill_color);
     list_append(rectangles, rectangle);
     rectangle_write_to_SVG(svg_file, rectangle);
 }
@@ -103,15 +106,22 @@ void t(List texts, FILE* geo_file, FILE* svg_file) {
     char colors[2][999];
     char string[999];
 
-    fscanf(geo_file, "%s %lf %lf %s %s", id, coordinates, coordinates + 1, colors, colors + 1);
+    fscanf(geo_file, "%s%lf %lf %s%s", id, coordinates, coordinates + 1, colors[0], colors[1]);
     fgets(string, 999, geo_file);
     if (*(string + strlen(string) - 1) == '\n') {
         *(string + strlen(string) - 1) = '\0';
     }
 
-    Text text = create_text(id, coordinates, string, colors);
-    list_append(texts, text);
-    text_write_to_SVG(svg_file, text);
+    printf("%s\n", id);
+    printf("%lf\n", coordinates[0]);
+    printf("%lf\n", coordinates[1]);
+    printf("%s\n", colors[0]);
+    printf("%s\n", colors[1]);
+    printf("%s\n", string);
+
+    // Text text = create_text(id, coordinates, string, colors);
+    // list_append(texts, text);
+    // text_write_to_SVG(svg_file, text);
 }
 
 Geo_lists geo_parser(char* BED, char* BSD, char* geo_name) {
@@ -145,14 +155,16 @@ Geo_lists geo_parser(char* BED, char* BSD, char* geo_name) {
     }
 
     char command;
-    while (fscanf(geo_file, "%c ", command) != EOF) {
+    char buffer[999];
+
+    while (fscanf(geo_file, "%c ", &command) != EOF) {
         switch (command) {
             case 'c':
-                c(geo_lists->circles, geo_file, svg_file);
+                // c(geo_lists->circles, geo_file, svg_file);
                 break;
 
             case 'l':
-                l(geo_lists->lines, geo_file, svg_file);
+                // l(geo_lists->lines, geo_file, svg_file);
                 break;
 
             case 'r':
@@ -164,6 +176,7 @@ Geo_lists geo_parser(char* BED, char* BSD, char* geo_name) {
                 break;
 
             default:
+                fgets(buffer, 999, geo_file);
                 break;
         }   
     }
