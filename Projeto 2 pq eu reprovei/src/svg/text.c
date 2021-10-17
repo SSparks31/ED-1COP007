@@ -15,8 +15,8 @@ struct text {
 };
 
 
-Text create_text(char* id, double coordinates[2], char* string, char colors[2][999]) {
-    if (!id || !coordinates || !colors) {
+Text create_text(char* id, double coordinates[2], char* string, char* border_color, char* fill_color) {
+    if (!id || !coordinates || !border_color || !fill_color) {
         return NULL;
     }
 
@@ -26,14 +26,15 @@ Text create_text(char* id, double coordinates[2], char* string, char colors[2][9
     }
 
     text->id = malloc(strlen(id) + 1);
+
     strcpy(text->id, id);
 
     text_set_x(text, coordinates[0]);
     text_set_y(text, coordinates[1]);
     text_set_string(text, string);
 
-    text_set_border_color(text, colors[0]);
-    text_set_fill_color(text, colors[1]);
+    text_set_border_color(text, border_color);
+    text_set_fill_color(text, fill_color);
 
     return text;
 }

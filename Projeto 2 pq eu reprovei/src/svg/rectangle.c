@@ -26,8 +26,6 @@ Rectangle create_rectangle(char* id, double coordinates[4], char* border_color, 
     }
 
     rectangle->id = malloc(strlen(id) + 1);
-    rectangle->border_color = NULL;
-    rectangle->fill_color = NULL;
 
     strcpy(rectangle->id, id);
 
@@ -134,12 +132,7 @@ void rectangle_set_border_color(Rectangle rectangle, char* border_color) {
         return;
     }
 
-    if (!rectangle->border_color) {
-        rectangle->border_color = malloc(strlen(border_color) + 1);
-    } else {
-        rectangle->border_color = realloc(rectangle->border_color, strlen(border_color) + 1);
-    }
-
+    rectangle->border_color = realloc(rectangle->border_color, strlen(border_color) + 1);
     strcpy(rectangle->border_color, border_color);
 }
 
@@ -148,12 +141,7 @@ void rectangle_set_fill_color(Rectangle rectangle, char* fill_color) {
         return;
     }
 
-    if (!rectangle->fill_color) {
-        rectangle->fill_color = malloc(strlen(fill_color) + 1);
-    } else {
-        rectangle->fill_color = realloc(rectangle->fill_color, strlen(fill_color) + 1);
-    }
-
+    rectangle->fill_color = realloc(rectangle->fill_color, strlen(fill_color) + 1);
     strcpy(rectangle->fill_color, fill_color);
 }
 

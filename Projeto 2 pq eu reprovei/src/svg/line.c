@@ -14,8 +14,8 @@ struct line {
     char* color;
 };
 
-Line create_line(char* id, double coordinates[4], char* colors) {
-    if (!id || !coordinates || !colors) {
+Line create_line(char* id, double coordinates[4], char* color) {
+    if (!id || !coordinates || !color) {
         return NULL;
     }
 
@@ -25,6 +25,7 @@ Line create_line(char* id, double coordinates[4], char* colors) {
     }
 
     line->id = malloc(strlen(id) + 1);
+
     strcpy(line->id, id);
 
     line_set_x1(line, coordinates[0]);
@@ -32,7 +33,7 @@ Line create_line(char* id, double coordinates[4], char* colors) {
     line_set_x2(line, coordinates[2]);
     line_set_y2(line, coordinates[3]);
 
-    line_set_color(line, colors);
+    line_set_color(line, color);
 
     return line;
 }
@@ -123,12 +124,7 @@ void line_set_color(Line line, char* color) {
         return;
     }
 
-    if (!line->color) {
-        line->color = malloc(strlen(color) + 1);
-    } else {
-        line->color = realloc(line->color, strlen(color) + 1);
-    }
-
+    line->color = realloc(line->color, strlen(color) + 1);
     strcpy(line->color, color);
 }
 

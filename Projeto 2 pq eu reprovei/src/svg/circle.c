@@ -14,8 +14,8 @@ struct circle {
     char* fill_color;
 };
 
-Circle create_circle(char* id, double coordinates[3], char colors[2][999]) {
-    if (!id || !coordinates || !colors) {
+Circle create_circle(char* id, double coordinates[3], char* border_color, char* fill_color) {
+    if (!id || !coordinates || !border_color || fill_color) {
         return NULL;
     }
 
@@ -25,14 +25,15 @@ Circle create_circle(char* id, double coordinates[3], char colors[2][999]) {
     }
 
     circle->id = malloc(strlen(id) + 1);
+
     strcpy(circle->id, id);
 
     circle_set_x(circle, coordinates[0]);
     circle_set_y(circle, coordinates[1]);
     circle_set_radius(circle, coordinates[2]);
 
-    circle_set_border_color(circle, colors[0]);
-    circle_set_fill_color(circle, colors[1]);
+    circle_set_border_color(circle, border_color);
+    circle_set_fill_color(circle, fill_color);
 
     return circle;
 }
@@ -113,12 +114,7 @@ void circle_set_border_color(Circle circle, char* border_color) {
         return;
     }
 
-    if (!circle->border_color) {
-        circle->border_color = malloc(strlen(border_color) + 1);
-    } else {
-        circle->border_color = realloc(circle->border_color, strlen(border_color) + 1);
-    }
-
+    circle->border_color = realloc(circle->border_color, strlen(border_color) + 1);
     strcpy(circle->border_color, border_color);
 }
 
@@ -127,12 +123,7 @@ void circle_set_fill_color(Circle circle, char* fill_color) {
         return;
     }
 
-    if (!circle->fill_color) {
-        circle->fill_color = malloc(strlen(fill_color) + 1);
-    } else {
-        circle->fill_color = realloc(circle->fill_color, strlen(fill_color) + 1);
-    }
-
+    circle->fill_color = realloc(circle->fill_color, strlen(fill_color) + 1);
     strcpy(circle->fill_color, fill_color);
 }
 

@@ -5,7 +5,7 @@
 
 typedef struct text* Text;
 
-Text create_text(char* id, double coordinates[2], char* string, char colors[2][999]);
+Text create_text(char* id, double coordinates[2], char* string, char* border_color, char* fill_color);
 
 char* text_get_id(Text text);
 
