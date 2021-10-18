@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -std=c99 -fstack-protector-all
 
-siguel: main.c circle.o line.o rectangle.o text.o list.o queue.o stack.o geo.o stringHelp.o pathHelp.o
+siguel: main.c circle.o line.o rectangle.o text.o list.o queue.o stack.o geo.o qry.o stringHelp.o pathHelp.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
 circle.o: svg/circle.c svg/circle.h
@@ -26,6 +26,9 @@ queue.o: queue/queue.c queue/queue.h
 	$(CC) $(CFLAGS) -c $<
 
 geo.o: siguel_data/geo.c siguel_data/geo.h
+	$(CC) $(CFLAGS) -c $<
+
+qry.o: siguel_data/qry.c siguel_data/qry.h
 	$(CC) $(CFLAGS) -c $<
 
 stringHelp.o: helper/stringHelp.c helper/stringHelp.h
