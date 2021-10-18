@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "siguel_data/geo.h"
+#include "siguel_data/qry.h"
 
 #include "svg/rectangle.h"
 #include "svg/line.h"
@@ -57,6 +58,8 @@ int main(int argc, char* argv[]) {
     List texts = create_list();
 
     geo_parser(BED, BSD, geo_name, circles, lines, rectangles, texts);
+
+    qry_parser(BED, BSD, geo_name, qry_name, circles, lines, rectangles, texts);
 
     return 0;
 }
