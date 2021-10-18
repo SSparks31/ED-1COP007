@@ -4,8 +4,6 @@
 #include <string.h>
 
 struct text {
-    char* id;
-
     double x;
     double y;
     char* string;
@@ -15,8 +13,8 @@ struct text {
 };
 
 
-Text create_text(char* id, double coordinates[2], char* string, char* border_color, char* fill_color) {
-    if (!id || !coordinates || !border_color || !fill_color) {
+Text text_create(double coordinates[2], char* string, char* border_color, char* fill_color) {
+    if (!coordinates || !border_color || !fill_color) {
         return NULL;
     }
 
@@ -25,29 +23,17 @@ Text create_text(char* id, double coordinates[2], char* string, char* border_col
         return NULL;
     }
 
-    text->id = malloc(strlen(id) + 1);
+    text_set_x(text, coordinates[0]);
+    text_set_y(text, coordinates[1]);
 
-    strcpy(text->id, id);
     text->string = NULL;
     text->border_color = NULL;
     text->fill_color = NULL;
-
-    text_set_x(text, coordinates[0]);
-    text_set_y(text, coordinates[1]);
     text_set_string(text, string);
-
     text_set_border_color(text, border_color);
     text_set_fill_color(text, fill_color);
 
     return text;
-}
-
-char* text_get_id(Text text) {
-    if (!text) {
-        return NULL;
-    }
-
-    return text->id;
 }
 
 double text_get_x(Text text) {
@@ -136,11 +122,8 @@ void text_destroy(Text* text) {
     if (!text || !*text) {
         return;
     }
-
-    if ((*text)->id) free((*text)->id); 
     
     if ((*text)->string) free((*text)->string);
-
     if ((*text)->border_color) free((*text)->border_color); 
     if ((*text)->fill_color) free((*text)->fill_color); 
 

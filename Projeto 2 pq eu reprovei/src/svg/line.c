@@ -4,8 +4,6 @@
 #include <string.h>
 
 struct line {
-    char* id;
-
     double x1;
     double y1;
     double x2;
@@ -14,8 +12,8 @@ struct line {
     char* color;
 };
 
-Line create_line(char* id, double coordinates[4], char* color) {
-    if (!id || !coordinates || !color) {
+Line line_create(double coordinates[4], char* color) {
+    if (!coordinates || !color) {
         return NULL;
     }
 
@@ -24,27 +22,16 @@ Line create_line(char* id, double coordinates[4], char* color) {
         return NULL;
     }
 
-    line->id = malloc(strlen(id) + 1);
-    line->color = NULL;
-
-    strcpy(line->id, id);
 
     line_set_x1(line, coordinates[0]);
     line_set_y1(line, coordinates[1]);
     line_set_x2(line, coordinates[2]);
     line_set_y2(line, coordinates[3]);
 
+    line->color = NULL;
     line_set_color(line, color);
 
     return line;
-}
-
-char* line_get_id(Line line) {
-    if (!line) {
-        return NULL;
-    }
-
-    return line->id;
 }
 
 double line_get_x1(Line line) {
@@ -134,8 +121,6 @@ void line_destroy(Line* line) {
         return;
     }
 
-    if ((*line)->id) free((*line)->id); 
-    
     if ((*line)->color) free((*line)->color); 
 
     free(*line);

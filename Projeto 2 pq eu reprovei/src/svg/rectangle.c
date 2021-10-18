@@ -4,8 +4,6 @@
 #include <string.h>
 
 struct rectangle {
-    char* id;
-
     double x;
     double y;
     double width;
@@ -15,8 +13,8 @@ struct rectangle {
     char* fill_color;
 };
 
-Rectangle create_rectangle(char* id, double coordinates[4], char* border_color, char* fill_color) {
-    if (!id || !coordinates || !border_color || !fill_color) {
+Rectangle rectangle_create(double coordinates[4], char* border_color, char* fill_color) {
+    if (!coordinates || !border_color || !fill_color) {
         return NULL;
     }
 
@@ -25,29 +23,17 @@ Rectangle create_rectangle(char* id, double coordinates[4], char* border_color, 
         return NULL;
     }
 
-    rectangle->id = malloc(strlen(id) + 1);
-    rectangle->border_color = NULL;
-    rectangle->fill_color = NULL;
-
-    strcpy(rectangle->id, id);
-
     rectangle_set_x(rectangle, coordinates[0]);
     rectangle_set_y(rectangle, coordinates[1]);
     rectangle_set_width(rectangle, coordinates[2]);
     rectangle_set_height(rectangle, coordinates[3]);
 
+    rectangle->border_color = NULL;
+    rectangle->fill_color = NULL;
     rectangle_set_border_color(rectangle, border_color);
     rectangle_set_fill_color(rectangle, fill_color);
 
     return rectangle;
-}
-
-char* rectangle_get_id(Rectangle rectangle) {
-    if (!rectangle) {
-        return NULL;
-    }
-
-    return rectangle->id;
 }
 
 double rectangle_get_x(Rectangle rectangle) {
@@ -152,8 +138,6 @@ void rectangle_destroy(Rectangle* rectangle) {
         return;
     }
 
-    if ((*rectangle)->id) free((*rectangle)->id); 
-    
     if ((*rectangle)->border_color) free((*rectangle)->border_color); 
     if ((*rectangle)->fill_color) free((*rectangle)->fill_color); 
 

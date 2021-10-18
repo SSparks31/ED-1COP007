@@ -10,7 +10,14 @@ void o();
 
 void i();
 
-void delf();
+void pnt();
+
+void delf(FILE* qry_file, List shapes) {
+    char id_to_remove[999];
+    fscanf(qry_file, "%s\n", id_to_remove);
+    
+        
+}
 
 void qry_parser(char* BED, char* BSD, char* geo_name, char* qry_name, List shapes) {
     char* qry_path = concatPathFile(BED, qry_name);

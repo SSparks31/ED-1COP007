@@ -5,9 +5,7 @@
 
 typedef struct circle* Circle;
 
-Circle create_circle(char* id, double coordinates[3], char* border_color, char* fill_color);
-
-char* circle_get_id(Circle circle);
+Circle circle_create(double coordinates[3], char* border_color, char* fill_color);
 
 double circle_get_x(Circle circle);
 double circle_get_y(Circle circle);

@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -std=c99 -fstack-protector-all
 
-siguel: main.c circle.o line.o rectangle.o text.o list.o queue.o stack.o geo.o qry.o stringHelp.o pathHelp.o
+siguel: main.c circle.o line.o rectangle.o text.o shape.o list.o queue.o stack.o geo.o qry.o stringHelp.o pathHelp.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
 circle.o: svg/circle.c svg/circle.h
@@ -14,6 +14,9 @@ rectangle.o: svg/rectangle.c svg/rectangle.h
 	$(CC) $(CFLAGS) -c $<
 
 text.o: svg/text.c svg/text.h
+	$(CC) $(CFLAGS) -c $<
+
+shape.o: svg/shape.c svg/shape.h
 	$(CC) $(CFLAGS) -c $<
 
 list.o: list/list.c list/list.h 

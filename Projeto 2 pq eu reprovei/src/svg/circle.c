@@ -2,10 +2,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+//
 
 struct circle {
-    char* id;
-
     double x;
     double y;
     double radius;
@@ -14,8 +13,8 @@ struct circle {
     char* fill_color;
 };
 
-Circle create_circle(char* id, double coordinates[3], char* border_color, char* fill_color) {
-    if (!id || !coordinates || !border_color || !fill_color) {
+Circle circle_create(double coordinates[3], char* border_color, char* fill_color) {
+    if (!coordinates || !border_color || !fill_color) {
         return NULL;
     }
 
@@ -24,29 +23,18 @@ Circle create_circle(char* id, double coordinates[3], char* border_color, char* 
         return NULL;
     }
 
-    circle->id = malloc(strlen(id) + 1);
-    circle->border_color = NULL;
-    circle->fill_color = NULL;
-
-    strcpy(circle->id, id);
-
     circle_set_x(circle, coordinates[0]);
     circle_set_y(circle, coordinates[1]);
     circle_set_radius(circle, coordinates[2]);
 
+    circle->border_color = NULL;
+    circle->fill_color = NULL;
     circle_set_border_color(circle, border_color);
     circle_set_fill_color(circle, fill_color);
 
     return circle;
 }
 
-char* circle_get_id(Circle circle) {
-    if (!circle) {
-        return NULL;
-    }
-
-    return circle->id;
-}
 
 double circle_get_x(Circle circle) {
     if (!circle) {
@@ -134,8 +122,6 @@ void circle_destroy(Circle* circle) {
         return;
     }
 
-    if ((*circle)->id) free((*circle)->id); 
-    
     if ((*circle)->border_color) free((*circle)->border_color); 
     if ((*circle)->fill_color) free((*circle)->fill_color); 
 

@@ -5,9 +5,7 @@
 
 typedef struct line* Line;
 
-Line create_line(char* id, double coordinates[4], char* color);
-
-char* line_get_id(Line line);
+Line line_create(double coordinates[4], char* color);
 
 double line_get_x1(Line line);
 double line_get_y1(Line line);

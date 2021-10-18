@@ -8,6 +8,7 @@
 #include "../svg/line.h"
 #include "../svg/rectangle.h"
 #include "../svg/text.h"
+#include "../svg/shape.h"
 
 #include "../helper/pathHelp.h"
 
@@ -20,8 +21,9 @@ void c(List shapes, FILE* geo_file, FILE* svg_file) {
 
     fscanf(geo_file, "%s %lf %lf %lf %s %s\n", id, coordinates + 2, coordinates, coordinates + 1, border_color, fill_color);
 
-    Circle circle = create_circle(id, coordinates, border_color, fill_color);
-    list_append(shapes, circle);
+    Circle circle = circle_create(coordinates, border_color, fill_color);
+    Generic_shape shape = generic_shape_create(id, GENERIC_CIRCLE, circle);
+    list_append(shapes, shape);
     circle_write_to_SVG(svg_file, circle);
 }
 
@@ -33,8 +35,9 @@ void l(List shapes, FILE* geo_file, FILE* svg_file) {
 
     fscanf(geo_file, "%s %lf %lf %lf %lf %s\n", id, coordinates, coordinates + 1, coordinates + 2, coordinates + 3, color);
 
-    Line line = create_line(id, coordinates, color);
-    list_append(shapes, line);
+    Line line = line_create(coordinates, color);
+    Generic_shape shape = generic_shape_create(id, GENERIC_LINE, line);
+    list_append(shapes, shape);
     line_write_to_SVG(svg_file, line);
 }
 
@@ -47,8 +50,9 @@ void r(List shapes, FILE* geo_file, FILE* svg_file) {
 
     fscanf(geo_file, "%s %lf %lf %lf %lf %s %s\n", id, coordinates + 2, coordinates + 3, coordinates, coordinates + 1, border_color, fill_color);
 
-    Rectangle rectangle = create_rectangle(id, coordinates, border_color, fill_color);
-    list_append(shapes, rectangle);
+    Rectangle rectangle = rectangle_create(coordinates, border_color, fill_color);
+    Generic_shape shape = generic_shape_create(id, GENERIC_RECTANGLE, rectangle);
+    list_append(shapes, shape);
     rectangle_write_to_SVG(svg_file, rectangle);
 }
 
@@ -68,8 +72,9 @@ void t(List shapes, FILE* geo_file, FILE* svg_file) {
 
     printf("%s\n", string);
 
-    Text text = create_text(id, coordinates, string, border_color, fill_color);
-    list_append(shapes, text);
+    Text text = text_create(coordinates, string, border_color, fill_color);
+    Generic_shape shape = generic_shape_create(id, GENERIC_TEXT, text);
+    list_append(shapes, shape);
     text_write_to_SVG(svg_file, text);
 }
 
