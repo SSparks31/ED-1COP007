@@ -6,6 +6,12 @@
 
 #include "../helper/pathHelp.h"
 
+#include "../svg/circle.h"
+#include "../svg/line.h"
+#include "../svg/rectangle.h"
+#include "../svg/text.h"
+#include "../svg/shape.h"
+
 void o();
 
 void i();
@@ -15,8 +21,21 @@ void pnt();
 void delf(FILE* qry_file, List shapes) {
     char id_to_remove[999];
     fscanf(qry_file, "%s\n", id_to_remove);
-    
+
+    List_pos aux = list_get_first(shapes);
+    while (aux) {
+        Generic_shape shape = list_get_elem(shapes, aux);
+        if (strcmp(generic_shape_get_id(shape), id_to_remove) == 0) {
+            break;
+        }
+
+        aux = list_get_next(shapes, aux);
+    }
         
+    if (aux) {
+        printf("Removing shape with id %s\n", id_to_remove);
+        list_remove(shapes, aux);
+    }
 }
 
 void qry_parser(char* BED, char* BSD, char* geo_name, char* qry_name, List shapes) {
