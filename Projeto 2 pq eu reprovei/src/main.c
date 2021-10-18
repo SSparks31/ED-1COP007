@@ -51,7 +51,12 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    geo_parser(BED, BSD, geo_name);
+    List circles = create_list();
+    List lines = create_list();
+    List rectangles = create_list();
+    List texts = create_list();
+
+    geo_parser(BED, BSD, geo_name, circles, lines, rectangles, texts);
 
     return 0;
 }

@@ -26,6 +26,8 @@ Rectangle create_rectangle(char* id, double coordinates[4], char* border_color, 
     }
 
     rectangle->id = malloc(strlen(id) + 1);
+    rectangle->border_color = NULL;
+    rectangle->fill_color = NULL;
 
     strcpy(rectangle->id, id);
 

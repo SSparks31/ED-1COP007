@@ -25,6 +25,7 @@ Line create_line(char* id, double coordinates[4], char* color) {
     }
 
     line->id = malloc(strlen(id) + 1);
+    line->color = NULL;
 
     strcpy(line->id, id);
 

@@ -15,7 +15,7 @@ struct circle {
 };
 
 Circle create_circle(char* id, double coordinates[3], char* border_color, char* fill_color) {
-    if (!id || !coordinates || !border_color || fill_color) {
+    if (!id || !coordinates || !border_color || !fill_color) {
         return NULL;
     }
 
@@ -25,6 +25,8 @@ Circle create_circle(char* id, double coordinates[3], char* border_color, char* 
     }
 
     circle->id = malloc(strlen(id) + 1);
+    circle->border_color = NULL;
+    circle->fill_color = NULL;
 
     strcpy(circle->id, id);
 

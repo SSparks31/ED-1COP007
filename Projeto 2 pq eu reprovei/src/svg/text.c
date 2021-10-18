@@ -28,6 +28,9 @@ Text create_text(char* id, double coordinates[2], char* string, char* border_col
     text->id = malloc(strlen(id) + 1);
 
     strcpy(text->id, id);
+    text->string = NULL;
+    text->border_color = NULL;
+    text->fill_color = NULL;
 
     text_set_x(text, coordinates[0]);
     text_set_y(text, coordinates[1]);
@@ -106,13 +109,8 @@ void text_set_string(Text text, char* string) {
     if (!text || !string) {
         return;
     }
-
-    if (!text->string) {
-        text->string = malloc(strlen(string) + 1);
-    } else {
-        text->string = realloc(text->string, strlen(string) + 1);
-    }
     
+    text->string = realloc(text->string, strlen(string) + 1);   
     strcpy(text->string, string);
 }
 
@@ -121,12 +119,7 @@ void text_set_border_color(Text text, char* border_color) {
         return;
     }
 
-    if (!text->border_color) {
-        text->border_color = malloc(strlen(border_color) + 1);
-    } else {
-        text->border_color = realloc(text->border_color, strlen(border_color) + 1);
-    }
-    
+    text->border_color = realloc(text->border_color, strlen(border_color) + 1);
     strcpy(text->border_color, border_color);
 }
 
@@ -135,12 +128,7 @@ void text_set_fill_color(Text text, char* fill_color) {
         return;
     }
 
-    if (!text->fill_color) {
-        text->fill_color = malloc(strlen(fill_color) + 1);
-    } else {
-        text->fill_color = realloc(text->fill_color, strlen(fill_color) + 1);
-    }
-    
+    text->fill_color = realloc(text->fill_color, strlen(fill_color) + 1);
     strcpy(text->fill_color, fill_color);
 }
 
@@ -165,7 +153,7 @@ void text_write_to_SVG(FILE* svg_file, Text text) {
         return;
     }
 
-    const char* format = "<text x=\"%.6lf\" y=\"%.6lf\" stroke=\"%s\" fill=\"%s\" font-size=\"[TROCA O TAMANHO]\">%s</text>";
+    const char* format = "<text x=\"%.6lf\" y=\"%.6lf\" stroke=\"%s\" fill=\"%s\" font-size=\"14\" stroke-width=\".4\">%s</text>\n";
 
     double x = text_get_x(text);
     double y = text_get_y(text);
@@ -175,5 +163,5 @@ void text_write_to_SVG(FILE* svg_file, Text text) {
     char* border_color = text_get_border_color(text);
     char* fill_color = text_get_fill_color(text);
 
-    fprintf(svg_file, format, x, y, string, border_color, fill_color);
+    fprintf(svg_file, format, x, y, border_color, fill_color, string);
 }
