@@ -3,6 +3,6 @@
 
 #include "../list/list.h"
 
-void geo_parser(char* BED, char* BSD, char* geo_name, List circles, List lines, List rectangles, List texts);
+void geo_parser(char* BED, char* BSD, char* geo_name, List shapes);
 
 #endif

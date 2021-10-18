@@ -15,7 +15,7 @@
 int main(int argc, char* argv[]) {
     char option;
     
-    char* BED = NULL;
+    char* BED = "./";
     char* BSD = NULL;
     char* geo_name = NULL;
     char* qry_name = NULL;
@@ -52,14 +52,13 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    List circles = create_list();
-    List lines = create_list();
-    List rectangles = create_list();
-    List texts = create_list();
+    List shapes = create_list();
 
-    geo_parser(BED, BSD, geo_name, circles, lines, rectangles, texts);
+    geo_parser(BED, BSD, geo_name, shapes);
 
-    qry_parser(BED, BSD, geo_name, qry_name, circles, lines, rectangles, texts);
+    if (qry_name) {
+        qry_parser(BED, BSD, geo_name, qry_name, shapes);
+    }
 
     return 0;
 }

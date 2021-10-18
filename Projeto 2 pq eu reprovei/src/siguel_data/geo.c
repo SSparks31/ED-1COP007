@@ -11,51 +11,48 @@
 
 #include "../helper/pathHelp.h"
 
-void c(List circles, FILE* geo_file, FILE* svg_file) {
+void c(List shapes, FILE* geo_file, FILE* svg_file) {
     char id[999];
     
     double coordinates[3]; // x y r 
     char border_color[999];
     char fill_color[999];
 
-    fscanf(geo_file, "%s %lf %lf %lf %s %s", id, coordinates + 2, coordinates, coordinates + 1, border_color, fill_color);
+    fscanf(geo_file, "%s %lf %lf %lf %s %s\n", id, coordinates + 2, coordinates, coordinates + 1, border_color, fill_color);
 
     Circle circle = create_circle(id, coordinates, border_color, fill_color);
-    list_append(circles, circle);
+    list_append(shapes, circle);
     circle_write_to_SVG(svg_file, circle);
-    fgets(border_color, 999, geo_file);
 }
 
-void l(List lines, FILE* geo_file, FILE* svg_file) {
+void l(List shapes, FILE* geo_file, FILE* svg_file) {
     char id[999];
     
     double coordinates[4]; // x1 y1 x2 y2
     char color[999];
 
-    fscanf(geo_file, "%s %lf %lf %lf %lf %s", id, coordinates, coordinates + 1, coordinates + 2, coordinates + 3, color);
+    fscanf(geo_file, "%s %lf %lf %lf %lf %s\n", id, coordinates, coordinates + 1, coordinates + 2, coordinates + 3, color);
 
     Line line = create_line(id, coordinates, color);
-    list_append(lines, line);
+    list_append(shapes, line);
     line_write_to_SVG(svg_file, line);
-    fgets(color, 999, geo_file);
 }
 
-void r(List rectangles, FILE* geo_file, FILE* svg_file) {
+void r(List shapes, FILE* geo_file, FILE* svg_file) {
     char id[999];
     
     double coordinates[4]; // x y w h
     char border_color[999];
     char fill_color[999];
 
-    fscanf(geo_file, "%s %lf %lf %lf %lf %s %s", id, coordinates + 2, coordinates + 3, coordinates, coordinates + 1, border_color, fill_color);
+    fscanf(geo_file, "%s %lf %lf %lf %lf %s %s\n", id, coordinates + 2, coordinates + 3, coordinates, coordinates + 1, border_color, fill_color);
 
     Rectangle rectangle = create_rectangle(id, coordinates, border_color, fill_color);
-    list_append(rectangles, rectangle);
+    list_append(shapes, rectangle);
     rectangle_write_to_SVG(svg_file, rectangle);
-    fgets(border_color, 999, geo_file);
 }
 
-void t(List texts, FILE* geo_file, FILE* svg_file) {
+void t(List shapes, FILE* geo_file, FILE* svg_file) {
     char id[999];
     
     double coordinates[2]; // x y
@@ -72,16 +69,11 @@ void t(List texts, FILE* geo_file, FILE* svg_file) {
     printf("%s\n", string);
 
     Text text = create_text(id, coordinates, string, border_color, fill_color);
-    list_append(texts, text);
+    list_append(shapes, text);
     text_write_to_SVG(svg_file, text);
 }
 
-void geo_parser(char* BED, char* BSD, char* geo_name, List circles, List lines, List rectangles, List texts) {
-    if (!BED) {
-        char* directory = "./";
-        BED = directory;
-    }
-
+void geo_parser(char* BED, char* BSD, char* geo_name, List shapes) {
     char* geo_path = concatPathFile(BED, geo_name);
     FILE* geo_file = fopen(geo_path, "r");
     free(geo_path);
@@ -107,19 +99,19 @@ void geo_parser(char* BED, char* BSD, char* geo_name, List circles, List lines, 
     while (fscanf(geo_file, "%c ", &command) != EOF) {
         switch (command) {
             case 'c':
-                c(circles, geo_file, svg_file);
+                c(shapes, geo_file, svg_file);
                 break;
 
             case 'l':
-                l(lines, geo_file, svg_file);
+                l(shapes, geo_file, svg_file);
                 break;
 
             case 'r':
-                r(rectangles, geo_file, svg_file);
+                r(shapes, geo_file, svg_file);
                 break;
 
             case 't':
-                t(rectangles, geo_file, svg_file);
+                t(shapes, geo_file, svg_file);
                 break;
 
             default:

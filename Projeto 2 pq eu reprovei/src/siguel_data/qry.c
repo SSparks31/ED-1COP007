@@ -6,25 +6,40 @@
 
 #include "../helper/pathHelp.h"
 
-void qry_parser(char* BED, char* BSD, char* geo_name, char* qry_name, List circles, List lines, List rectangles, List texts) {
-    if (!BED) {
-        char* directory = "./";
-        BED = directory;
-    }
+void o();
 
+void i();
+
+void delf();
+
+void qry_parser(char* BED, char* BSD, char* geo_name, char* qry_name, List shapes) {
     char* qry_path = concatPathFile(BED, qry_name);
     FILE* qry_file = fopen(qry_path, "r");
-    // free(qry_path);
-      
     
     char* geo_no_suffix = stripSuffix(geo_name);
     char* qry_no_suffix = stripSuffix(qry_name);
-    char* svg_name = malloc(strlen(geo_no_suffix) + strlen("-") + strlen(qry_no_suffix) + strlen(".svg") + 1);
-    sprintf(svg_name, "%s-%s.svg");
-    char* svg_path = concatPathFile(BSD, svg_path);
-    char* txt_name = stripSuffix(svg_path);
-    char* txt_path = concatPathFile(txt_name, ".txt");
-    printf("%s %s %s\n", qry_path, svg_path, txt_path);
+    char* geo_qry = malloc(strlen(geo_no_suffix) + strlen("-") + strlen(qry_no_suffix) + 1);
+    sprintf(geo_qry, "%s-%s", geo_no_suffix, qry_no_suffix);
+       
+    char* svg_txt_path = concatPathFile(BSD, geo_qry);
+    char* svg_path = concatFileSuffix(svg_txt_path, "svg");
+    char* txt_path = concatFileSuffix(svg_txt_path, "txt");
+    
+    FILE* svg_file = fopen(svg_path, "w");
+    FILE* txt_file = fopen(txt_path, "w");
+
+    free(qry_path);
+    free(geo_no_suffix);
+    free(qry_no_suffix);
+    free(geo_qry);
+    free(svg_txt_path);
+    free(svg_path);
+    free(txt_path);
+
+    char command[5];
+    while (fscanf(qry_file, "%s", command) != EOF) {
+        
+    }
 
     return;
 }
