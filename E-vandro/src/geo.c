@@ -6,8 +6,6 @@
 
 #include "svg.h"
 
-#include "path.h"
-
 void c(List shapes, FILE* geo_file, FILE* svg_file) {
     int id;
 
@@ -83,26 +81,40 @@ void t(List shapes, FILE* geo_file, FILE* svg_file) {
 }
 
 void geo_parser(char* BED, char* BSD, char* geo_name, List shapes) {
-    char result[999], buffer[999];
-    concat_path_file(result, BED, geo_name);  
-    FILE* geo_file = fopen(result, "r");
-    if (!geo_file) {
+    if (!BED || strlen(BED) == 0 || !BSD || strlen(BSD) == 0 || !geo_name || strlen(geo_name) == 0 || !shapes) {
         return;
     }
 
-    
-    strip_suffix(buffer, geo_name);
-    concat_file_suffix(buffer, buffer, "svg");
-    concat_path_file(result, BSD, buffer);
-    FILE* svg_file = fopen(result, "w");
+    char* geo_path = calloc(1, strlen(BED) + 1 + strlen(geo_name) + 1);
+    if (BED[strlen(BED)-1] != '/') {
+        sprintf(geo_path, "%s/%s", BED, geo_name);
+    } else {
+        sprintf(geo_path, "%s%s", BED, geo_name);
+    }
+
+    FILE* geo_file = fopen(geo_path, "r");
+
+
+    geo_name = strrchr(geo_path, '/') + 1;
+    char* svg_path = calloc(1, strlen(BSD) + 1 + strlen(geo_name) + 1);
+    if (BSD[strlen(BSD)-1] != '/') {
+        sprintf(svg_path, "%s/%s", BSD, geo_name);
+    } else {
+        sprintf(svg_path, "%s%s", BSD, geo_name);
+    }    
+    char* extension = strrchr(svg_path, '.');
+    sprintf(extension + 1, "svg");
+
+    FILE* svg_file = fopen(svg_path, "w");
+    free(svg_path);
     if (!svg_file) {
         fclose(geo_file);
         return;
     }
 
-    fprintf(svg_file, "<svg>\n");
+    fprintf(svg_file, "<svg xmlns=\"http://www.w3.org/2000/svg\">\n");
 
-    char command;
+    char command, buffer[999];
 
     while (fscanf(geo_file, "%c ", &command) != EOF) {
         switch (command) {

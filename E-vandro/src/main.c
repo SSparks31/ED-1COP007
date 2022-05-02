@@ -5,8 +5,6 @@
 
 #include "svg.h"
 
-#include "path.h"
-
 #include "list.h"
 // #include "queue.h"
 
@@ -55,15 +53,10 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-
-    printf("%s\n%s\n%s\n%s\n", BED, BSD, geo_name, qry_name);
-
     List shapes = create_list();
     geo_parser(BED, BSD, geo_name, shapes);
 
     qry_parser(BED, BSD, geo_name, qry_name, shapes);
-
-    printf("%d\n", list_get_size(shapes));
 
     return 0;
 }
